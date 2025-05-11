@@ -200,7 +200,7 @@ def analyze_news(news_text: str) -> str:
         # 建立符合 Claude Messages API 的 body 結構
         body = {
             "anthropic_version": "bedrock-2023-05-31",
-            "max_tokens": 4000,
+            "max_tokens": 5000,
             "temperature": 0.7,
             "top_p": 0.95,
             "top_k": 250,
@@ -339,7 +339,7 @@ def analyze_news(news_text: str) -> str:
     final_prompt = f"{final_system_prompt}\n\n以下是多批次的新聞摘要資料（JSON 格式）如下：\n{total_summary_json}"
     body = {
         "anthropic_version": "bedrock-2023-05-31",
-        "max_tokens": 4300,
+        "max_tokens": 5500,
         "temperature": 0.7,
         "top_p": 0.95,
         "top_k": 250,
