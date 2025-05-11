@@ -40,7 +40,7 @@ def get_today_max_version(bucket_name, prefix_date=None):
     s3 = get_s3_client()
     
     if prefix_date is None:
-        prefix_date = datetime.now().strftime("daily/headline_news_%Y%m%d")  # e.g., daily/headline_news_20250501
+        prefix_date = datetime.now().strftime("headline_daily/headline_news_%Y%m%d")  # e.g., headline_daily/headline_news_20250501
 
     response = s3.list_objects_v2(Bucket=bucket_name, Prefix=prefix_date)
     max_version = 0
@@ -62,7 +62,7 @@ def get_today_max_version(bucket_name, prefix_date=None):
 
 def get_latest_read_key(bucket_name):
     """取得今天最新版本的檔案 key"""
-    prefix_date = datetime.now().strftime("daily/headline_news_%Y%m%d")
+    prefix_date = datetime.now().strftime("headline_daily/headline_news_%Y%m%d")
     max_version = get_today_max_version(bucket_name, prefix_date)
     if max_version == 0:
         log_collection = "AI_headline_news_error"
@@ -107,7 +107,8 @@ def load_local_news_from_s3(bucket_name, key):
         try:
             title = news_json.get("title", "")
             content = news_json.get("content", "")
-            news_entries.append(f"標題：{title}\n內文：{content}")
+            id = news_json.get("_id", "")
+            news_entries.append(f"標題：{title}\nID:{id}\n內文：{content}")
         except Exception as e:
             log_collection = "AI_headline_news_error"
             log_type = "bedrock_client.invoke_model error"
@@ -115,7 +116,7 @@ def load_local_news_from_s3(bucket_name, key):
             source = "lambda_function/AI_headline_news_analysisy.py/load_local_news_from_s3()"
             log_error(log_collection=log_collection,log_type=log_type,error_message=error_message,source=source)
             continue
-    return "\n\n".join(news_entries) #會回傳一個多段中間都空兩行的字串，每一段都會是f"標題：{title}\n內文：{content}"
+    return "\n\n".join(news_entries) #會回傳一個多段中間都空兩行的字串，每一段都會是f"標題：{title}\nID:{id}\n內文：{content}"
 
 
 
@@ -139,6 +140,11 @@ def analyze_news(news_text: str) -> str:
     "industry_list": [
         "半導體",
         "光電"
+    ],
+    "source_news":[
+        {"title":"美港口對陸船收費 長榮彈性調配不受影響","_id":"680b6917c3c5d94c43190b98"},
+        {"title":"關稅衝擊〉全面防堵「洗產地」！5/7起 MIT貨品出口至美國 須附原產地聲明書","_id":"680b6917c3c5d94c43190b99"},
+        {"title":"對美中貿易協議樂觀期待 美債殖利率持穩","_id":"680b6917c3c5d94c43190b9a"},
     ]
     }
 
@@ -157,6 +163,11 @@ def analyze_news(news_text: str) -> str:
     6. industry_list : 將第 4 點提到的產業，**以 list 格式放入 industry_list 欄位**，範例如下：
     - ["半導體", "AI", "鋼鐵"]
     - 注意：**不得加上「產業」兩字**
+    7. source_news : 請將本次分析所根據的每一篇新聞，回傳其「標題」與「ID」，格式如下：
+    - [
+        {"title": "新聞標題A", "_id": "680b6917c3c5d94c43190b98"},
+        {"title": "新聞標題B", "_id": "680b6917c3c5d94c43190b99"}
+    ]
 
     特別注意：
     - 請優先挑出新聞中「雖然只出現一次但具有潛在重大意涵」的議題。
@@ -236,6 +247,7 @@ def analyze_news(news_text: str) -> str:
                 potential_stocks_and_industries = parsed_result.get("potential_stocks_and_industries", False)
                 stock_list = parsed_result.get("stock_list", False)
                 industry_list = parsed_result.get("industry_list", False)
+                source_news = parsed_result.get("source_news", False)
                 publishAt = int(time.time())
                 # 儲存每次批次結果到資料庫
                 ai_summary = {
@@ -246,9 +258,11 @@ def analyze_news(news_text: str) -> str:
                     "sentiment":sentiment,
                     "potential_stocks_and_industries":potential_stocks_and_industries,
                     "stock_list":stock_list,
-                    "industry_list":industry_list
+                    "industry_list":industry_list,
+                    "source_news":source_news
                     }
                 # Store each AI analysis summary in the database
+                
                 insert_data_mongodb(
                     ai_summary, 
                     insert_db="AI_news_analysis", 
@@ -262,7 +276,10 @@ def analyze_news(news_text: str) -> str:
                 continue
         else:
             log_error("AI_headline_news_error", "JSON decode error", "Claude 沒有回傳內容", source="lambda_function/AI_headline_news_analysisy.py/analyze_news()")
-        try:    
+        try:
+            if "_id" in ai_summary:
+                del ai_summary["_id"]
+                print("Removed _id from ai_summary before appending to total_summary")  #fix the auto add "_id" after insert_data_mongodb()
             # Add a summary of each batch to the summary
             total_summary.append(ai_summary)
             time.sleep(2)
@@ -314,7 +331,9 @@ def analyze_news(news_text: str) -> str:
         - 在第 4 項中，若可提及具體公司名稱（如台積電、鴻海等）與產業（如半導體、AI、生技、綠能），並說明其與新聞的關聯，效果更佳。
         - 所有欄位都必須填入對應的內容，並以 JSON 結構格式回傳（不要有自然語言或段落）。
     """
+    print("good",total_summary)
     total_summary_json = json.dumps(total_summary, ensure_ascii=False, indent=2)
+    print("goog2")
     final_prompt = f"{final_system_prompt}\n\n以下是多批次的新聞摘要資料（JSON 格式）如下：\n{total_summary_json}"
     body = {
         "anthropic_version": "bedrock-2023-05-31",
@@ -403,8 +422,8 @@ def analyze_news(news_text: str) -> str:
 
 def lambda_handler(event, context):
     try:
-        key = get_latest_read_key("news-datalake")
-        news_text = load_local_news_from_s3(bucket_name="news-datalake", key=key)
+        key = get_latest_read_key("stock-insight-news-datalake")
+        news_text = load_local_news_from_s3(bucket_name="stock-insight-news-datalake", key=key)
         print(news_text.strip())
         print(len(news_text.strip()))
         result = analyze_news(news_text)
@@ -428,7 +447,7 @@ def lambda_handler(event, context):
 
 if __name__ == '__main__':
     result = lambda_handler({}, {})
-    print(json.dumps(result, ensure_ascii=False, indent=2))
+    print(result)
 
 
 

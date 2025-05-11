@@ -25,7 +25,7 @@ def get_today_max_version(bucket_name, prefix_date=None):
     s3 = get_s3_client()
     
     if prefix_date is None:
-        prefix_date = datetime.now().strftime("daily/headline_news_%Y%m%d")  # e.g., headline_news_20250501
+        prefix_date = datetime.now().strftime("headline_daily/headline_news_%Y%m%d")  # e.g., headline_news_20250501
 
     response = s3.list_objects_v2(Bucket=bucket_name, Prefix=prefix_date)
     max_version = 0
@@ -42,7 +42,7 @@ def get_today_max_version(bucket_name, prefix_date=None):
 
 def get_next_write_key(bucket_name):
     """產生今天該寫入的版本名稱（v1, v2, ...）"""
-    prefix_date = datetime.now().strftime("daily/headline_news_%Y%m%d")
+    prefix_date = datetime.now().strftime("headline_daily/headline_news_%Y%m%d")
     max_version = get_today_max_version(bucket_name, prefix_date)
     next_version = max_version + 1
     return f"{prefix_date}_v{next_version}.json"
@@ -74,8 +74,8 @@ def lambda_handler(event, context):
         end_ts = int(end_time.timestamp())
         news = get_news(start_ts, end_ts, db_name="news_data", collection_name="headline_news")
 
-        key = get_next_write_key("news-datalake")
-        news_to_json_and_upload(news, bucket="news-datalake", key=key)
+        key = get_next_write_key("stock-insight-news-datalake")
+        news_to_json_and_upload(news, bucket="stock-insight-news-datalake", key=key)
         successful_message = f"共取得 {len(news)} 筆新聞資料，已上傳至 S3：{key}"
         result = {
             "statusCode": 200,
