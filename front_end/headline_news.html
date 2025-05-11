@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Stock Dashboard</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .container {
+            display: grid;
+            grid-template-columns: 1fr 2fr 2fr 1fr;
+            gap: 20px;
+            height: 90vh;
+        }
+        .section {
+            background-color: white;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            padding: 15px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            position: relative;
+        }
+        .list-section, .news-section {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        .list-item {
+            background-color: #f0f0f0;
+            padding: 10px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.2s;
+            position: relative;
+        }
+        .list-item:hover {
+            background-color: #e0e0e0;
+        }
+        .news-item {
+            background-color: #f0f0f0;
+            padding: 10px;
+            border-radius: 5px;
+            margin-bottom: 10px;
+            position: relative;
+        }
+        .news-section {
+            overflow-y: auto;
+        }
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        .logo {
+            font-weight: bold;
+            font-size: 24px;
+        }
+        .search-bar, .calendar {
+            padding: 5px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            margin-left: 10px;
+        }
+        /* Arrow Styles using SVG */
+        .arrow-right {
+            position: absolute;
+            right: -20px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 20px;
+            height: 20px;
+        }
+        .arrow-left {
+            position: absolute;
+            left: -20px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 20px;
+            height: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div class="logo">LOGO</div>
+        <div>
+            <input type="text" class="search-bar" placeholder="Search...">
+            <input type="date" class="calendar">
+        </div>
+    </div>
+    <div class="container">
+        <!-- Stock List 1 -->
+        <div class="section list-section">
+            <h3>Stock List</h3>
+            <div class="list-item">Stock A</div>
+            <div class="list-item">Stock B</div>
+            <div class="list-item">Stock C</div>
+            <div class="list-item">Stock D</div>
+            <h3>Industry List</h3>
+            <div class="list-item">Industry 1</div>
+            <div class="list-item">Industry 2</div>
+            <div class="list-item">Industry 3</div>
+            <div class="list-item">Industry 4</div>
+        </div>
+        <!-- Potential Stocks 1 -->
+        <div class="section potential-stocks">
+            <h3>Potential Stocks and Industry Details</h3>
+            <p>Details about potential stocks and industries will be displayed here</p>
+            <svg class="arrow-left" viewBox="0 0 20 20">
+                <polygon points="15,5 5,10 15,15" fill="#000"/>
+            </svg>
+        </div>
+        <!-- AI Summary 1 -->
+        <div class="section ai-summary">
+            <h3>AI Summary</h3>
+            <ol>
+                <li>News Summary: Brief overview of the latest news.</li>
+                <li>Key News Highlights: Key news.</li>
+                <li>Sentiment Analysis: Analysis of market sentiment.</li>
+            </ol>
+            <svg class="arrow-left" viewBox="0 0 20 20">
+                <polygon points="15,5 5,10 15,15" fill="#000"/>
+            </svg>
+        </div>
+        <!-- News List 1 -->
+        <div class="section news-section">
+            <h3>News</h3>
+            <div class="news-item">News Title 1<svg class="arrow-right" viewBox="0 0 20 20">
+                <polygon points="5,5 15,10 5,15" fill="#000"/>
+            </svg></div>
+            <div class="news-item">News Title 2<svg class="arrow-right" viewBox="0 0 20 20">
+                <polygon points="5,5 15,10 5,15" fill="#000"/>
+            </svg></div>
+            <div class="news-item">News Title 3<svg class="arrow-right" viewBox="0 0 20 20">
+                <polygon points="5,5 15,10 5,15" fill="#000"/>
+            </svg></div>
+            <div class="news-item">News Title 4<svg class="arrow-right" viewBox="0 0 20 20">
+                <polygon points="5,5 15,10 5,15" fill="#000"/>
+            </svg></div>
+            <div class="news-item">News Title 5<svg class="arrow-right" viewBox="0 0 20 20">
+                <polygon points="5,5 15,10 5,15" fill="#000"/>
+            </svg></div>
+        </div>
+        <!-- Stock List 2 -->
+        <div class="section list-section">
+            <h3>Stock List</h3>
+            <div class="list-item">Stock E</div>
+            <div class="list-item">Stock F</div>
+            <div class="list-item">Stock G</div>
+            <div class="list-item">Stock H</div>
+            <h3>Industry List</h3>
+            <div class="list-item">Industry 5</div>
+            <div class="list-item">Industry 6</div>
+            <div class="list-item">Industry 7</div>
+            <div class="list-item">Industry 8</div>
+        </div>
+        <!-- Potential Stocks 2 -->
+        <div class="section potential-stocks">
+            <h3>Potential Stocks and Industry Details</h3>
+            <p>Details about potential stocks and industries will be displayed here</p>
+            <svg class="arrow-left" viewBox="0 0 20 20">
+                <polygon points="15,5 5,10 15,15" fill="#000"/>
+            </svg>
+        </div>
+        <!-- AI Summary 2 -->
+        <div class="section ai-summary">
+            <h3>AI Summary</h3>
+            <ol>
+                <li>News Summary: Brief overview of the latest news.</li>
+                <li>Key News Highlights: Key news.</li>
+                <li>Sentiment Analysis: Analysis of market sentiment.</li>
+            </ol>
+            <svg class="arrow-left" viewBox="0 0 20 20">
+                <polygon points="15,5 5,10 15,15" fill="#000"/>
+            </svg>
+        </div>
+        <!-- News List 2 -->
+        <div class="section news-section">
+            <h3>News</h3>
+            <div class="news-item">News Title 6<svg class="arrow-right" viewBox="0 0 20 20">
+                <polygon points="5,5 15,10 5,15" fill="#000"/>
+            </svg></div>
+            <div class="news-item">News Title 7<svg class="arrow-right" viewBox="0 0 20 20">
+                <polygon points="5,5 15,10 5,15" fill="#000"/>
+            </svg></div>
+            <div class="news-item">News Title 8<svg class="arrow-right" viewBox="0 0 20 20">
+                <polygon points="5,5 15,10 5,15" fill="#000"/>
+            </svg></div>
+            <div class="news-item">News Title 9<svg class="arrow-right" viewBox="0 0 20 20">
+                <polygon points="5,5 15,10 5,15" fill="#000"/>
+            </svg></div>
+            <div class="news-item">News Title 10<svg class="arrow-right" viewBox="0 0 20 20">
+                <polygon points="5,5 15,10 5,15" fill="#000"/>
+            </svg></div>
+        </div>
+    </div>
+</body>
+</html>
