@@ -15,8 +15,6 @@ if os.getenv("AWS_EXECUTION_ENV") is None:
 def get_s3_client():
     return boto3.client(
         "s3",
-        aws_access_key_id = os.getenv("aws_s3_access_key_id"),
-        aws_secret_access_key = os.getenv("aws_s3_secret_access_key"),
         region_name="us-west-2"
     )
 

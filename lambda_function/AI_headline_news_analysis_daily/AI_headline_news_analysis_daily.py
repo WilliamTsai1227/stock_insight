@@ -11,9 +11,8 @@ import os
 if os.getenv("AWS_EXECUTION_ENV") is None:
     from dotenv import load_dotenv
     load_dotenv()
-
-s3_access_key_id = os.getenv("aws_s3_access_key_id")
-s3_secret_access_key = os.getenv("aws_s3_secret_access_key")
+    s3_access_key_id = os.getenv("aws_s3_access_key_id")
+    s3_secret_access_key = os.getenv("aws_s3_secret_access_key")
 
 #This lambda function is used to get headline news data from s3, then use AI to analyze the news , and finally return the results and intsert them into database.
 
@@ -22,16 +21,12 @@ s3_secret_access_key = os.getenv("aws_s3_secret_access_key")
 def get_s3_client():
     return boto3.client(
         "s3",
-        aws_access_key_id = s3_access_key_id,
-        aws_secret_access_key = s3_secret_access_key,
         region_name="us-west-2"
     )
 
 def get_bedrock_client():
     return boto3.client(
         'bedrock-runtime',
-        aws_access_key_id = s3_access_key_id,
-        aws_secret_access_key = s3_secret_access_key,
         region_name="us-west-2"
     )
 
