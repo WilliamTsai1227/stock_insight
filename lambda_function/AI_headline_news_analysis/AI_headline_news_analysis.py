@@ -116,7 +116,7 @@ def load_local_news_from_s3(bucket_name, key):
             source = "lambda_function/AI_headline_news_analysisy.py/load_local_news_from_s3()"
             log_error(log_collection=log_collection,log_type=log_type,error_message=error_message,source=source)
             continue
-    return "\n\n".join(news_entries) #會回傳一個多段中間都空兩行的字串，每一段都會是f"標題：{title}\nID:{id}\n內文：{content}"
+    return "\n".join(news_entries) #會回傳一個多段中間都空兩行的字串，每一段都會是f"標題：{title}\nID:{id}\n內文：{content}"
 
 
 
@@ -178,12 +178,14 @@ def analyze_news(news_text: str) -> str:
 
     # 假設每次最多處理 5 篇新聞
     max_articles_per_batch = 5
-    news_list = news_text.split("\n\n")  # 假設每篇新聞用換行符號分開
+    
+    news_list = re.split(r'(?=標題：)', news_text) #使用正則將每篇新聞以"標題："做區分寫入list，確保一個item就是一則新聞
+    news_list = [n.strip() for n in news_list if n.strip()] # 移除空字串或只包含空白的元素
+
     batches = []
     for i in range(0, len(news_list), max_articles_per_batch):
         batch = news_list[i:i + max_articles_per_batch]
         batches.append(batch)
-
     
     total_summary = []  # 用來儲存每一批的摘要
 
@@ -193,9 +195,9 @@ def analyze_news(news_text: str) -> str:
     # Claude 3 Haiku 模型 ID
     MODEL_ID = 'anthropic.claude-3-haiku-20240307-v1:0'
     count = 0
-    for batch in batches:
+    for item in batches:
         # 合併每一批的新聞文本
-        batch_text = "\n\n".join(batch)
+        batch_text = "\n\n".join(item)
         full_prompt = f"{system_prompt.strip()}\n\n以下是今天的新聞：\n{batch_text.strip()}"
         # 建立符合 Claude Messages API 的 body 結構
         body = {
@@ -252,7 +254,7 @@ def analyze_news(news_text: str) -> str:
                 publishAt = int(time.time())
                 # 儲存每次批次結果到資料庫
                 ai_summary = {
-                    "type":f"{count}",
+                    "type":count,
                     "publishAt":publishAt,
                     "summary":summary,
                     "important_news":important_news,
@@ -426,7 +428,6 @@ def lambda_handler(event, context):
     try:
         key = get_latest_read_key("stock-insight-news-datalake")
         news_text = load_local_news_from_s3(bucket_name="stock-insight-news-datalake", key=key)
-        print(news_text.strip())
         print(len(news_text.strip()))
         result = analyze_news(news_text)
         if isinstance(result,dict) and result.get("ok",False) != False:
