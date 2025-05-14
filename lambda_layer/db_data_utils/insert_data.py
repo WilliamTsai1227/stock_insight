@@ -61,7 +61,7 @@ def insert_data_mongodb(items, insert_db: str, insert_collection: str,log_succes
                 log_error(log_error_collection,"insert", error_message, error_db=insert_db, error_collection=insert_collection)
                 return False
         except BulkWriteError as bwe:
-            inserted_count = bwe.details.get('nInserted', 0)
+            inserted_count = bwe.details.get('Inserted', 0)
             error_message = f"Bulk write warning: {bwe.details}"
             log_error(log_error_collection,"insert", error_message, error_db=insert_db, error_collection=insert_collection)
             return False

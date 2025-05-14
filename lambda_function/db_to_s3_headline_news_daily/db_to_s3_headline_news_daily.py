@@ -88,14 +88,14 @@ def lambda_handler(event, context):
             "statusCode": 500,
             "body": error_message
         }
-        print(result)
+        
         return result
     
 
 
 
 if __name__ == "__main__":
-    result = lambda_handler({}, {})
-    print(json.dumps(result, ensure_ascii=False, indent=2))
+    lambda_handler({}, {})
+    
 
 

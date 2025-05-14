@@ -41,7 +41,7 @@ def log_error(log_collection:str = None,log_type: str = None, error_message: str
         raise e
     
 # Log success to MongoDB
-def log_success(log_collection:str = None,log_type: str = None,successful_message:str = None , additional_info: dict = None, source:str =None, success_db:str = None, success_collection:str = None):
+def log_success(log_collection:str = None,log_type: str = None,successful_message:str = None , additional_info: dict = None, source:str =None, success_db:str = None, success_collection:str = None,successful_inserts:int =None):
 
     try:
         # Get current time
@@ -50,6 +50,7 @@ def log_success(log_collection:str = None,log_type: str = None,successful_messag
         log_entry = {
             "log_type": log_type,
             "source":source,
+            "successful_inserts":successful_inserts,
             "success_message":successful_message,
             "timestamp": current_time,
             "additional_info": additional_info,

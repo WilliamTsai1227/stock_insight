@@ -276,8 +276,7 @@ def analyze_news(news_text: str) -> str:
             log_error("AI_headline_news_error", "JSON decode error", "Claude 沒有回傳內容", source="lambda_function/AI_headline_news_analysisy.py/analyze_news()")
         try:
             if "_id" in ai_summary:
-                del ai_summary["_id"]
-                print("Removed _id from ai_summary before appending to total_summary")  #fix the auto add "_id" after insert_data_mongodb()
+                del ai_summary["_id"] #fix the auto add "_id" after insert_data_mongodb()                 
             # Add a summary of each batch to the summary
             total_summary.append(ai_summary)
             time.sleep(2)
@@ -330,9 +329,9 @@ def analyze_news(news_text: str) -> str:
         - 在第 4 項中，若可提及具體公司名稱（如台積電、鴻海等）與產業（如半導體、AI、生技、綠能），並說明其與新聞的關聯，效果更佳。
         - 所有欄位都必須填入對應的內容，並以 JSON 結構格式回傳（不要有自然語言或段落）。
     """
-    print("good",total_summary)
+    
     total_summary_json = json.dumps(total_summary, ensure_ascii=False, indent=2)
-    print("goog2")
+    
     final_prompt = f"{final_system_prompt}\n\n以下是多批次的新聞摘要資料（JSON 格式）如下：\n{total_summary_json}"
     body = {
         "anthropic_version": "bedrock-2023-05-31",
@@ -423,10 +422,10 @@ def lambda_handler(event, context):
     try:
         key = get_latest_read_key("stock-insight-news-datalake")
         news_text = load_local_news_from_s3(bucket_name="stock-insight-news-datalake", key=key)
-        print(len(news_text.strip()))
+        
         result = analyze_news(news_text)
         if isinstance(result,dict) and result.get("ok",False) != False:
-            print(result)
+            
             successful_message = "AI headline news analysis success"
             lambda_result = {
                 "statusCode": 200,
@@ -444,8 +443,8 @@ def lambda_handler(event, context):
 
 
 if __name__ == '__main__':
-    result = lambda_handler({}, {})
-    print(result)
+    lambda_handler({}, {})
+    
 
 
 
