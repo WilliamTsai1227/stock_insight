@@ -1,0 +1,60 @@
+
+
+# Ignore version control files
+.git
+
+# Ignore virtual environment directories
+venv
+env
+.venv
+
+# Ignore environment variable files
+.env
+
+# Ignore Python compiled files
+__pycache__
+*.pyc
+*.pyo
+*.pyd
+
+# Ignore log and instant files
+*.log
+*.tmp
+
+
+# Ignore IDE editor configuration directory
+.vscode
+*.sublime-project
+*.sublime-workspace
+
+# Ignore Docker build and deployment files
+docker-compose.yml
+Dockerfile
+.dockerignore
+
+#gitignore
+.gitignore
+
+#note
+aws_command.txt
+database_structure.sql
+
+#README
+README.md
+
+sql_command.sql
+#python
+try.py
+note.py
+
+# Ignore GIF file
+/gif/
+.gif
+
+# Ignore lambda directory
+lambda_function/
+lambda_layer/
+
+# Ignore Database related
+*.sqlite3
+*.db
