@@ -69,7 +69,7 @@ def crawl_news():
 
     # insert news in mongodb
     try:
-        insert_data_mongodb(db_all_news, insert_db="news_data", insert_collection="headline_news", source="anue")
+        insert_data_mongodb(db_all_news, insert_db="stock_insight", insert_collection="news", source="anue")
     except Exception as e:
         error_message = f"insert_data_mongodb() module fail: {e}"
         log_error(log_type=LogType.CRAWLER_ERROR, error_message=error_message, source="crawler_anue/headline_news")
@@ -79,14 +79,14 @@ def lambda_handler(event, context):
     try:
         crawl_news()
         success_message = "Anue鉅亨網爬蟲執行成功"
-        print(success_message)# <=== 加這一行，讓 CloudWatch Log 有記錄
+        print(success_message)
         return {
             "statusCode": 200,
             "body": "爬蟲執行成功"
         }
     except Exception as e:
-        error_message = "Anue鉅亨網爬蟲執行失敗"
-        print(error_message)# <=== 加這一行，讓 CloudWatch Log 有記錄
+        error_message = f"Anue鉅亨網爬蟲執行失敗: {e}"
+        print(error_message)
         return {
             "statusCode": 500,
             "body": f"爬蟲執行失敗: {str(e)}"
