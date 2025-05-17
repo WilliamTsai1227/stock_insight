@@ -265,8 +265,8 @@ def analyze_news(news_text: str) -> str:
                 
                 insert_data_mongodb(
                     ai_summary, 
-                    insert_db="AI_news_analysis", 
-                    insert_collection="headlines_daily", 
+                    insert_db="stock_insight", 
+                    insert_collection="AI_news_analysis", 
                     log_success_collection="AI_headline_news_success",
                     log_error_collection="AI_headline_news_error",
                     source=source
@@ -397,8 +397,8 @@ def analyze_news(news_text: str) -> str:
             # Store each AI analysis summary in the database
             insert_data_mongodb(
                 db_final_ai_summary, 
-                insert_db="AI_news_analysis", 
-                insert_collection="headlines_daily",
+                insert_db="stock_insight", 
+                insert_collection="AI_news_analysis",
                 log_success_collection="AI_headline_news_success",
                 log_error_collection="AI_headline_news_error", 
                 source=source
