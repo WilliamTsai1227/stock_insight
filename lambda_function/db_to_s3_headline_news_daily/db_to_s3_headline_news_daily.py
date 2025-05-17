@@ -1,4 +1,4 @@
-from lambda_layer.db_data_utils.fetch_data import get_news
+from local_module.fetch_data import get_news
 from lambda_layer.log_utils.logger import log_error,log_success
 import boto3
 import json
@@ -48,19 +48,22 @@ def get_next_write_key(bucket_name):
 def normalize_news(news_list: list[dict]) -> pd.DataFrame:
     df = pd.json_normalize(news_list)
     df["_id"] = df["_id"].astype(str)
-    df.drop(columns=["news_id", "type","url"], inplace=True) #把原始新聞URL先移除，點擊跳轉到我的網站新聞頁面再顯示原始url
+    df.drop(columns=["news_id","type","url","category","summary","keyword","stock","market"], inplace=True) #清除AI新聞分析不必要的欄位，僅留title/content/publishAt/source
     return df
 
 def news_to_json_and_upload(news_list: list[dict], bucket: str = None, key: str = None):
-    df = normalize_news(news_list)
-    # 將 DataFrame 轉為 JSON Lines 格式 (每行一筆 JSON)
-    json_lines = df.to_dict(orient="records")
-    json_str = "\n".join(json.dumps(line, ensure_ascii=False) for line in json_lines)
-    
-    buffer = io.BytesIO(json_str.encode("utf-8"))
+    try:
+        df = normalize_news(news_list)
+        json_lines = df.to_dict(orient="records")# 將 DataFrame 轉為 JSON Lines 格式 (每行一筆 JSON)
+        json_str = "\n".join(json.dumps(line, ensure_ascii=False) for line in json_lines)
+        
+        buffer = io.BytesIO(json_str.encode("utf-8"))
 
-    s3 = get_s3_client()
-    s3.upload_fileobj(buffer, bucket, key)
+        s3 = get_s3_client()
+        s3.upload_fileobj(buffer, bucket, key)
+        return {"ok":True}
+    except Exception as e:
+        return {"ok":False,"error_message":f"{e}"}
 
 
 def lambda_handler(event, context):
@@ -70,17 +73,44 @@ def lambda_handler(event, context):
 
         start_ts = int(start_time.timestamp())
         end_ts = int(end_time.timestamp())
-        news = get_news(start_ts, end_ts, db_name="news_data", collection_name="headline_news")
+        news = get_news(start_ts, end_ts, db_name="stock_insight", collection_name="news")
 
         key = get_next_write_key("stock-insight-news-datalake")
-        news_to_json_and_upload(news, bucket="stock-insight-news-datalake", key=key)
-        successful_message = f"共取得 {len(news)} 筆新聞資料，已上傳至 S3：{key}"
-        result = {
-            "statusCode": 200,
-            "body": successful_message
-        }
-        log_success("db_to_s3_success","daily",successful_message,source="lambda_function/db_to_s3_headline_news_daily.py")
-        return result
+        upload_result = news_to_json_and_upload(news, bucket="stock-insight-news-datalake", key=key)
+        if upload_result.get("ok",None) == True :
+            successful_message = f"共取得 {len(news)} 筆新聞資料，已上傳至 S3：{key}"
+            result = {
+                "statusCode": 200,
+                "body": successful_message
+            }
+            log_success("db_to_s3_success","daily",successful_message,source="lambda_function/db_to_s3_headline_news_daily.py")
+            return result
+        elif upload_result.get("ok",None) == False:
+            try:
+                error_message = upload_result.get("error_message",None)
+                log_error("db_to_s3_error","daily",error_message,source="lambda_function/db_to_s3_headline_news_daily.py")
+                result = {
+                    "statusCode": 500,
+                    "body": error_message
+                }
+                return result
+            except Exception as e:
+                error_message = f"db to s3 daily error:{e}"
+                log_error("db_to_s3_error","daily",error_message,source="lambda_function/db_to_s3_headline_news_daily.py")
+                result = {
+                    "statusCode": 500,
+                    "body": error_message
+                }
+                return result
+        elif upload_result.get("ok",None) == None:
+            error_message = f"db to s3 daily error: news_to_json_and_upload() empty return"
+            log_error("db_to_s3_error","daily",error_message,source="lambda_function/db_to_s3_headline_news_daily.py")
+            result = {
+                "statusCode": 500,
+                "body": error_message
+            }
+            return result
+        
     except Exception as e:
         error_message = f"db to s3 daily error:{e}"
         log_error("db_to_s3_error","daily",error_message,source="lambda_function/db_to_s3_headline_news_daily.py")

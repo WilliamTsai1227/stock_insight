@@ -5,7 +5,7 @@ import time
 
 # 這個是放在本身 function 裡的 Tidy
 # from local_module.tidy_data import Tidy
-from crawler_anue.local_module.tidy_data import Tidy
+from local_module.tidy_data import Tidy
 
 # 這個是放在 Lambda Layer 裡的共用 insert_data / logger
 from crawler_module.insert_data import insert_data_mongodb

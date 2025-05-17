@@ -111,7 +111,7 @@ def load_local_news_from_s3(bucket_name, key):
             source = "lambda_function/AI_headline_news_analysisy.py/load_local_news_from_s3()"
             log_error(log_collection=log_collection,log_type=log_type,error_message=error_message,source=source)
             continue
-    return "\n".join(news_entries) #會回傳一個多段中間都空兩行的字串，每一段都會是f"標題：{title}\nID:{id}\n內文：{content}"
+    return "\n".join(news_entries) #會回傳一個多段中間只有換行的字串，每一段都會是f"標題：{title}\nID:{id}\n內文：{content}"
 
 
 

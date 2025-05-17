@@ -17,7 +17,7 @@ def get_news(start_time, end_time, db_name, collection_name):
         "publishAt": {
             "$gte": start_time,
             "$lt": end_time
-        }
+        },
+        "category": "headline"
     }
-
     return list(collection.find(query))
