@@ -17,39 +17,48 @@ collection = db["AI_news_analysis"]
 
 
 
-router = APIRouter
+router = APIRouter()
+
 
 @router.get("/api/ai_news")
 async def get_ai_news(
     keyword: Optional[str] = None,
     industry: Optional[str] = None,
     is_summary: Optional[bool] = None,
-    start_time: Optional[str] = None,
-    end_time: Optional[str] = None,
+    start_time: Optional[int] = None,
+    end_time: Optional[int] = None,
     page: int = 1
 ):
     limit = 10
     skip = (page - 1) * limit
 
-    # 組成查詢條件
+    # 組查詢條件
     query = {}
 
     if keyword:
-        query["content"] = {"$regex": keyword, "$options": "i"}  # 模糊搜尋
+        query["summary"] = {"$regex": keyword, "$options": "i"}  # 模糊搜尋 summary 欄位
+
     if industry:
-        query["industry"] = industry
+        query["industry_list"] = {"$in": [industry]}
+
     if is_summary is not None:
         query["is_summary"] = is_summary
-    if start_time and end_time:
-        query["created_at"] = {
+
+    if start_time is not None and end_time is not None:
+        query["publishAt"] = {
             "$gte": start_time,
             "$lte": end_time
         }
 
-    # 查詢資料
-    results = list(collection.find(query).skip(skip).limit(limit))
+    # 查詢 + 排序 + 分頁
+    results = list(
+        collection.find(query)
+        .sort("publishAt", -1)
+        .skip(skip)
+        .limit(limit)
+    )
 
-    # 將 MongoDB ObjectId 轉成字串
+    # 處理 ObjectId
     for r in results:
         r["_id"] = str(r["_id"])
 
