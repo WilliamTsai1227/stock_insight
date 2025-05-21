@@ -392,7 +392,8 @@ def analyze_news(news_text: str) -> str:
                 "sentiment":sentiment,
                 "potential_stocks_and_industries":potential_stocks_and_industries,
                 "stock_list":stock_list,
-                "industry_list":industry_list
+                "industry_list":industry_list,
+                "source_news":[]
                 }
             # Store each AI analysis summary in the database
             insert_data_mongodb(
