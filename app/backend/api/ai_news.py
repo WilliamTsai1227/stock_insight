@@ -29,17 +29,23 @@ async def get_ai_news(
     end_time: Optional[int] = None,
     page: int = 1
 ):
-    limit = 10
+    limit = 15
     skip = (page - 1) * limit
 
     # 組查詢條件
     query = {}
 
     if keyword:
-        query["summary"] = {"$regex": keyword, "$options": "i"}  # 模糊搜尋 summary 欄位
-
+        query["$or"] = [
+            {"summary": {"$regex": keyword, "$options": "i"}},
+            {"important_news": {"$regex": keyword, "$options": "i"}},
+            {"potential_stocks_and_industries": {"$regex": keyword, "$options": "i"}},
+            {"source_news.title": {"$regex": keyword, "$options": "i"}}
+        ]
     if industry:
-        query["industry_list"] = {"$in": [industry]}
+        query["industry_list"] = {
+            "$elemMatch": {"$regex": industry, "$options": "i"}
+        }
 
     if is_summary is not None:
         query["is_summary"] = is_summary

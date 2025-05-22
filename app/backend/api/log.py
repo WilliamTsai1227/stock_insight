@@ -3,7 +3,7 @@ from module.connection_pool import get_log_data_db
 from datetime import datetime, timedelta
 
 
-router = APIRouter
+router = APIRouter()
 
 @router.get("/api/log/ai_headline_news_error")
 def get_ai_headline_news_error(
