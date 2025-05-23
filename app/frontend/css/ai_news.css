@@ -29,7 +29,11 @@ body {
     flex-direction: column;
     gap: 10px;
 }
-.list-item {
+.stock-list-item {
+    font-family: Noto Sans TC;
+    font-size: 18px;
+    color: #110f0fb5;
+    font-weight: 480;
     background-color: #f0f0f0;
     padding: 10px;
     border-radius: 5px;
@@ -37,7 +41,22 @@ body {
     transition: background-color 0.2s;
     position: relative;
 }
-.list-item:hover {
+.stock-list-item:hover {
+    background-color: #e0e0e0;
+}
+.industry-list-item {
+    font-family: Noto Sans TC;
+    font-size: 18px;
+    color: #110f0fb5;
+    font-weight: 480;
+    background-color: #f0f0f0;
+    padding: 10px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.2s;
+    position: relative;
+}
+.industry-list-item:hover {
     background-color: #e0e0e0;
 }
 .news-item {
@@ -46,6 +65,10 @@ body {
     border-radius: 5px;
     margin-bottom: 10px;
     position: relative;
+    cursor: pointer;
+}
+.news-item:hover {
+    background-color: #e0e0e0;
 }
 .news-section {
     overflow-y: auto;
@@ -91,4 +114,70 @@ body {
 }
 .news-item span {
     display: none;
+}
+.news-summary{
+    flex: none;
+    font-size: 20px;
+    color: #448899;
+    font-family: Noto Sans TC;
+    font-weight: 700;
+    text-align: left;
+    margin-bottom: 10px;
+    
+}
+.news-summary-content{
+    flex: none;
+    font-size: 18px;
+    color: grey;
+    font-family: Noto Sans TC;
+    font-weight: 700;
+    text-align: left;
+    margin-bottom: 10px;
+
+}
+.key-news{
+    flex: none;
+    font-size: 20px;
+    color: #448899;
+    font-family: Noto Sans TC;
+    font-weight: 700;
+    text-align: left;
+    margin-bottom: 10px;
+}
+.key-news-content{
+    flex: none;
+    font-size: 18px;
+    color: grey;
+    font-family: Noto Sans TC;
+    font-weight: 700;
+    text-align: left;
+    margin-bottom: 10px;
+}
+.sentiment-analysis{
+    flex: none;
+    font-size: 20px;
+    color: #448899;
+    font-family: Noto Sans TC;
+    font-weight: 700;
+    text-align: left;
+    margin-bottom: 10px;
+}
+.sentiment-analysis-content{
+    flex: none;
+    font-size: 18px;
+    color: grey;
+    font-family: Noto Sans TC;
+    font-weight: 700;
+    text-align: left;
+    margin-bottom: 10px;
+}
+.section-title{
+    flex: none;
+    font-size: 22px;
+    color: #0a0202d1;
+    font-family: Noto Sans TC;
+    font-weight: 900;
+    text-align: left;
+    margin-bottom: 10px;
+    margin-top: 10px;
 }

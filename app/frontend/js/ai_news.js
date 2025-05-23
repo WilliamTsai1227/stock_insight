@@ -68,7 +68,125 @@ document.addEventListener("DOMContentLoaded", async () => {
             const block = document.createElement("div");
             block.className = "block";
 
-            // --- 1. source_news - news items ---
+            // --- 1. Stock List Section ---
+            const listSection = document.createElement("div");
+            listSection.className = "section list-section";
+
+            const stockListBigTitle = document.createElement("div");
+            stockListBigTitle.textContent = "潛力股票";
+            stockListBigTitle.className = "section-title";
+            listSection.appendChild(stockListBigTitle);
+
+            item.stock_list.forEach(stock => {
+                const div = document.createElement("div");
+                div.className = "stock-list-item";
+                div.textContent = stock[2];
+                listSection.appendChild(div);
+            });
+
+            const industryListBigTitle = document.createElement("div");
+            industryListBigTitle.textContent = "潛力產業";
+            industryListBigTitle.className = "section-title";
+            listSection.appendChild(industryListBigTitle);
+
+            item.industry_list.forEach(ind => {
+                const div = document.createElement("div");
+                div.className = "industry-list-item";
+                div.textContent = ind;
+                listSection.appendChild(div);
+            });
+
+            block.appendChild(listSection);
+
+            // --- 2. Potential Stocks and Industries ---
+            const potentialSection = document.createElement("div");
+            potentialSection.className = "section potential-stocks";
+
+            const potentialBigTitle = document.createElement("div");
+            potentialBigTitle.textContent = "股票＆產業分析";
+            potentialBigTitle.className = "section-title";
+            potentialSection.appendChild(potentialBigTitle);
+
+            const p = document.createElement("p");
+            p.textContent = item.potential_stocks_and_industries;
+            potentialSection.appendChild(p);
+
+            const arrowPotential = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+            arrowPotential.classList.add("arrow-left");
+            arrowPotential.setAttribute("viewBox", "0 0 20 20");
+
+            const polygonPotential = document.createElementNS("http://www.w3.org/2000/svg", "polygon");
+            polygonPotential.setAttribute("points", "15,5 5,10 15,15");
+            polygonPotential.setAttribute("fill", "#000");
+
+            arrowPotential.appendChild(polygonPotential);
+            potentialSection.appendChild(arrowPotential);
+
+            block.appendChild(potentialSection);
+
+
+            // --- 3. AI Summary Section ---
+            const aiSection = document.createElement("div");
+            aiSection.className = "section ai-summary";
+
+            const aiBigTitle = document.createElement("div");
+            aiBigTitle.textContent = "AI 重點整理";
+            aiBigTitle.className = "section-title";
+            aiSection.appendChild(aiBigTitle);
+
+            const aiSectionDiv = document.createElement("div"); 
+
+            const summaryTitle = document.createElement("div");
+            summaryTitle.textContent = "新聞重點: ";
+            summaryTitle.className = "news-summary";
+            const summaryContent = document.createElement("div");
+            summaryContent.textContent = item.summary;
+            summaryContent.className = "news-summary-content";
+            aiSectionDiv.appendChild(summaryTitle);
+            aiSectionDiv.appendChild(summaryContent);
+            
+            const keyNewsTitle = document.createElement("div");
+            keyNewsTitle.textContent = "重點新聞: ";
+            keyNewsTitle.className = "key-news";
+            const keyNewsContent = document.createElement("div");
+            keyNewsContent.textContent = item.important_news;
+            keyNewsContent.className = "key-news-content";
+            aiSectionDiv.appendChild(keyNewsTitle);
+            aiSectionDiv.appendChild(keyNewsContent);
+
+            const sentimentTitle = document.createElement("div");
+            sentimentTitle.textContent = "情緒分析: " ;
+            sentimentTitle.className = "sentiment-analysis";
+            const sentimentContent = document.createElement("div");
+            sentimentContent.textContent = item.sentiment;
+            sentimentContent.className = "sentiment-analysis-content";
+            aiSectionDiv.appendChild(sentimentTitle);
+            aiSectionDiv.appendChild(sentimentContent);
+
+            aiSection.appendChild(aiSectionDiv);
+
+            const arrowAI = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+            arrowAI.classList.add("arrow-left");
+            arrowAI.setAttribute("viewBox", "0 0 20 20");
+
+            const polygonAI = document.createElementNS("http://www.w3.org/2000/svg", "polygon");
+            polygonAI.setAttribute("points", "15,5 5,10 15,15");
+            polygonAI.setAttribute("fill", "#000");
+
+            arrowAI.appendChild(polygonAI);
+            aiSection.appendChild(arrowAI);
+
+            block.appendChild(aiSection);
+
+
+            // --- 4. source_news - news items ---
+            const newsSection = document.createElement("div");
+            newsSection.className = "section news-section";
+            const newsBigTitle = document.createElement("div");
+            newsBigTitle.textContent = "News";
+            newsBigTitle.className = "section-title"
+            newsSection.appendChild(newsBigTitle);
+
             item.source_news.forEach(news => {
                 const newsDiv = document.createElement("div");
                 newsDiv.className = "news-item";
@@ -91,99 +209,9 @@ document.addEventListener("DOMContentLoaded", async () => {
 
                 arrow.appendChild(polygon);
                 newsDiv.appendChild(arrow);
-
-                block.appendChild(newsDiv);
+                newsSection.appendChild(newsDiv);
+                block.appendChild(newsSection);
             });
-
-            // --- 2. AI Summary Section ---
-            const aiSection = document.createElement("div");
-            aiSection.className = "section ai-summary";
-
-            const h3AI = document.createElement("h3");
-            h3AI.textContent = "AI Summary";
-            aiSection.appendChild(h3AI);
-
-            const ol = document.createElement("ol");
-
-            const li1 = document.createElement("li");
-            li1.textContent = "News Summary: " + item.summary;
-            ol.appendChild(li1);
-
-            const li2 = document.createElement("li");
-            li2.textContent = "Key News Highlights: " + item.important_news;
-            ol.appendChild(li2);
-
-            const li3 = document.createElement("li");
-            li3.textContent = "Sentiment Analysis: " + item.sentiment;
-            ol.appendChild(li3);
-
-            aiSection.appendChild(ol);
-
-            const arrowAI = document.createElementNS("http://www.w3.org/2000/svg", "svg");
-            arrowAI.classList.add("arrow-left");
-            arrowAI.setAttribute("viewBox", "0 0 20 20");
-
-            const polygonAI = document.createElementNS("http://www.w3.org/2000/svg", "polygon");
-            polygonAI.setAttribute("points", "15,5 5,10 15,15");
-            polygonAI.setAttribute("fill", "#000");
-
-            arrowAI.appendChild(polygonAI);
-            aiSection.appendChild(arrowAI);
-
-            block.appendChild(aiSection);
-
-            // --- 3. Potential Stocks and Industries ---
-            const potentialSection = document.createElement("div");
-            potentialSection.className = "section potential-stocks";
-
-            const h3Potential = document.createElement("h3");
-            h3Potential.textContent = "Potential Stocks and Industry Details";
-            potentialSection.appendChild(h3Potential);
-
-            const p = document.createElement("p");
-            p.textContent = item.potential_stocks_and_industries;
-            potentialSection.appendChild(p);
-
-            const arrowPotential = document.createElementNS("http://www.w3.org/2000/svg", "svg");
-            arrowPotential.classList.add("arrow-left");
-            arrowPotential.setAttribute("viewBox", "0 0 20 20");
-
-            const polygonPotential = document.createElementNS("http://www.w3.org/2000/svg", "polygon");
-            polygonPotential.setAttribute("points", "15,5 5,10 15,15");
-            polygonPotential.setAttribute("fill", "#000");
-
-            arrowPotential.appendChild(polygonPotential);
-            potentialSection.appendChild(arrowPotential);
-
-            block.appendChild(potentialSection);
-
-            // --- 4. List Section ---
-            const listSection = document.createElement("div");
-            listSection.className = "section list-section";
-
-            const h3Stock = document.createElement("h3");
-            h3Stock.textContent = "Stock List";
-            listSection.appendChild(h3Stock);
-
-            item.stock_list.forEach(stock => {
-                const div = document.createElement("div");
-                div.className = "list-item";
-                div.textContent = stock;
-                listSection.appendChild(div);
-            });
-
-            const h3Industry = document.createElement("h3");
-            h3Industry.textContent = "Industry List";
-            listSection.appendChild(h3Industry);
-
-            item.industry_list.forEach(ind => {
-                const div = document.createElement("div");
-                div.className = "list-item";
-                div.textContent = ind;
-                listSection.appendChild(div);
-            });
-
-            block.appendChild(listSection);
 
             // 將整個 block 加入 container
             container.appendChild(block);
@@ -199,9 +227,6 @@ document.addEventListener("DOMContentLoaded", async () => {
 
 
 async function excute(){
-    scrollingAddAttractions();
-    search();
-    monitorMrtClick();
-    monitorAttractionClicks();
+
 }
 excute();
