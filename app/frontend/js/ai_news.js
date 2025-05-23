@@ -17,6 +17,23 @@ async function loadAllAIAnalysis(){
             const block = document.createElement("div");
             block.className = "block";
 
+            //Establish a creation time block
+            const publishAtDiv = document.createElement("div");
+            publishAtDiv.className = "publishAtDiv";
+            const timestamp = item.publishAt; // Unix timestamp（以秒為單位）
+            const date = new Date(timestamp * 1000); // 轉成毫秒
+
+            const taiwanTime = date.toLocaleString("zh-TW", {
+            timeZone: "Asia/Taipei",
+            });
+            publishAtDiv.textContent = taiwanTime;
+            block.appendChild(publishAtDiv);
+
+            // --- 包裹後面四個區塊的容器 ---
+            const blockContent = document.createElement("div");
+            blockContent.className = "block-content";
+
+
             // --- 1. Stock List Section ---
             const listSection = document.createElement("div");
             listSection.className = "section list-section";
@@ -55,7 +72,7 @@ async function loadAllAIAnalysis(){
                 listSection.appendChild(div);
             });
 
-            block.appendChild(listSection);
+            blockContent.appendChild(listSection);
 
             // --- 2. Potential Stocks and Industries ---
             const potentialSection = document.createElement("div");
@@ -84,15 +101,16 @@ async function loadAllAIAnalysis(){
             const arrowPotential = document.createElementNS("http://www.w3.org/2000/svg", "svg");
             arrowPotential.classList.add("arrow-left");
             arrowPotential.setAttribute("viewBox", "0 0 20 20");
+            
 
             const polygonPotential = document.createElementNS("http://www.w3.org/2000/svg", "polygon");
-            polygonPotential.setAttribute("points", "15,5 5,10 15,15");
+            polygonPotential.setAttribute("points", "19,9 9,14 19,19");
             polygonPotential.setAttribute("fill", "#000");
 
             arrowPotential.appendChild(polygonPotential);
             potentialSection.appendChild(arrowPotential);
 
-            block.appendChild(potentialSection);
+            blockContent.appendChild(potentialSection);
 
 
             // --- 3. AI Summary Section ---
@@ -149,13 +167,13 @@ async function loadAllAIAnalysis(){
             arrowAI.setAttribute("viewBox", "0 0 20 20");
 
             const polygonAI = document.createElementNS("http://www.w3.org/2000/svg", "polygon");
-            polygonAI.setAttribute("points", "15,5 5,10 15,15");
+            polygonAI.setAttribute("points", "18,8 8,13 18,18");
             polygonAI.setAttribute("fill", "#000");
 
             arrowAI.appendChild(polygonAI);
             aiSection.appendChild(arrowAI);
 
-            block.appendChild(aiSection);
+            blockContent.appendChild(aiSection);
 
 
             // --- 4. source_news - news items ---
@@ -183,15 +201,15 @@ async function loadAllAIAnalysis(){
                 arrow.setAttribute("viewBox", "0 0 20 20");
 
                 const polygon = document.createElementNS("http://www.w3.org/2000/svg", "polygon");
-                polygon.setAttribute("points", "15,5 5,10 15,15");
+                polygon.setAttribute("points", "18,8 8,13 18,18");
                 polygon.setAttribute("fill", "#000");
 
                 arrow.appendChild(polygon);
                 newsDiv.appendChild(arrow);
                 newsSection.appendChild(newsDiv);
-                block.appendChild(newsSection);
+                blockContent.appendChild(newsSection);
             });
-
+            block.appendChild(blockContent);
             // 將整個 block 加入 container
             container.appendChild(block);
         });
