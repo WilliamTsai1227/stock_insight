@@ -44,6 +44,44 @@ body {
 .stock-list-item:hover {
     background-color: #e0e0e0;
 }
+.stock-tooltip {
+    display: none;
+    position: absolute;
+    top: 50%;          /* 垂直置中 */
+    left: 100%;        /* 從右邊開始 */
+    transform: translateY(-50%) translateX(12px); /* 稍微右移一點並垂直置中 */
+    width: 160px;
+    height: 30px;
+    background-color: rgba(6, 28, 168, 0.68); /* 淺白色＋透明 */
+    color: #eaeeee; /* 深灰色文字 */
+    font-size: 13px;
+    padding: 5px 10px;
+    border-radius: 4px;
+    z-index: 999;
+    white-space: nowrap;
+    text-align: center;
+    line-height: 20px;
+}
+.stock-tooltip::after {
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: -12px; /* 箭頭出現在 tooltip 左邊 */
+    transform: translateY(-50%);
+    border-width: 6px;
+    border-style: solid;
+    border-color: transparent rgba(6, 28, 168, 0.68) transparent transparent;
+}
+
+/* 滑入整個 stock-list-item 時顯示 tooltip */
+.stock-list-item:hover .stock-tooltip {
+    display: block;
+}
+
+/* 隱藏代碼本體 */
+.stock-list-item-code {
+    display: none;
+}
 .industry-list-item {
     font-family: Noto Sans TC;
     font-size: 18px;
@@ -60,6 +98,10 @@ body {
     background-color: #e0e0e0;
 }
 .news-item {
+    font-family: Noto Sans TC;
+    font-size: 16px;
+    color: #110f0fb5;
+    font-weight: 450;
     background-color: #f0f0f0;
     padding: 10px;
     border-radius: 5px;
@@ -180,4 +222,17 @@ body {
     text-align: left;
     margin-bottom: 10px;
     margin-top: 10px;
+}
+
+.news-item-id{
+    display: none;
+}
+.potential-content{
+    flex: none;
+    font-size: 18px;
+    color: #110f0fb5;
+    font-family: Noto Sans TC;
+    font-weight: 700;
+    text-align: left;
+    margin-bottom: 10px;    
 }

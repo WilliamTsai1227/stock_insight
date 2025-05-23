@@ -44,8 +44,8 @@ function monitorMrtClick(){
     })    
 }
 
-function monitorAttractionClicks(){
-    let listItems = document.querySelectorAll(".attraction_content");
+function monitorStockClicks(){
+    let listItems = document.querySelectorAll(".stock-list-item");
     let id = 0;
     listItems.forEach(item => {
         item.addEventListener("click", () =>{
@@ -55,8 +55,7 @@ function monitorAttractionClicks(){
     })
 }
 
-
-document.addEventListener("DOMContentLoaded", async () => {
+async function loadAllAIAnalysis(){
     try {
         const response = await fetch("http://0.0.0.0:8000/api/ai_news");
         const result = await response.json();
@@ -81,6 +80,16 @@ document.addEventListener("DOMContentLoaded", async () => {
                 const div = document.createElement("div");
                 div.className = "stock-list-item";
                 div.textContent = stock[2];
+                const span = document.createElement("span");
+                span.className = "stock-list-item-code";
+                const firstTwo = stock.slice(0, 2); // 取第 0 和第 1 個元素
+                span.textContent = firstTwo.join(",");  // 例如："2330,TSMC"
+                div.appendChild(span);
+                const [market, number] = firstTwo;
+                const tooltip = document.createElement('div');
+                tooltip.className = 'stock-tooltip';
+                tooltip.textContent = `股票代碼：${market} ${number}`;
+                div.appendChild(tooltip);
                 listSection.appendChild(div);
             });
 
@@ -107,9 +116,20 @@ document.addEventListener("DOMContentLoaded", async () => {
             potentialBigTitle.className = "section-title";
             potentialSection.appendChild(potentialBigTitle);
 
-            const p = document.createElement("p");
-            p.textContent = item.potential_stocks_and_industries;
-            potentialSection.appendChild(p);
+            const potentialContentDiv= document.createElement("div");
+            potentialContentDiv.className = "potential-content";
+                        
+            const lines = item.potential_stocks_and_industries.split('\n');// 使用 \n 拆分文字
+
+            // 每一行都創建文字節點和 <br>
+            lines.forEach((line, index) => {
+                potentialContentDiv.appendChild(document.createTextNode(line));
+                if (index < lines.length - 1) {
+                    potentialContentDiv.appendChild(document.createElement("br"));
+                    potentialContentDiv.appendChild(document.createElement("br"));
+                }
+            });
+            potentialSection.appendChild(potentialContentDiv);
 
             const arrowPotential = document.createElementNS("http://www.w3.org/2000/svg", "svg");
             arrowPotential.classList.add("arrow-left");
@@ -149,8 +169,17 @@ document.addEventListener("DOMContentLoaded", async () => {
             keyNewsTitle.textContent = "重點新聞: ";
             keyNewsTitle.className = "key-news";
             const keyNewsContent = document.createElement("div");
-            keyNewsContent.textContent = item.important_news;
             keyNewsContent.className = "key-news-content";
+            const importantNewsLines = item.important_news.split('\n');// 使用 \n 拆分文字
+
+            // 每一行都創建文字節點和 <br>
+            lines.forEach((importantNewsLines, index) => {
+                keyNewsContent.appendChild(document.createTextNode(importantNewsLines));
+                if (index < lines.length - 1) {
+                    keyNewsContent.appendChild(document.createElement("br"));
+                    keyNewsContent.appendChild(document.createElement("br"));
+                }
+            });
             aiSectionDiv.appendChild(keyNewsTitle);
             aiSectionDiv.appendChild(keyNewsContent);
 
@@ -183,7 +212,7 @@ document.addEventListener("DOMContentLoaded", async () => {
             const newsSection = document.createElement("div");
             newsSection.className = "section news-section";
             const newsBigTitle = document.createElement("div");
-            newsBigTitle.textContent = "News";
+            newsBigTitle.textContent = "原始新聞";
             newsBigTitle.className = "section-title"
             newsSection.appendChild(newsBigTitle);
 
@@ -195,7 +224,7 @@ document.addEventListener("DOMContentLoaded", async () => {
                 // hidden _id span
                 const idSpan = document.createElement("span");
                 idSpan.textContent = item._id;
-                idSpan.style.display = "none";
+                idSpan.className = "news-item-id";
                 newsDiv.appendChild(idSpan);
 
                 // arrow
@@ -219,7 +248,8 @@ document.addEventListener("DOMContentLoaded", async () => {
     } catch (error) {
         console.error("Error fetching AI news:", error);
     }
-});
+}
+
 
 
 
@@ -227,6 +257,6 @@ document.addEventListener("DOMContentLoaded", async () => {
 
 
 async function excute(){
-
+    loadAllAIAnalysis();
 }
 excute();
