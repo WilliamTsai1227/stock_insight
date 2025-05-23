@@ -1,64 +1,14 @@
-function scrollingAddAttractions(){
-    let footer = document.querySelector(".footer");
-    window.addEventListener("scroll", function () {
-      const { bottom } = footer.getBoundingClientRect();
-      const windowHeight = window.innerHeight || document.documentElement.clientHeight;
-      if (bottom <= windowHeight) {
-        if (page != null){
-            fetchAttractions();
-        }
-      }
-    });
-}
 
 
-function search(){
-    let button = document.querySelector(".hero_section_search_icon");
-    let input = document.querySelector(".hero_section_search input");
-    let attractions = document.querySelector(".attractions");
-    button.addEventListener("click",async () => {
-        page = 0;
-        keyword = input.value;
-        while(attractions.firstChild){
-            attractions.removeChild(attractions.firstChild);
-        }
-        await fetchAttractions();
-    })
-}
-
-function monitorMrtClick(){
-    let listItems = document.querySelectorAll(".list_item");
-    let input = document.querySelector(".hero_section_search input");
-    let attractions = document.querySelector(".attractions");
-    listItems.forEach(item => {
-        item.addEventListener("click",() => {
-            let searchInput = item.textContent;
-            input.value = searchInput;
-            page = 0;
-            keyword = input.value;
-            while(attractions.firstChild){
-                attractions.removeChild(attractions.firstChild);
-            }
-            fetchAttractions();
-        })
-    })    
-}
-
-function monitorStockClicks(){
-    let listItems = document.querySelectorAll(".stock-list-item");
-    let id = 0;
-    listItems.forEach(item => {
-        item.addEventListener("click", () =>{
-            id = item.querySelector(".attraction_id").textContent;
-            window.location.href = `https://taipeitrips.com/attraction/${id}`;
-        })
-    })
-}
-
+let page = 1;
+let isLoading = false; // Create a label to indicate whether data is loading
 async function loadAllAIAnalysis(){
     try {
-        const response = await fetch("http://0.0.0.0:8000/api/ai_news");
+        if (isLoading) return; // If data is being loaded, the load operation is not triggered
+        isLoading = true; // Start loading data, set isLoading to true
+        const response = await fetch(`http://0.0.0.0:8000/api/ai_news?is_summary=false&page=${page}`);
         const result = await response.json();
+        page = result.nextPage;
         const dataList = result.data;
 
         const container = document.querySelector(".container");
@@ -245,12 +195,36 @@ async function loadAllAIAnalysis(){
             // 將整個 block 加入 container
             container.appendChild(block);
         });
+        isLoading = false; // Data loading is complete, set isLoading to false
     } catch (error) {
         console.error("Error fetching AI news:", error);
+        isLoading = false; // Data loading error, set isLoading to false
     }
 }
 
+function scrollingAddAIAnalysis(){
+    let footer = document.querySelector(".footer");
+    window.addEventListener("scroll", function () {
+      const { bottom } = footer.getBoundingClientRect();
+      const windowHeight = window.innerHeight || document.documentElement.clientHeight;
+      if (bottom <= windowHeight) {
+        if (page != null){
+            loadAllAIAnalysis();
+        }
+      }
+    });
+}
 
+function monitorStockClicks(){
+    let listItems = document.querySelectorAll(".stock-list-item");
+    let id = 0;
+    listItems.forEach(item => {
+        item.addEventListener("click", () =>{
+            id = item.querySelector(".attraction_id").textContent;
+            window.location.href = `https://taipeitrips.com/attraction/${id}`;
+        })
+    })
+}
 
 
 
@@ -258,5 +232,6 @@ async function loadAllAIAnalysis(){
 
 async function excute(){
     loadAllAIAnalysis();
+    scrollingAddAIAnalysis();
 }
 excute();

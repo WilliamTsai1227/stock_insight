@@ -68,4 +68,4 @@ async def get_ai_news(
     for r in results:
         r["_id"] = str(r["_id"])
 
-    return JSONResponse(content={"page": page, "data": results})
+    return JSONResponse(content={"nextPage":page+1,"page": page, "data": results})
