@@ -12,6 +12,7 @@ async function loadAllAIAnalysis(){
     try {
         if (isLoading) return; // If data is being loaded, the load operation is not triggered
         isLoading = true; // Start loading data, set isLoading to true
+        console.log(`fetch startTime:${startTime}, endTime: ${endTime}`)
         const response = await fetch(`http://0.0.0.0:8000/api/ai_news?keyword=${keyword}&industry=${industry}&is_summary=${is_summary}&startTime=${startTime}&endTime=${endTime}&page=${page}`);
         const result = await response.json();
         page = result.nextPage;
@@ -243,7 +244,21 @@ function search(){
     let button = document.querySelector(".search_icon");
     let input = document.querySelector(".search-bar");
     let container = document.querySelector(".container");
+
+
     button.addEventListener("click",async () => {
+        const startDateInput = document.querySelector('.start-time-calendar');
+        const startDateValue = startDateInput.value; // 格式是 "YYYY-MM-DD"
+        const endDateInput = document.querySelector('.end-time-calendar');
+        const endDateValue = endDateInput.value; // 格式是 "YYYY-MM-DD"
+        if (startDateValue !== "") {
+            startTime = Math.floor(new Date(startDateValue).getTime() / 1000);
+        }
+        
+        if (endDateValue !== "") {
+            endTime = Math.floor(new Date(endDateValue).getTime() / 1000);
+        }
+        console.log(startTime,endTime)
         page = 1;
         keyword = input.value;
         while(container.firstChild){

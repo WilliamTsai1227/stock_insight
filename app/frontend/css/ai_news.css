@@ -111,13 +111,18 @@ body {
     padding-left: 10px;
 
 }
-.calendar {
+.start-time-calendar {
     border: 1px solid #ddd;
     border-radius: 5px;
     margin-left: 10px;
     height: 42px;
 }
-
+.end-time-calendar {
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    margin-left: 10px;
+    height: 42px;
+}
 .container {
     display: flex;
     flex-direction: column;
