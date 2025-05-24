@@ -2,11 +2,17 @@
 
 let page = 1;
 let isLoading = false; // Create a label to indicate whether data is loading
+let keyword = "";
+let industry = "";
+let is_summary = false
+let startTime = Math.floor(Date.now() / 1000);//現在時間轉換為 Unix timestamp（秒）
+let endTime = Math.floor(new Date("2020-01-01T00:00:00Z").getTime() / 1000);// "2020-01-01 00:00:00" 轉換為 Unix timestamp（秒）
+
 async function loadAllAIAnalysis(){
     try {
         if (isLoading) return; // If data is being loaded, the load operation is not triggered
         isLoading = true; // Start loading data, set isLoading to true
-        const response = await fetch(`http://0.0.0.0:8000/api/ai_news?is_summary=false&page=${page}`);
+        const response = await fetch(`http://0.0.0.0:8000/api/ai_news?keyword=${keyword}&industry=${industry}&is_summary=${is_summary}&startTime=${startTime}&endTime=${endTime}&page=${page}`);
         const result = await response.json();
         page = result.nextPage;
         const dataList = result.data;
@@ -233,16 +239,30 @@ function scrollingAddAIAnalysis(){
     });
 }
 
-function monitorStockClicks(){
-    let listItems = document.querySelectorAll(".stock-list-item");
-    let id = 0;
-    listItems.forEach(item => {
-        item.addEventListener("click", () =>{
-            id = item.querySelector(".attraction_id").textContent;
-            window.location.href = `https://taipeitrips.com/attraction/${id}`;
-        })
+function search(){
+    let button = document.querySelector(".search_icon");
+    let input = document.querySelector(".search-bar");
+    let container = document.querySelector(".container");
+    button.addEventListener("click",async () => {
+        page = 1;
+        keyword = input.value;
+        while(container.firstChild){
+            container.removeChild(container.firstChild);
+        }
+        await loadAllAIAnalysis();
     })
 }
+
+// function monitorStockClicks(){
+//     let listItems = document.querySelectorAll(".stock-list-item");
+//     let id = 0;
+//     listItems.forEach(item => {
+//         item.addEventListener("click", () =>{
+//             id = item.querySelector(".attraction_id").textContent;
+//             window.location.href = `https://taipeitrips.com/attraction/${id}`;
+//         })
+//     })
+// }
 
 
 
@@ -251,5 +271,6 @@ function monitorStockClicks(){
 async function excute(){
     loadAllAIAnalysis();
     scrollingAddAIAnalysis();
+    search()
 }
 excute();
