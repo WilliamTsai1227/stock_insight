@@ -4,7 +4,7 @@ from fastapi.staticfiles import StaticFiles
 from pathlib import Path
 import os
 from fastapi.middleware.cors import CORSMiddleware
-from api import log, ai_news
+from api import log, ai_news, news
 
 app = FastAPI()
 
@@ -31,7 +31,14 @@ app.mount("/js", StaticFiles(directory=JS_DIR), name="js")
 @app.get("/ai_news", include_in_schema=False)
 async def index(request: Request):
     return FileResponse(HTML_DIR / "ai_news.html", media_type="text/html")
+@app.get("/news", include_in_schema=False)
+async def attraction(request: Request):
+	return FileResponse(HTML_DIR / "news.html", media_type="text/html")
+@app.get("/news/{id}", include_in_schema=False)
+async def attraction(request: Request, id: str):
+	return FileResponse(HTML_DIR / "detail_news.html", media_type="text/html")
 
 # 加入 API router
 app.include_router(log.router)
 app.include_router(ai_news.router)
+app.include_router(news.router)
