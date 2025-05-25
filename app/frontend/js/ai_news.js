@@ -198,7 +198,7 @@ async function loadAllAIAnalysis(){
 
                 // hidden _id span
                 const idSpan = document.createElement("span");
-                idSpan.textContent = item._id;
+                idSpan.textContent = news["_id"];
                 idSpan.className = "news-item-id";
                 newsDiv.appendChild(idSpan);
 
