@@ -24,6 +24,8 @@ HTML_DIR = BASE_DIR / "frontend" / "html"
 CSS_DIR = BASE_DIR / "frontend" / "css"
 JS_DIR = BASE_DIR / "frontend" / "js"
 
+app.mount("/css", StaticFiles(directory=CSS_DIR), name="css")
+app.mount("/js", StaticFiles(directory=JS_DIR), name="js")
 
 # 回傳 HTML 頁面
 @app.get("/ai_news", include_in_schema=False)
