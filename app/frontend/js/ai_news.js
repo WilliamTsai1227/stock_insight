@@ -4,18 +4,24 @@ let page = 1;
 let isLoading = false; // Create a label to indicate whether data is loading
 let keyword = "";
 let industry = "";
-let is_summary = false
-let startTime = Math.floor(Date.now() / 1000);//現在時間轉換為 Unix timestamp（秒）
-let endTime = Math.floor(new Date("2020-01-01T00:00:00Z").getTime() / 1000);// "2020-01-01 00:00:00" 轉換為 Unix timestamp（秒）
+let is_summary = false;
+let hasMoreData = true;
+let endTime = Math.floor(Date.now() / 1000);//現在時間轉換為 Unix timestamp（秒）
+let startTime = Math.floor(new Date("2020-01-01T00:00:00Z").getTime() / 1000);// "2020-01-01 00:00:00" 轉換為 Unix timestamp（秒）
 
 async function loadAllAIAnalysis(){
     try {
-        if (isLoading) return; // If data is being loaded, the load operation is not triggered
+        if (isLoading === true || hasMoreData === false) return; // If data is being loaded, the load operation is not triggered
         isLoading = true; // Start loading data, set isLoading to true
         console.log(`fetch startTime:${startTime}, endTime: ${endTime}`)
-        const response = await fetch(`http://0.0.0.0:8000/api/ai_news?keyword=${keyword}&industry=${industry}&is_summary=${is_summary}&startTime=${startTime}&endTime=${endTime}&page=${page}`);
+        const response = await fetch(`http://0.0.0.0:8000/api/ai_news?keyword=${keyword}&industry=${industry}&is_summary=${is_summary}&start_time=${startTime}&end_time=${endTime}&page=${page}`);
         const result = await response.json();
-        page = result.nextPage;
+        // 判斷是否還有下一頁資料
+        if (result.nextPage === null || result.data.length === 0) {
+            hasMoreData = false;
+        } else {
+            page = result.nextPage;
+        }
         const dataList = result.data;
 
         const container = document.querySelector(".container");
@@ -258,7 +264,6 @@ function search(){
         if (endDateValue !== "") {
             endTime = Math.floor(new Date(endDateValue).getTime() / 1000);
         }
-        console.log(startTime,endTime)
         page = 1;
         keyword = input.value;
         while(container.firstChild){

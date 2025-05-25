@@ -39,7 +39,6 @@ body {
     display: flex;
     flex: none;
     flex-wrap: wrap;
-    height: 54px;
     /* width: 300px; */
     align-items: center;
     padding-left: 10px;
