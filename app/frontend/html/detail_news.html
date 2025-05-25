@@ -7,24 +7,24 @@
     <meta name="keywords" content="AI股票新聞, 股票分析, 財經AI, 股票推薦, 產業分析, 新聞摘要, 市場情緒, 股票爬蟲, AI財經摘要, 潛力股票, AI stock news, stock analysis, financial AI, stock recommendation, industry analysis, news summary, market sentiment, web scraping, AI financial summary, potential stocks">
     <meta name="author" content="william tsai">
     <title>AI News</title>
-    <!-- <link rel="stylesheet" href="/frontend/css/ai_news.css"> -->
-    <link rel="stylesheet" href="../css/news.css">
-    <script src="../js/news.js" defer></script>
+    <link rel="stylesheet" href="../css/detail_news.css">
+    <script src="../js/detail_news.js" defer></script>
 </head>
 <body>
     <div class="header">
         <div class="logo">Stock Insight</div>
     </div>
-    <div class="search-block">
-        <div class="start-time-title">開始時間:</div>
-        <input type="datetime-local" class="start-time-calendar">
-        <div class="end-time-title">結束時間:</div>
-        <input type="datetime-local" class="end-time-calendar">
-        <div class="search-bar-title">關鍵字搜尋:</div>
-        <input type="text" class="search-bar" placeholder="Search...">
-        <div class="search_icon"></div>
-    </div>
     <div class="container">
+        <h1 id="title"></h1>
+        <p><strong>來源：</strong><span id="source"></span></p>
+        <p><strong>發布時間：</strong><span id="publishAt"></span></p>
+        <p><strong>摘要：</strong></p>
+        <p id="summary"></p>
+        <p><strong>內容：</strong></p>
+        <p id="content"></p>
+        <p><strong>相關股票：</strong></p>
+        <ul id="market"></ul>
+        <a id="newsUrl" href="#" target="_blank">查看原文</a>
     </div>
     <div class="footer">
         <div class="footer_text">COPYRIGHT © William Tsai</div>

@@ -1,0 +1,405 @@
+*{
+    margin: 0;
+}
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    background-color: #f5f5f5;
+}
+
+
+.header {
+    background-color: #FFFFFF;
+    display: flex;
+    flex: none;
+    flex-wrap: wrap;
+    height: 54px;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    border-bottom: 1px solid #75757560; /* 加這一行 */
+}
+.logo {
+    flex: none;
+    font-size: 30px;
+    color: #448899;
+    font-family: Noto Sans TC;
+    font-weight: 700;
+    text-align: left;
+    margin-left: 15px;
+}
+.logo:hover{
+    transform: scale(1.02);
+    cursor: pointer;
+}
+.logo:active{
+    transform: scale(1);
+}
+.search-block {
+    display: flex;
+    flex: none;
+    flex-wrap: wrap;
+    /* width: 300px; */
+    align-items: center;
+    padding-left: 10px;
+    padding-right: 10px; 
+}
+.search-bar-title{
+    font-size: 20px;
+    color: #0000008c;
+    font-family: Noto Sans TC;
+    font-weight: 500;
+    text-align: left;
+    padding-left: 6px;
+    padding-right: 6px;
+}
+.search-bar {
+    display: flex;
+    align-items: center;
+    width: 460px;
+    height: 42px;
+    font-family: Noto Sans TC;
+    font-size: 16px;
+    font-weight: 700;
+    text-align: left;
+    width: 200px;
+    box-sizing: border-box; /* 使用border-box盒模型 */
+    padding: 0 10px; /* 可根据需要调整内边距 */
+    border: none; /* 移除默认边框 */
+    outline: none; /* 移除焦点样式 */
+    border-radius: 5px 0 0 5px;
+}
+.search_icon {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 40px;
+    height: 42px;
+    background-color: #FFFFFF;
+    cursor: pointer;
+    border-radius: 0 5px 5px 0 ;
+    transition: background-color 0.3s ease;
+    font-size: 20px;
+    position: relative;
+}
+.search_icon::before {
+    content: "🔍";
+}
+.search_icon:hover {
+    transform: scale(1.05);
+}
+.search_icon:active {
+    transform: scale(1);
+    box-shadow: inset 0 0 10px 1px rgba(0, 0, 0, .2);
+}
+.start-time-title{
+    font-size: 20px;
+    color: #0000008c;
+    font-family: Noto Sans TC;
+    font-weight: 500;
+    text-align: left;
+    padding-left: 6px;
+
+}
+.end-time-title{
+    font-size: 20px;
+    color: #0000008c;
+    font-family: Noto Sans TC;
+    font-weight: 500;
+    text-align: left;
+    padding-left: 6px;
+
+}
+.start-time-calendar {
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    margin-left: 10px;
+    height: 42px;
+    font-family: Noto Sans TC;
+    font-size: 16px;
+    font-weight: 700;
+    color: #0000008c;
+}
+.end-time-calendar {
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    margin-left: 10px;
+    height: 42px;
+    font-family: Noto Sans TC;
+    font-size: 16px;
+    font-weight: 700;
+    color: #0000008c;
+}
+
+.container {
+    display: flex;
+    flex-direction: column;
+    gap: 40px;
+    padding-bottom: 40px;
+}
+.block {
+    display: flex;
+    flex-direction: column; /* 垂直堆疊 */
+    gap: 20px; 
+    padding-left: 15px;
+    padding-right: 15px;   
+}
+.block-content {
+    display: flex;
+    gap: 10px;
+}
+.publishAtDiv{
+    font-family: Noto Sans TC;
+    font-size: 15px;
+    color: #110f0fad;
+    font-weight: 450;
+    background-color: white;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 8px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    position: relative;
+    width:200px;
+    gap: 10px;
+    top: 10px;
+}
+.section {
+    background-color: white;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 15px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    position: relative;
+}
+.list-section{
+    display: flex;
+    flex-direction: column;
+    width:15%;
+    gap: 10px;
+}
+.news-section {
+    display: flex;
+    flex-direction: column;
+    width:17%;
+    gap: 10px;
+}
+.potential-stocks{
+    width:34%;
+}
+.ai-summary{
+    width:34%;
+}
+.stock-list-item {
+    font-family: Noto Sans TC;
+    font-size: 18px;
+    color: #110f0fb5;
+    font-weight: 480;
+    background-color: #f0f0f0;
+    padding: 10px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.2s;
+    position: relative;
+}
+.stock-list-item:hover {
+    background-color: #e0e0e0;
+}
+.stock-tooltip {
+    display: none;
+    position: absolute;
+    top: 50%;          /* 垂直置中 */
+    left: 100%;        /* 從右邊開始 */
+    transform: translateY(-50%) translateX(12px); /* 稍微右移一點並垂直置中 */
+    width: 160px;
+    height: 30px;
+    background-color: rgba(6, 28, 168, 0.68); /* 淺白色＋透明 */
+    color: #eaeeee; /* 深灰色文字 */
+    font-size: 13px;
+    padding: 5px 10px;
+    border-radius: 4px;
+    z-index: 999;
+    white-space: nowrap;
+    text-align: center;
+    line-height: 20px;
+}
+.stock-tooltip::after {
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: -12px; /* 箭頭出現在 tooltip 左邊 */
+    transform: translateY(-50%);
+    border-width: 6px;
+    border-style: solid;
+    border-color: transparent rgba(6, 28, 168, 0.68) transparent transparent;
+}
+
+/* 滑入整個 stock-list-item 時顯示 tooltip */
+.stock-list-item:hover .stock-tooltip {
+    display: block;
+}
+
+/* 隱藏代碼本體 */
+.stock-list-item-code {
+    display: none;
+}
+.industry-list-item {
+    font-family: Noto Sans TC;
+    font-size: 18px;
+    color: #110f0fb5;
+    font-weight: 480;
+    background-color: #f0f0f0;
+    padding: 10px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.2s;
+    position: relative;
+}
+.industry-list-item:hover {
+    background-color: #e0e0e0;
+}
+.news-item {
+    font-family: Noto Sans TC;
+    font-size: 16px;
+    color: #110f0fb5;
+    font-weight: 450;
+    background-color: #f0f0f0;
+    padding: 10px;
+    border-radius: 5px;
+    margin-bottom: 10px;
+    position: relative;
+    cursor: pointer;
+}
+.news-item:hover {
+    background-color: #e0e0e0;
+}
+.news-section {
+    overflow-y: auto;
+}
+
+
+/* Arrow Styles using SVG */
+.arrow-right {
+    position: absolute;
+    right: -20px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 20px;
+    height: 20px;
+}
+.arrow-left {
+    position: absolute;
+    left: -20px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 20px;
+    height: 20px;
+}
+
+.news-item span {
+    display: none;
+}
+.news-summary{
+    flex: none;
+    font-size: 20px;
+    color: #448899;
+    font-family: Noto Sans TC;
+    font-weight: 700;
+    text-align: left;
+    margin-bottom: 10px;
+    
+}
+.news-summary-content{
+    flex: none;
+    font-size: 18px;
+    color: grey;
+    font-family: Noto Sans TC;
+    font-weight: 700;
+    text-align: left;
+    margin-bottom: 10px;
+
+}
+.key-news{
+    flex: none;
+    font-size: 20px;
+    color: #448899;
+    font-family: Noto Sans TC;
+    font-weight: 700;
+    text-align: left;
+    margin-bottom: 10px;
+}
+.key-news-content{
+    flex: none;
+    font-size: 18px;
+    color: grey;
+    font-family: Noto Sans TC;
+    font-weight: 700;
+    text-align: left;
+    margin-bottom: 10px;
+}
+.sentiment-analysis{
+    flex: none;
+    font-size: 20px;
+    color: #448899;
+    font-family: Noto Sans TC;
+    font-weight: 700;
+    text-align: left;
+    margin-bottom: 10px;
+}
+.sentiment-analysis-content{
+    flex: none;
+    font-size: 18px;
+    color: grey;
+    font-family: Noto Sans TC;
+    font-weight: 700;
+    text-align: left;
+    margin-bottom: 10px;
+}
+.section-title{
+    flex: none;
+    font-size: 22px;
+    color: #0a0202d1;
+    font-family: Noto Sans TC;
+    font-weight: 900;
+    text-align: left;
+    margin-bottom: 10px;
+    margin-top: 10px;
+}
+
+.news-item-id{
+    display: none;
+}
+.potential-content{
+    flex: none;
+    font-size: 18px;
+    color: #110f0fb5;
+    font-family: Noto Sans TC;
+    font-weight: 700;
+    text-align: left;
+    margin-bottom: 10px;    
+}
+.footer{
+    flex: none;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding-top: 40px;
+    padding-bottom: 40px;
+    width: 100%;
+    height: 104px;
+    background-color:#75757597;
+    box-sizing: border-box;
+}
+.footer_text{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 300px;
+    height: 24px;
+    /* padding: 5px 0px 5px 0px; */
+    /* top: 5px; */
+    font-family: Noto Sans TC;
+    font-size: 16px;
+    font-weight: 700;
+    text-align: center;
+    color:#FFFFFF;
+}

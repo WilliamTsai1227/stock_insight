@@ -281,16 +281,18 @@ function search(){
     })
 }
 
-// function monitorStockClicks(){
-//     let listItems = document.querySelectorAll(".stock-list-item");
-//     let id = 0;
-//     listItems.forEach(item => {
-//         item.addEventListener("click", () =>{
-//             id = item.querySelector(".attraction_id").textContent;
-//             window.location.href = `https://taipeitrips.com/attraction/${id}`;
-//         })
-//     })
-// }
+function monitorNewsClicks(){
+    let listItems = document.querySelectorAll(".news-item");
+    listItems.forEach(item => {
+        item.addEventListener("click", () => {
+            let objectIdElement = item.querySelector(".news-item-id");
+            if (objectIdElement) {
+                let objectId = objectIdElement.textContent.trim();
+                window.location.href = `http://0.0.0.0:8000/news/${objectId}`;
+            }
+        });
+    });
+}
 
 
 
@@ -299,6 +301,7 @@ function search(){
 async function excute(){
     loadAllAIAnalysis();
     scrollingAddAIAnalysis();
-    search()
+    search();
+    monitorNewsClicks();
 }
 excute();
