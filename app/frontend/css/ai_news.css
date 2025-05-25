@@ -51,7 +51,7 @@ body {
     font-weight: 500;
     text-align: left;
     padding-left: 6px;
-    padding-right: 10px;
+    padding-right: 6px;
 }
 .search-bar {
     display: flex;
@@ -98,7 +98,7 @@ body {
     font-family: Noto Sans TC;
     font-weight: 500;
     text-align: left;
-    padding-left: 10px;
+    padding-left: 6px;
 
 }
 .end-time-title{
@@ -107,7 +107,7 @@ body {
     font-family: Noto Sans TC;
     font-weight: 500;
     text-align: left;
-    padding-left: 10px;
+    padding-left: 6px;
 
 }
 .start-time-calendar {
@@ -115,13 +115,42 @@ body {
     border-radius: 5px;
     margin-left: 10px;
     height: 42px;
+    font-family: Noto Sans TC;
+    font-size: 16px;
+    font-weight: 700;
+    color: #0000008c;
 }
 .end-time-calendar {
     border: 1px solid #ddd;
     border-radius: 5px;
     margin-left: 10px;
     height: 42px;
+    font-family: Noto Sans TC;
+    font-size: 16px;
+    font-weight: 700;
+    color: #0000008c;
 }
+.analysis-type-title{
+    font-size: 20px;
+    color: #0000008c;
+    font-family: Noto Sans TC;
+    font-weight: 500;
+    text-align: left;
+    padding-left: 6px;
+}
+.analysis-type-select{
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    margin-left: 4px;
+    height: 42px;
+    width: 100px;
+    font-family: Noto Sans TC;
+    font-size: 16px;
+    font-weight: 700;
+    text-align: center;
+    color: #0000008c;
+}
+
 .container {
     display: flex;
     flex-direction: column;

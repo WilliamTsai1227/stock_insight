@@ -257,6 +257,13 @@ function search(){
         const startDateValue = startDateInput.value; // 格式是 "YYYY-MM-DD"
         const endDateInput = document.querySelector('.end-time-calendar');
         const endDateValue = endDateInput.value; // 格式是 "YYYY-MM-DD"
+        const isSummaryValue = document.querySelector('.analysis-type-select').value;
+        if (isSummaryValue === "true"){
+            is_summary = true;
+        }else if(isSummaryValue === "false"){
+            is_summary = false;
+        }
+
         if (startDateValue !== "") {
             startTime = Math.floor(new Date(startDateValue).getTime() / 1000);
         }
@@ -265,6 +272,7 @@ function search(){
             endTime = Math.floor(new Date(endDateValue).getTime() / 1000);
         }
         page = 1;
+        hasMoreData = true;
         keyword = input.value;
         while(container.firstChild){
             container.removeChild(container.firstChild);
