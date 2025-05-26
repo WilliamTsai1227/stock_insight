@@ -140,9 +140,21 @@ async function loadAllAIAnalysis(){
             const summaryTitle = document.createElement("div");
             summaryTitle.textContent = "新聞重點: ";
             summaryTitle.className = "news-summary";
+
             const summaryContent = document.createElement("div");
-            summaryContent.textContent = item.summary;
             summaryContent.className = "news-summary-content";
+
+            // 將句子以 "。" 分割，並加回 "。" + 換行處理
+            const summaryLines = (item.summary || '').split('。');
+
+            summaryLines.forEach((line) => {
+                if (line.trim() !== '') {
+                    summaryContent.appendChild(document.createTextNode(line + '。'));
+                    summaryContent.appendChild(document.createElement("br"));
+                    summaryContent.appendChild(document.createElement("br"));
+                }
+            });
+
             aiSectionDiv.appendChild(summaryTitle);
             aiSectionDiv.appendChild(summaryContent);
             

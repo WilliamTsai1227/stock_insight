@@ -16,12 +16,42 @@ async function loadNews(){
 
       // 動態填入網頁內容
       document.getElementById("title").textContent = news.title;
-      document.getElementById("summary").textContent = news.summary;
-      document.getElementById("content").textContent = news.content;
-      document.getElementById("publishAt").textContent = formatTimestamp(news.publishAt);
-      document.getElementById("source").textContent = news.source;
-      document.getElementById("newsUrl").href = news.url;
-      document.getElementById("newsUrl").textContent = "查看原文";
+      document.getElementById("publish-time").textContent = formatTimestamp(news.publishAt);
+      document.getElementById("source-content").textContent = news.source;
+      document.getElementById("source-news-url").href = news.url;
+      document.getElementById("source-news-url").textContent = "查看原文";
+
+      //Process summary line breaks and insert 
+      const summaryContent = news.summary || '';
+      const summaryLines = summaryContent.split('。');
+      
+      const summaryDiv = document.getElementById("summary-content");
+      summaryDiv.textContent = ''; // Clear original content
+      
+      summaryLines.forEach((line, index) => {
+          if (line.trim() !== '') {
+              summaryDiv.appendChild(document.createTextNode(line + '。'));
+              summaryDiv.appendChild(document.createElement("br")); // Add a line break to each sentence
+          }
+      });
+      
+
+      //Process news content line breaks and insert 
+      const newsContent = news.content || ''; // Make sure it is a string
+      const lines = newsContent.split('\n');  // Use \n to separate lines
+      
+      const newsContentDiv = document.getElementById("news-content");
+      
+      newsContentDiv.textContent = '';// Clear original content
+      
+      // Insert each line of text and line break
+      lines.forEach((line, index) => {
+          newsContentDiv.appendChild(document.createTextNode(line));
+          if (index < lines.length - 1) {
+              newsContentDiv.appendChild(document.createElement("br"));
+              newsContentDiv.appendChild(document.createElement("br")); //Double line break
+          }
+      });
   
       // 顯示相關股票（如果有）
       const marketList = document.getElementById("market");
@@ -29,6 +59,7 @@ async function loadNews(){
         news.market.forEach(stock => {
           const li = document.createElement("li");
           li.textContent = `${stock.name} (${stock.code})`;
+          li.className = "related-stocks";
           marketList.appendChild(li);
         });
       }
