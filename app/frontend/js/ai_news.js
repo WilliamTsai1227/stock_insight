@@ -231,6 +231,7 @@ async function loadAllAIAnalysis(){
         console.error("Error fetching AI news:", error);
         isLoading = false; // Data loading error, set isLoading to false
     }
+    monitorNewsClicks();
 }
 
 function scrollingAddAIAnalysis(){
@@ -288,7 +289,9 @@ function monitorNewsClicks(){
             let objectIdElement = item.querySelector(".news-item-id");
             if (objectIdElement) {
                 let objectId = objectIdElement.textContent.trim();
-                window.location.href = `http://0.0.0.0:8000/news/${objectId}`;
+                // window.location.href = `http://0.0.0.0:8000/news/${objectId}`;
+                window.open(`http://0.0.0.0:8000/news/${objectId}`, '_blank');
+
             }
         });
     });
@@ -299,7 +302,7 @@ function monitorNewsClicks(){
 
 
 async function excute(){
-    loadAllAIAnalysis();
+    await loadAllAIAnalysis();
     scrollingAddAIAnalysis();
     search();
     monitorNewsClicks();
