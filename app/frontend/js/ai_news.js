@@ -1,5 +1,5 @@
 
-
+let loadingIndicator = document.getElementById("loading-indicator");
 let page = 1;
 let isLoading = false; // Create a label to indicate whether data is loading
 let keyword = "";
@@ -9,10 +9,49 @@ let hasMoreData = true;
 let endTime = Math.floor(Date.now() / 1000);//現在時間轉換為 Unix timestamp（秒）
 let startTime = Math.floor(new Date("2020-01-01T00:00:00Z").getTime() / 1000);// "2020-01-01 00:00:00" 轉換為 Unix timestamp（秒）
 
+function initSearchParamsFromURL() {
+    const params = new URLSearchParams(window.location.search);
+    keyword = params.get('keyword') || "";
+    industry = params.get('industry') || "";
+    is_summary = params.get('is_summary') || false;  
+    if (is_summary === "true"){
+        is_summary = true;
+    }
+    if (is_summary === "false"){
+        is_summary = false;
+    }
+    const startDate = params.get('start_time');
+    const endDate = params.get('end_time');
+
+    // Convert only if the value is a pure number
+    if (startDate && /^\d+$/.test(startDate)) {
+        startTime = parseInt(startDate, 10);
+    }
+
+    if (endDate && /^\d+$/.test(endDate)) {
+        endTime = parseInt(endDate, 10);
+    }
+    // Default page number
+    page = 1;
+}
+
+function updateURLParams() {
+    const params = new URLSearchParams();
+    params.set('keyword', keyword);
+    params.set('industry', industry);
+    params.set('is_summary', is_summary);
+    params.set('start_time', startTime);
+    params.set('end_time', endTime);
+    const newUrl = `${window.location.pathname}?${params.toString()}`;
+    history.replaceState({}, '', newUrl); // 不重新整理，只更新網址
+}
+
+
 async function loadAllAIAnalysis(){
     try {
         if (isLoading === true || hasMoreData === false) return; // If data is being loaded, the load operation is not triggered
         isLoading = true; // Start loading data, set isLoading to true
+        if (loadingIndicator) loadingIndicator.style.display = "flex"; // Display the loading indicator
         console.log(`fetch startTime:${startTime}, endTime: ${endTime}`)
         const response = await fetch(`http://0.0.0.0:8000/api/ai_news?keyword=${keyword}&industry=${industry}&is_summary=${is_summary}&start_time=${startTime}&end_time=${endTime}&page=${page}`);
         const result = await response.json();
@@ -239,9 +278,16 @@ async function loadAllAIAnalysis(){
             container.appendChild(block);
         });
         isLoading = false; // Data loading is complete, set isLoading to false
+        if (loadingIndicator) loadingIndicator.style.display = "none"; // Hide the loading indicator
     } catch (error) {
         console.error("Error fetching AI news:", error);
         isLoading = false; // Data loading error, set isLoading to false
+        if (loadingIndicator) loadingIndicator.style.display = "none"; // Hide the loading indicator
+        const container = document.querySelector(".container");
+        const errorMessage = document.createElement("div");
+        errorMessage.textContent = "Oops! 載入分析時發生錯誤，請稍後再試。";
+        errorMessage.className = "errorMessage";
+        container.appendChild(errorMessage);
     }
     monitorNewsClicks();
 }
@@ -266,6 +312,7 @@ function search(){
 
 
     button.addEventListener("click",async () => {
+        endTime = Math.floor(Date.now() / 1000);
         const startDateInput = document.querySelector('.start-time-calendar');
         const startDateValue = startDateInput.value; // 格式是 "YYYY-MM-DD"
         const endDateInput = document.querySelector('.end-time-calendar');
@@ -290,6 +337,7 @@ function search(){
         while(container.firstChild){
             container.removeChild(container.firstChild);
         }
+        updateURLParams();
         await loadAllAIAnalysis();
     })
 }
@@ -314,9 +362,10 @@ function monitorNewsClicks(){
 
 
 async function excute(){
+    initSearchParamsFromURL();
     await loadAllAIAnalysis();
     scrollingAddAIAnalysis();
     search();
-    monitorNewsClicks();
+    
 }
 excute();

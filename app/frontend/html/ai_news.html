@@ -7,7 +7,6 @@
     <meta name="keywords" content="AI股票新聞, 股票分析, 財經AI, 股票推薦, 產業分析, 新聞摘要, 市場情緒, 股票爬蟲, AI財經摘要, 潛力股票, AI stock news, stock analysis, financial AI, stock recommendation, industry analysis, news summary, market sentiment, web scraping, AI financial summary, potential stocks">
     <meta name="author" content="william tsai">
     <title>AI News</title>
-    <!-- <link rel="stylesheet" href="/frontend/css/ai_news.css"> -->
     <link rel="stylesheet" href="../css/ai_news.css">
     <script src="../js/ai_news.js" defer></script>
 </head>
@@ -22,14 +21,18 @@
         <input type="datetime-local" class="end-time-calendar">
         <div class="analysis-type-title">分析類型:</div>
         <select class="analysis-type-select">
-            <option value="true">統整分析</option>
             <option value="false">逐條分析</option>
+            <option value="true">統整分析</option>
         </select>
         <div class="search-bar-title">關鍵字搜尋:</div>
         <input type="text" class="search-bar" placeholder="Search...">
         <div class="search_icon"></div>
     </div>
     <div class="container">
+    </div>
+    <div id="loading-indicator">
+        <div class="spinner"></div> 
+        <p>載入中...</p>
     </div>
     <div class="footer">
         <div class="footer_text">COPYRIGHT © William Tsai</div>
