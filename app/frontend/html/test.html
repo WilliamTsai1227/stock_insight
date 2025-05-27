@@ -1,0 +1,445 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Stitch Design - Stock Insight (純 CSS)</title>
+    <link rel="icon" type="image/x-icon" href="data:image/x-icon;base64," />
+
+    <link rel="preconnect" href="https://fonts.gstatic.com/" crossorigin />
+    <link
+      rel="stylesheet"
+      as="style"
+      onload="this.rel='stylesheet'"
+      href="https://fonts.googleapis.com/css2?display=swap&family=Noto+Sans%3Awght%40400%3B500%3B700%3B900&family=Work+Sans%3Awght%40400%3B500%3B700%3B900"
+    />
+
+    <style>
+        /* CSS Reset 和基本設定 */
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: "Work Sans", "Noto Sans", sans-serif;
+            background-color: #ffffff;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            overflow-x: hidden;
+        }
+
+        .layout-container {
+            display: flex;
+            flex-direction: column;
+            flex-grow: 1;
+            height: 100%;
+        }
+
+        /* Header 樣式 */
+        .main-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            white-space: nowrap;
+            border-bottom: 1px solid #f0f2f5;
+            padding: 12px 40px; /* px-10 py-3 */
+        }
+
+        .header-left-section {
+            display: flex;
+            align-items: center;
+            gap: 32px; /* gap-8 */
+        }
+
+        .logo-section {
+            display: flex;
+            align-items: center;
+            gap: 16px; /* gap-4 */
+            color: #111418;
+        }
+
+        .logo-icon {
+            width: 16px; /* size-4 */
+            height: 16px; /* size-4 */
+        }
+
+        .logo-title {
+            color: #111418;
+            font-size: 18px; /* text-lg */
+            font-weight: 700; /* font-bold */
+            line-height: 28px; /* leading-tight */
+            letter-spacing: -0.015em; /* tracking-[-0.015em] */
+        }
+
+        .nav-links {
+            display: flex;
+            align-items: center;
+            gap: 36px; /* gap-9 */
+        }
+
+        .nav-links a {
+            color: #111418;
+            font-size: 14px; /* text-sm */
+            font-weight: 500; /* font-medium */
+            line-height: 20px; /* leading-normal */
+            text-decoration: none;
+        }
+
+        .header-right-section {
+            display: flex;
+            flex: 1;
+            justify-content: flex-end;
+            gap: 32px; /* gap-8 */
+        }
+
+        /* Search Input 樣式 */
+        .search-label {
+            display: flex;
+            flex-direction: column;
+            min-width: 160px; /* min-w-40 */
+            height: 40px; /* !h-10 */
+            max-width: 256px; /* max-w-64 */
+        }
+
+        .search-input-wrapper {
+            display: flex;
+            width: 100%;
+            flex: 1;
+            align-items: stretch;
+            border-radius: 12px; /* rounded-xl */
+            height: 100%;
+        }
+
+        .search-icon-container {
+            color: #60748a;
+            display: flex;
+            border: none;
+            background-color: #f0f2f5;
+            align-items: center;
+            justify-content: center;
+            padding-left: 16px; /* pl-4 */
+            border-top-left-radius: 12px; /* rounded-l-xl */
+            border-bottom-left-radius: 12px;
+            border-right: 0;
+        }
+
+        .search-input {
+            flex: 1;
+            width: 100%;
+            min-width: 0;
+            resize: none;
+            overflow: hidden;
+            border-radius: 12px; /* rounded-xl */
+            color: #111418;
+            border: none;
+            background-color: #f0f2f5;
+            height: 100%;
+            padding: 0 16px 0 8px; /* px-4 pl-2 */
+            font-size: 16px; /* text-base */
+            font-weight: 400; /* font-normal */
+            line-height: 24px; /* leading-normal */
+            border-top-left-radius: 0; /* rounded-l-none */
+            border-bottom-left-radius: 0;
+            border-left: 0;
+        }
+        .search-input::placeholder {
+            color: #60748a;
+        }
+        .search-input:focus {
+            outline: 0;
+            box-shadow: none;
+            border: none;
+        }
+
+        /* Notification Button 樣式 */
+        .notification-button {
+            display: flex;
+            max-width: 480px;
+            cursor: pointer;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            border-radius: 9999px; /* rounded-full */
+            height: 40px; /* h-10 */
+            background-color: #f0f2f5;
+            color: #111418;
+            gap: 8px; /* gap-2 */
+            font-size: 14px; /* text-sm */
+            font-weight: 700; /* font-bold */
+            line-height: 20px; /* leading-normal */
+            letter-spacing: 0.015em; /* tracking-[0.015em] */
+            min-width: 0;
+            padding: 0 10px; /* px-2.5 */
+            border: none;
+        }
+
+        /* Profile Image 樣式 */
+        .profile-image {
+            background-position: center;
+            background-repeat: no-repeat;
+            background-size: cover;
+            aspect-ratio: 1 / 1; /* aspect-square */
+            border-radius: 9999px; /* rounded-full */
+            width: 40px; /* size-10 */
+            height: 40px; /* size-10 */
+        }
+
+        /* Content Area 樣式 */
+        .content-area {
+            padding: 20px 160px; /* px-40 py-5 */
+            display: flex;
+            flex: 1;
+            justify-content: center;
+        }
+
+        .layout-content-container {
+            display: flex;
+            flex-direction: column;
+            max-width: 960px; /* max-w-[960px] */
+            flex: 1;
+        }
+
+        .welcome-section {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            gap: 12px; /* gap-3 */
+            padding: 16px; /* p-4 */
+        }
+
+        .welcome-title {
+            color: #111418;
+            letter-spacing: -0.025em; /* tracking-light */
+            font-size: 32px; /* text-[32px] */
+            font-weight: 700; /* font-bold */
+            line-height: 40px; /* leading-tight */
+            min-width: 288px; /* min-w-72 */
+        }
+
+        .welcome-description {
+            color: #111418;
+            font-size: 16px; /* text-base */
+            font-weight: 400; /* font-normal */
+            line-height: 24px; /* leading-normal */
+            padding-bottom: 12px; /* pb-3 */
+            padding-top: 4px; /* pt-1 */
+            padding-left: 16px; /* px-4 */
+            padding-right: 16px; /* px-4 */
+        }
+
+        .features-title {
+            color: #111418;
+            font-size: 22px; /* text-[22px] */
+            font-weight: 700; /* font-bold */
+            line-height: 28px; /* leading-tight */
+            letter-spacing: -0.015em; /* tracking-[-0.015em] */
+            padding-left: 16px; /* px-4 */
+            padding-right: 16px; /* px-4 */
+            padding-bottom: 12px; /* pb-3 */
+            padding-top: 20px; /* pt-5 */
+        }
+
+        .feature-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(158px, 1fr)); /* grid-cols-[repeat(auto-fit,minmax(158px,1fr))] */
+            gap: 12px; /* gap-3 */
+            padding: 16px; /* p-4 */
+        }
+
+        .feature-card {
+            display: flex;
+            flex: 1;
+            gap: 12px; /* gap-3 */
+            border-radius: 8px; /* rounded-lg */
+            border: 1px solid #dbe0e6;
+            background-color: #ffffff;
+            padding: 16px; /* p-4 */
+            flex-direction: column;
+        }
+
+        .feature-icon {
+            color: #111418;
+            width: 24px; /* size-24px */
+            height: 24px; /* size-24px */
+        }
+
+        .feature-text-content {
+            display: flex;
+            flex-direction: column;
+            gap: 4px; /* gap-1 */
+        }
+
+        .feature-card h2 {
+            color: #111418;
+            font-size: 16px; /* text-base */
+            font-weight: 700; /* font-bold */
+            line-height: 24px; /* leading-tight */
+        }
+
+        .feature-card p {
+            color: #60748a;
+            font-size: 14px; /* text-sm */
+            font-weight: 400; /* font-normal */
+            line-height: 20px; /* leading-normal */
+        }
+
+        /* SVG 樣式 */
+        .logo-icon svg,
+        .search-icon-container svg,
+        .notification-button svg,
+        .feature-icon svg {
+            width: 100%;
+            height: 100%;
+            display: block;
+        }
+    </style>
+</head>
+<body>
+    <div class="layout-container">
+        <header class="main-header">
+            <div class="header-left-section">
+                <div class="logo-section">
+                    <div class="logo-icon">
+                        <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <g clip-path="url(#clip0_6_330)">
+                                <path fill-rule="evenodd" clip-rule="evenodd" d="M24 0.757355L47.2426 24L24 47.2426L0.757355 24L24 0.757355ZM21 35.7574V12.2426L9.24264 24L21 35.7574Z" fill="currentColor"></path>
+                            </g>
+                            <defs>
+                                <clipPath id="clip0_6_330"><rect width="48" height="48" fill="white"></rect></clipPath>
+                            </defs>
+                        </svg>
+                    </div>
+                    <h2 class="logo-title">Stock Insight</h2>
+                </div>
+                <div class="nav-links">
+                    <a href="#">首頁</a>
+                    <a href="#">新聞</a>
+                    <a href="#">AI 新聞分析</a>
+                    <a href="#">分析</a>
+                    <a href="#">股票</a>
+                </div>
+            </div>
+            <div class="header-right-section">
+                <label class="search-label">
+                    <div class="search-input-wrapper">
+                        <div class="search-icon-container">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24px" height="24px" fill="currentColor" viewBox="0 0 256 256">
+                                <path d="M229.66,218.34l-50.07-50.06a88.11,88.11,0,1,0-11.31,11.31l50.06,50.07a8,8,0,0,0,11.32-11.32ZM40,112a72,72,0,1,1,72,72A72.08,72.08,0,0,1,40,112Z"></path>
+                            </svg>
+                        </div>
+                        <input placeholder="搜尋" class="search-input" value="" />
+                    </div>
+                </label>
+                <button class="notification-button">
+                    <div>
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20px" height="20px" fill="currentColor" viewBox="0 0 256 256">
+                            <path d="M221.8,175.94C216.25,166.38,208,139.33,208,104a80,80,0,1,0-160,0c0,35.34-8.26,62.38-13.81,71.94A16,16,0,0,0,48,200H88.81a40,40,0,0,0,78.38,0H208a16,16,0,0,0,13.8-24.06ZM128,216a24,24,0,0,1-22.62-16h45.24A24,24,0,0,1,128,216ZM48,184c7.7-13.24,16-43.92,16-80a64,64,0,1,1,128,0c0,36.05,8.28,66.73,16,80Z"></path>
+                        </svg>
+                    </div>
+                </button>
+                <div class="profile-image" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuACQH4kvaP_K_UQ2FuQjcc1XgHHLK1hIVd6UdPgZGEJjk17DcnSqGPKs3MQcdq4Cwsxzuo4m3nKrVQPVsfCU9oPbq8cJIDVDgREz6W867MMDDXLlNDKpCeFBYaMBJNyNlY2l4Of_CwNxNeFBz6K6OPEZP4PdQL8fYt8qGCeV2MbuC-m07EYyBWsIBQFa3DQAHu3Li-ms39AHGW6WVEgdT8bMDFHp-W4z6CwOiGQPE1F5Z1QByr11TOSyI56gyAufrgeoKUzJMqKIe0");'></div>
+            </div>
+        </header>
+        <div class="content-area">
+            <div class="layout-content-container">
+                <div class="welcome-section">
+                    <p class="welcome-title">歡迎來到 Stock Insight</p>
+                </div>
+                <p class="welcome-description">
+                    探索 Stock Insight 的強大功能，提升您的股票分析和財務報告能力。
+                </p>
+                <h2 class="features-title">主要功能</h2>
+                <div class="feature-grid">
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24px" height="24px" fill="currentColor" viewBox="0 0 256 256">
+                                <path d="M88,112a8,8,0,0,1,8-8h80a8,8,0,0,1,0,16H96A8,8,0,0,1,88,112Zm8,40h80a8,8,0,0,0,0-16H96a8,8,0,0,0,0,16ZM232,64V184a24,24,0,0,1-24,24H32A24,24,0,0,1,8,184.11V88a8,8,0,0,1,16,0v96a8,8,0,0,0,16,0V64A16,16,0,0,1,56,48H216A16,16,0,0,1,232,64Zm-16,0H56V184a23.84,23.84,0,0,1-1.37,8H208a8,8,0,0,0,8-8Z"></path>
+                            </svg>
+                        </div>
+                        <div class="feature-text-content">
+                            <h2>即時新聞</h2>
+                            <p>即時掌握最新市場新聞與趨勢。</p>
+                        </div>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24px" height="24px" fill="currentColor" viewBox="0 0 256 256">
+                                <path d="M200,48H136V16a8,8,0,0,0-16,0V48H56A32,32,0,0,0,24,80V192a32,32,0,0,0,32,32H200a32,32,0,0,0,32-32V80A32,32,0,0,0,200,48Zm16,144a16,16,0,0,1-16,16H56a16,16,0,0,1-16-16V80A16,16,0,0,1,56,64H200a16,16,0,0,1,16,16Zm-52-56H92a28,28,0,0,0,0,56h72a28,28,0,0,0,0-56Zm-28,16v24H120V152ZM80,164a12,12,0,0,1,12-12h12v24H92A12,12,0,0,1,80,164Zm84,12H152V152h12a12,12,0,0,1,0,24ZM72,108a12,12,0,1,1,12,12A12,12,0,0,1,72,108Zm88,0a12,12,0,1,1,12,12A12,12,0,0,1,160,108Z"></path>
+                            </svg>
+                        </div>
+                        <div class="feature-text-content">
+                            <h2>AI 分析</h2>
+                            <p>利用 AI 驅動的洞察，進行深入的股票分析。</p>
+                        </div>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24px" height="24px" fill="currentColor" viewBox="0 0 256 256">
+                                <path d="M216,40H136V24a8,8,0,0,0-16,0V40H40A16,16,0,0,0,24,56V176a16,16,0,0,0,16,16H79.36L57.75,219a8,8,0,0,0,12.5,10l29.59-37h56.32l29.59,37a8,8,0,1,0,12.5-10l-21.61-27H216a16,16,0,0,0,16-16V56A16,16,0,0,0,216,40Zm0,136H40V56H216V176ZM104,120v24a8,8,0,0,1-16,0V120a8,8,0,0,1,16,0Zm32-16v40a8,8,0,0,1-16,0V104a8,8,0,0,1,16,0Zm32-16v56a8,8,0,0,1-16,0V88a8,8,0,0,1,16,0Z"></path>
+                            </svg>
+                        </div>
+                        <div class="feature-text-content">
+                            <h2>財務報告評分</h2>
+                            <p>透過自動化報告評分，評估公司財務健康狀況。</p>
+                        </div>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24px" height="24px" fill="currentColor" viewBox="0 0 256 256">
+                                <path d="M232,208a8,8,0,0,1-8,8H32a8,8,0,0,1-8-8V48a8,8,0,0,1,16,0v94.37L90.73,98a8,8,0,0,1,10.07-.38l58.81,44.11L218.73,90a8,8,0,1,1,10.54,12l-64,56a8,8,0,0,1-10.07.38L96.39,114.29,40,163.63V200H224A8,8,0,0,1,232,208Z"></path>
+                            </svg>
+                        </div>
+                        <div class="feature-text-content">
+                            <h2>K 線圖</h2>
+                            <p>透過互動式 K 線圖，視覺化股票價格變動。</p>
+                        </div>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24px" height="24px" fill="currentColor" viewBox="0 0 256 256">
+                                <path d="M128,24C74.17,24,32,48.6,32,80v96c0,31.4,42.17,56,96,56s96-24.6,96-56V80C224,48.6,181.83,24,128,24Zm80,104c0,9.62-7.88,19.43-21.61,26.92C170.93,163.35,150.19,168,128,168s-42.93-4.65-58.39-13.08C55.88,147.43,48,137.62,48,128V111.36c17.06,15,46.23,24.64,80,24.64s62.94-9.68,80-24.64ZM69.61,53.08C85.07,44.65,105.81,40,128,40s42.93,4.65,58.39,13.08C200.12,60.57,208,70.38,208,80s-7.88,19.43-21.61,26.92C170.93,115.35,150.19,120,128,120s-42.93-4.65-58.39-13.08C55.88,99.43,48,89.62,48,80S55.88,60.57,69.61,53.08ZM186.39,202.92C170.93,211.35,150.19,216,128,216s-42.93-4.65-58.39-13.08C55.88,195.43,48,185.62,48,176V159.36c17.06,15,46.23,24.64,80,24.64s62.94-9.68,80-24.64V176C208,185.62,200.12,195.43,186.39,202.92Z"></path>
+                            </svg>
+                        </div>
+                        <div class="feature-text-content">
+                            <h2>數據分析</h2>
+                            <p>深入探索市場數據，做出明智決策。</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // JavaScript 保持不變，用於互動功能
+        document.addEventListener('DOMContentLoaded', () => {
+            console.log('Stock Insight 頁面已載入 (純 CSS 版本)。');
+
+            const navLinks = document.querySelectorAll('.nav-links a');
+            navLinks.forEach(link => {
+                link.addEventListener('click', (event) => {
+                    // event.preventDefault();
+                    console.log(`點擊了導覽列項目: ${event.target.textContent}`);
+                });
+            });
+
+            const searchInput = document.querySelector('.search-input');
+            if (searchInput) {
+                searchInput.addEventListener('input', (event) => {
+                    console.log(`搜尋框輸入: ${event.target.value}`);
+                });
+            }
+
+            const notificationButton = document.querySelector('.notification-button');
+            if (notificationButton) {
+                notificationButton.addEventListener('click', () => {
+                    alert('您點擊了通知按鈕！');
+                });
+            }
+        });
+    </script>
+</body>
+</html>
