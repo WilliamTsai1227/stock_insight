@@ -42,6 +42,27 @@ function initSearchParamsFromURL() {
     page = 1;
 }
 
+// 函式：設定搜尋框的值
+function setSearchBarValue() {
+    const searchBar = document.querySelector('.search-bar');
+    if (searchBar) {
+        searchBar.value = keyword; // 將全域變數 keyword 的值設定到搜尋框
+    }
+}
+
+// 用於根據 is_summary 設定下拉選單顯示
+function setAnalysisTypeSelect() {
+    const selectElement = document.querySelector('.analysis-type-select');
+    if (selectElement) {
+        // 根據全域變數 is_summary 的布林值來選取對應的選項
+        if (is_summary === true) {
+            selectElement.value = "true"; // 設定為統整分析對應的值
+        } else {
+            selectElement.value = "false"; // 設定為逐條分析對應的值
+        }
+    }
+}
+
 function updateURLParams() {
     const params = new URLSearchParams();
     params.set('keyword', keyword);
@@ -60,7 +81,7 @@ async function loadAllAIAnalysis(){
         isLoading = true; // Start loading data, set isLoading to true
         if (loadingIndicator) loadingIndicator.style.display = "flex"; // Display the loading indicator
         console.log(`fetch startTime:${startTime}, endTime: ${endTime}`)
-        const response = await fetch(`http://0.0.0.0:8000/api/ai_news?keyword=${keyword}&industry=${industry}&is_summary=${is_summary}&start_time=${startTime}&end_time=${endTime}&page=${page}`);
+        const response = await fetch(`http://localhost:8000/api/ai_news?keyword=${keyword}&industry=${industry}&is_summary=${is_summary}&start_time=${startTime}&end_time=${endTime}&page=${page}`);
         const result = await response.json();
         // 判斷是否還有下一頁資料
         if (result.nextPage === null || result.data.length === 0) {
@@ -262,7 +283,7 @@ async function loadAllAIAnalysis(){
 
                 // hidden _id span
                 const idSpan = document.createElement("span");
-                idSpan.textContent = news["_id"];
+                idSpan.textContent = news["_id"] || "";
                 idSpan.className = "news-item-id";
                 newsDiv.appendChild(idSpan);
 
@@ -312,45 +333,58 @@ function scrollingAddAIAnalysis(){
     });
 }
 
-function search(){
-    let button = document.querySelector(".search_icon");
+async function performSearch(){
     let input = document.querySelector(".search-bar");
     let container = document.querySelector(".container");
 
+    endTime = Math.floor(Date.now() / 1000);
+    const startDateInput = document.querySelector('.start-time-calendar');
+    const startDateValue = startDateInput.value; // 格式是 "YYYY-MM-DD"
+    const endDateInput = document.querySelector('.end-time-calendar');
+    const endDateValue = endDateInput.value; // 格式是 "YYYY-MM-DD"
+    const isSummaryValue = document.querySelector('.analysis-type-select').value;
+    if (isSummaryValue === "true"){
+        is_summary = true;
+    }else if(isSummaryValue === "false"){
+        is_summary = false;
+    }
 
-    button.addEventListener("click",async () => {
-        endTime = Math.floor(Date.now() / 1000);
-        const startDateInput = document.querySelector('.start-time-calendar');
-        const startDateValue = startDateInput.value; // 格式是 "YYYY-MM-DD"
-        const endDateInput = document.querySelector('.end-time-calendar');
-        const endDateValue = endDateInput.value; // 格式是 "YYYY-MM-DD"
-        const isSummaryValue = document.querySelector('.analysis-type-select').value;
-        if (isSummaryValue === "true"){
-            is_summary = true;
-        }else if(isSummaryValue === "false"){
-            is_summary = false;
-        }
+    if (startDateValue !== "") {
+        startTime = Math.floor(new Date(startDateValue).getTime() / 1000);
+    }else {
+        startTime = Math.floor(new Date("2020-01-01T00:00:00Z").getTime() / 1000);
+    }
+    
+    if (endDateValue !== "") {
+        endTime = Math.floor(new Date(endDateValue).getTime() / 1000);
+    }else {
+        endTime = Math.floor(Date.now() / 1000); // If the user clears the date input box, reset it to the current time
+    }
+    page = 1;
+    hasMoreData = true;
+    keyword = input.value;
+    while(container.firstChild){
+        container.removeChild(container.firstChild);
+    }
+    updateURLParams();
+    await loadAllAIAnalysis();
 
-        if (startDateValue !== "") {
-            startTime = Math.floor(new Date(startDateValue).getTime() / 1000);
-        }else {
-            startTime = Math.floor(new Date("2020-01-01T00:00:00Z").getTime() / 1000);
+}
+
+function search(){
+    let button = document.querySelector(".search_icon");
+    let input = document.querySelector(".search-bar");
+    
+    // 監聽搜尋按鈕點擊事件
+    button.addEventListener("click", performSearch);
+
+    // 監聽搜尋輸入框的鍵盤事件
+    input.addEventListener("keydown", async (event) => {
+        if (event.key === "Enter") {
+            event.preventDefault(); // 阻止 Enter 鍵的預設行為 (例如提交表單)
+            await performSearch();
         }
-        
-        if (endDateValue !== "") {
-            endTime = Math.floor(new Date(endDateValue).getTime() / 1000);
-        }else {
-            endTime = Math.floor(Date.now() / 1000); // If the user clears the date input box, reset it to the current time
-        }
-        page = 1;
-        hasMoreData = true;
-        keyword = input.value;
-        while(container.firstChild){
-            container.removeChild(container.firstChild);
-        }
-        updateURLParams();
-        await loadAllAIAnalysis();
-    })
+    });
 }
 
 function monitorNewsClicks(){
@@ -361,61 +395,21 @@ function monitorNewsClicks(){
             if (objectIdElement) {
                 let objectId = objectIdElement.textContent.trim();
                 // window.location.href = `http://0.0.0.0:8000/news/${objectId}`;
-                window.open(`http://0.0.0.0:8000/news/${objectId}`, '_blank');
+                window.open(`http://localhost:8000/news/${objectId}`, '_blank');
 
             }
         });
     });
 }
 
-// 函式：設定日曆輸入框的值，適應 datetime-local 格式
-function setCalendarInputValues() {
-    const startDateInput = document.querySelector('.start-time-calendar');
-    const endDateInput = document.querySelector('.end-time-calendar');
 
-    if (startDateInput) {
-        const startDate = new Date(startTime * 1000);
-        const year = startDate.getFullYear();
-        const month = (startDate.getMonth() + 1).toString().padStart(2, '0');
-        const day = startDate.getDate().toString().padStart(2, '0');
-        // 輸出 yyyy-MM-ddT00:00 格式，符合 datetime-local 要求
-        startDateInput.value = `${year}-${month}-${day}T00:00`;
-    }
-    if (endDateInput) {
-        const endDate = new Date(endTime * 1000);
-        const year = endDate.getFullYear();
-        const month = (endDate.getMonth() + 1).toString().padStart(2, '0');
-        const day = endDate.getDate().toString().padStart(2, '0');
-        // 輸出 yyyy-MM-ddT00:00 格式，符合 datetime-local 要求
-        endDateInput.value = `${year}-${month}-${day}T00:00`;
-    }
-}
 
-// 函式：設定搜尋框的值
-function setSearchBarValue() {
-    const searchBar = document.querySelector('.search-bar');
-    if (searchBar) {
-        searchBar.value = keyword; // 將全域變數 keyword 的值設定到搜尋框
-    }
-}
 
-// 用於根據 is_summary 設定下拉選單顯示
-function setAnalysisTypeSelect() {
-    const selectElement = document.querySelector('.analysis-type-select');
-    if (selectElement) {
-        // 根據全域變數 is_summary 的布林值來選取對應的選項
-        if (is_summary === true) {
-            selectElement.value = "true"; // 設定為統整分析對應的值
-        } else {
-            selectElement.value = "false"; // 設定為逐條分析對應的值
-        }
-    }
-}
 
 
 async function excute(){
     initSearchParamsFromURL();
-    setSearchBarValue();      // 設定搜尋框的值
+    setSearchBarValue();      // Set the value of the search box 
     setAnalysisTypeSelect(); 
     await loadAllAIAnalysis();
     scrollingAddAIAnalysis();

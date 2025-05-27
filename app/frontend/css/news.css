@@ -130,274 +130,104 @@ body {
     font-weight: 700;
     color: #0000008c;
 }
-.analysis-type-title{
-    font-size: 20px;
-    color: #0000008c;
-    font-family: Noto Sans TC;
-    font-weight: 500;
-    text-align: left;
-    padding-left: 6px;
-}
-.analysis-type-select{
-    border: 1px solid #ddd;
-    border-radius: 5px;
-    margin-left: 4px;
-    height: 42px;
-    width: 100px;
-    font-family: Noto Sans TC;
-    font-size: 16px;
-    font-weight: 700;
-    text-align: center;
-    color: #0000008c;
-}
+
 
 .container {
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 40px;
+    padding-top: 20px;
     padding-bottom: 40px;
 }
 .block {
     display: flex;
     flex-direction: column; /* 垂直堆疊 */
-    gap: 20px; 
-    padding-left: 15px;
-    padding-right: 15px;   
+    padding-top: 10px;
+    padding-left: 10px;
+    padding-right: 10px; 
+    width: 95%;  
+
 }
-.block-content {
-    display: flex;
-    gap: 10px;
-}
+
+
 .publishAtDiv{
     font-family: Noto Sans TC;
     font-size: 15px;
     color: #110f0fad;
     font-weight: 450;
-    background-color: white;
-    border: 1px solid #ddd;
     border-radius: 8px;
-    padding: 8px;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
     position: relative;
     width:200px;
-    gap: 10px;
-    top: 10px;
 }
-.section {
+/* .section {
     background-color: white;
     border: 1px solid #ddd;
     border-radius: 8px;
     padding: 15px;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
     position: relative;
-}
-.list-section{
-    display: flex;
-    flex-direction: column;
-    width:15%;
-    gap: 10px;
-}
-.news-section {
-    display: flex;
-    flex-direction: column;
-    width:17%;
-    gap: 10px;
-}
-.potential-stocks{
-    width:34%;
-}
-.ai-summary{
-    width:34%;
-}
-.stock-list-item {
-    font-family: Noto Sans TC;
-    font-size: 18px;
-    color: #110f0fb5;
-    font-weight: 480;
-    background-color: #f0f0f0;
-    padding: 10px;
-    border-radius: 5px;
-    cursor: pointer;
-    transition: background-color 0.2s;
-    position: relative;
-}
-.stock-list-item:hover {
-    background-color: #e0e0e0;
-}
-.stock-tooltip {
-    display: none;
-    position: absolute;
-    top: 50%;          
-    left: 100%;        
-    transform: translateY(-50%) translateX(12px); 
-    width: 160px;
-    height: 30px;
-    background-color: rgba(6, 28, 168, 0.68); 
-    color: #eaeeee; 
-    font-size: 13px;
-    padding: 5px 10px;
-    border-radius: 4px;
-    z-index: 999;
-    white-space: nowrap;
-    text-align: center;
-    line-height: 20px;
-}
-.stock-tooltip::after {
-    content: "";
-    position: absolute;
-    top: 50%;
-    left: -12px; /* The arrow appears to the left of the tooltip */
-    transform: translateY(-50%);
-    border-width: 6px;
-    border-style: solid;
-    border-color: transparent rgba(6, 28, 168, 0.68) transparent transparent;
-}
+} */
 
-
-.stock-list-item:hover .stock-tooltip {
-    display: block;
-}
-
-
-.stock-list-item-code {
-    display: none;
-}
-.industry-list-item {
-    font-family: Noto Sans TC;
-    font-size: 18px;
-    color: #110f0fb5;
-    font-weight: 480;
-    background-color: #f0f0f0;
-    padding: 10px;
-    border-radius: 5px;
-    cursor: pointer;
-    transition: background-color 0.2s;
-    position: relative;
-}
-.industry-list-item:hover {
-    background-color: #e0e0e0;
-}
-.news-item {
-    font-family: Noto Sans TC;
-    font-size: 16px;
-    color: #110f0fb5;
-    font-weight: 450;
-    background-color: #f0f0f0;
-    padding: 10px;
-    border-radius: 5px;
-    margin-bottom: 10px;
-    position: relative;
+.news-sesstion{
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    background-color: white;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 15px;
     cursor: pointer;
 }
-.news-item:hover {
-    background-color: #e0e0e0;
+.news-sesstion:hover {
+    background-color: #e0e0e012;
 }
-.news-section {
-    overflow-y: auto;
-}
-
-
-/* Arrow Styles using SVG */
-.arrow-right {
-    position: absolute;
-    right: -20px;
-    top: 50%;
-    transform: translateY(-50%);
-    width: 20px;
-    height: 20px;
-}
-.arrow-left {
-    position: absolute;
-    left: -20px;
-    top: 50%;
-    transform: translateY(-50%);
-    width: 20px;
-    height: 20px;
+.news-sesstion:active{
+    transform: scale(0.99);
 }
 
-.news-item span {
-    display: none;
-}
-.news-summary{
+
+
+.news-title{
     flex: none;
     font-size: 20px;
-    color: #448899;
+    color: #000000;
     font-family: Noto Sans TC;
     font-weight: 700;
     text-align: left;
     margin-bottom: 10px;
     
 }
-.news-summary-content{
-    flex: none;
-    font-size: 18px;
-    color: grey;
-    font-family: Noto Sans TC;
-    font-weight: 700;
-    text-align: left;
-    margin-bottom: 10px;
-
-}
-.key-news{
-    flex: none;
-    font-size: 20px;
-    color: #448899;
-    font-family: Noto Sans TC;
-    font-weight: 700;
-    text-align: left;
-    margin-bottom: 10px;
-}
-.key-news-content{
-    flex: none;
-    font-size: 18px;
-    color: grey;
-    font-family: Noto Sans TC;
-    font-weight: 700;
-    text-align: left;
-    margin-bottom: 10px;
-}
-.sentiment-analysis{
-    flex: none;
-    font-size: 20px;
-    color: #448899;
-    font-family: Noto Sans TC;
-    font-weight: 700;
-    text-align: left;
-    margin-bottom: 10px;
-}
-.sentiment-analysis-content{
-    flex: none;
-    font-size: 18px;
-    color: grey;
-    font-family: Noto Sans TC;
-    font-weight: 700;
-    text-align: left;
-    margin-bottom: 10px;
-}
-.section-title{
-    flex: none;
-    font-size: 22px;
-    color: #0a0202d1;
-    font-family: Noto Sans TC;
-    font-weight: 900;
-    text-align: left;
-    margin-bottom: 10px;
-    margin-top: 10px;
-}
-
-.news-item-id{
-    display: none;
-}
-.potential-content{
+.news-content{
     flex: none;
     font-size: 18px;
     color: #110f0fb5;
     font-family: Noto Sans TC;
     font-weight: 700;
     text-align: left;
-    margin-bottom: 10px;    
+    margin-bottom: 10px;
+    /* 新增以下屬性來實現多行截斷 */
+    /* display: -webkit-box; /* 使用 Flexbox 模型 */
+    /* -webkit-box-orient: vertical; 設定為垂直方向 */
+    /* -webkit-line-clamp: 3; 設定顯示的最大行數，例如 3 行 */ 
+    /* white-space: normal; 確保文字可以換行 */
+    white-space: nowrap; /* 文本不換行 */
+    overflow: hidden; /* 超出部分隱藏 */
+    text-overflow: ellipsis; /* 在截斷處顯示省略號 */
+
 }
+.category{
+    flex: none;
+    font-size: 15px;
+    color: grey;
+    font-family: Noto Sans TC;
+    font-weight: 450;
+    text-align: left;
+    padding-top: 5px;
+    margin-bottom: 10px;
+}
+
+.news-id{
+    display: none;
+}
+
 .errorMessage{
     font-family: Noto Sans TC;
     font-size: 25px;
