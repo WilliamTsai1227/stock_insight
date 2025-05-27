@@ -19,6 +19,164 @@ body {
     margin-bottom: 20px;
     border-bottom: 1px solid #75757560; 
 }
+/* Header 樣式 */
+.main-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    white-space: nowrap;
+    border-bottom: 1px solid #f0f2f5;
+    padding: 12px 40px; /* px-10 py-3 */
+    background-color: #ffffff;
+}
+
+.header-left-section {
+    display: flex;
+    align-items: center;
+    gap: 32px; /* gap-8 */
+}
+
+.logo-section {
+    display: flex;
+    align-items: center;
+    gap: 16px; /* gap-4 */
+    color: #111418;
+}
+
+.logo-icon {
+    width: 16px; /* size-4 */
+    height: 16px; /* size-4 */
+}
+
+.logo-title {
+    color: #111418;
+    font-size: 18px; /* text-lg */
+    font-weight: 700; /* font-bold */
+    line-height: 28px; /* leading-tight */
+    letter-spacing: -0.015em; /* tracking-[-0.015em] */
+}
+
+.nav-links {
+    display: flex;
+    align-items: center;
+    gap: 36px; /* gap-9 */
+}
+
+.nav-links a {
+    color: #111418;
+    font-size: 14px; /* text-sm */
+    font-weight: 500; /* font-medium */
+    line-height: 20px; /* leading-normal */
+    text-decoration: none;
+}
+
+.header-right-section {
+    display: flex;
+    flex: 1;
+    justify-content: flex-end;
+    gap: 32px; /* gap-8 */
+}
+
+/* Search Input 樣式 (Header 內的搜尋框) */
+.search-label {
+    display: flex;
+    flex-direction: column;
+    min-width: 160px; /* min-w-40 */
+    height: 40px; /* !h-10 */
+    max-width: 256px; /* max-w-64 */
+}
+
+.search-input-wrapper {
+    display: flex;
+    width: 100%;
+    flex: 1;
+    align-items: stretch;
+    border-radius: 12px; /* rounded-xl */
+    height: 100%;
+}
+
+.search-icon-container {
+    color: #60748a;
+    display: flex;
+    border: none;
+    background-color: #f0f2f5;
+    align-items: center;
+    justify-content: center;
+    padding-left: 16px; /* pl-4 */
+    border-top-left-radius: 12px; /* rounded-l-xl */
+    border-bottom-left-radius: 12px;
+    border-right: 0;
+}
+
+.search-input {
+    flex: 1;
+    width: 100%;
+    min-width: 0;
+    resize: none;
+    overflow: hidden;
+    border-radius: 12px; /* rounded-xl */
+    color: #111418;
+    border: none;
+    background-color: #f0f2f5;
+    height: 100%;
+    padding: 0 16px 0 8px; /* px-4 pl-2 */
+    font-size: 16px; /* text-base */
+    font-weight: 400; /* font-normal */
+    line-height: 24px; /* leading-normal */
+    border-top-left-radius: 0; /* rounded-l-none */
+    border-bottom-left-radius: 0;
+    border-left: 0;
+}
+.search-input::placeholder {
+    color: #60748a;
+}
+.search-input:focus {
+    outline: 0;
+    box-shadow: none;
+    border: none;
+}
+
+/* Notification Button 樣式 */
+.notification-button {
+    display: flex;
+    max-width: 480px;
+    cursor: pointer;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    border-radius: 9999px; /* rounded-full */
+    height: 40px; /* h-10 */
+    background-color: #f0f2f5;
+    color: #111418;
+    gap: 8px; /* gap-2 */
+    font-size: 14px; /* text-sm */
+    font-weight: 700; /* font-bold */
+    line-height: 20px; /* leading-normal */
+    letter-spacing: 0.015em; /* tracking-[0.015em] */
+    min-width: 0;
+    padding: 0 10px; /* px-2.5 */
+    border: none;
+}
+
+/* Profile Image 樣式 */
+.profile-image {
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+    aspect-ratio: 1 / 1; /* aspect-square */
+    border-radius: 9999px; /* rounded-full */
+    width: 40px; /* size-10 */
+    height: 40px; /* size-10 */
+}
+
+/* SVG 樣式 */
+.logo-icon svg,
+.search-icon-container svg,
+.notification-button svg {
+    width: 100%;
+    height: 100%;
+    display: block;
+}
 .logo {
     flex: none;
     font-size: 30px;

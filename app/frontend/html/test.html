@@ -295,6 +295,80 @@
             height: 100%;
             display: block;
         }
+
+        /* Footer 樣式 */
+        .footer {
+            background-color: #f0f2f5; /* 輕微的背景色 */
+            padding: 20px 40px;
+            text-align: center;
+            border-top: 1px solid #e0e4e8; /* 頂部邊界 */
+            margin-top: auto; /* 將 footer 推到底部 */
+        }
+
+        .footer_text {
+            color: #60748a; /* 與其他輔助文字相似的顏色 */
+            font-size: 14px;
+            line-height: 1.6;
+            max-width: 960px; /* 限制寬度與內容區域相似 */
+            margin: 0 auto; /* 置中 */
+        }
+
+        .footer_text strong {
+            font-weight: 700; /* 加粗免責聲明中的重要部分 */
+        }
+
+        /* 簡單的響應式調整 */
+        @media (max-width: 768px) {
+            .main-header {
+                flex-direction: column;
+                align-items: flex-start;
+                padding: 12px 20px;
+            }
+
+            .header-left-section {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 16px;
+                width: 100%;
+            }
+
+            .nav-links {
+                flex-wrap: wrap;
+                gap: 10px;
+                justify-content: center;
+                width: 100%;
+                margin-top: 10px;
+            }
+
+            .header-right-section {
+                flex-direction: column;
+                align-items: center;
+                gap: 16px;
+                width: 100%;
+                margin-top: 10px;
+            }
+
+            .search-label {
+                max-width: 100%;
+                width: 100%;
+            }
+
+            .content-area {
+                padding: 20px;
+            }
+
+            .welcome-section,
+            .welcome-description,
+            .features-title,
+            .feature-grid {
+                padding-left: 0;
+                padding-right: 0;
+            }
+
+            .feature-grid {
+                grid-template-columns: 1fr;
+            }
+        }
     </style>
 </head>
 <body>
@@ -411,12 +485,19 @@
                 </div>
             </div>
         </div>
+
+        <div class="footer">
+            <div class="footer_text">COPYRIGHT © William Tsai<br>
+                免責聲明：<br>
+                **本網站內容不構成任何投資建議，所有內容僅供參考。投資有風險，請謹慎評估。**
+            </div>
+        </div>
     </div>
 
     <script>
         // JavaScript 保持不變，用於互動功能
         document.addEventListener('DOMContentLoaded', () => {
-            console.log('Stock Insight 頁面已載入 (純 CSS 版本)。');
+            console.log('Stock Insight 頁面已載入 (純 CSS 版本，含 Footer)。');
 
             const navLinks = document.querySelectorAll('.nav-links a');
             navLinks.forEach(link => {
