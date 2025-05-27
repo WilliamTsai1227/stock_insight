@@ -17,7 +17,7 @@ body {
     justify-content: space-between;
     align-items: center;
     margin-bottom: 20px;
-    border-bottom: 1px solid #75757560; /* 加這一行 */
+    border-bottom: 1px solid #75757560; 
 }
 .logo {
     flex: none;
@@ -63,10 +63,10 @@ body {
     font-weight: 700;
     text-align: left;
     width: 200px;
-    box-sizing: border-box; /* 使用border-box盒模型 */
-    padding: 0 10px; /* 可根据需要调整内边距 */
-    border: none; /* 移除默认边框 */
-    outline: none; /* 移除焦点样式 */
+    box-sizing: border-box; 
+    padding: 0 10px; 
+    border: none; 
+    outline: none; 
     border-radius: 5px 0 0 5px;
 }
 .search_icon {
@@ -130,10 +130,31 @@ body {
     font-weight: 700;
     color: #0000008c;
 }
+.analysis-type-title{
+    font-size: 20px;
+    color: #0000008c;
+    font-family: Noto Sans TC;
+    font-weight: 500;
+    text-align: left;
+    padding-left: 6px;
+}
+.analysis-type-select{
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    margin-left: 4px;
+    height: 42px;
+    width: 100px;
+    font-family: Noto Sans TC;
+    font-size: 16px;
+    font-weight: 700;
+    text-align: center;
+    color: #0000008c;
+}
 
 .container {
     display: flex;
     flex-direction: column;
+    align-items: center;
     gap: 40px;
     padding-bottom: 40px;
 }
@@ -207,13 +228,13 @@ body {
 .stock-tooltip {
     display: none;
     position: absolute;
-    top: 50%;          /* 垂直置中 */
-    left: 100%;        /* 從右邊開始 */
-    transform: translateY(-50%) translateX(12px); /* 稍微右移一點並垂直置中 */
+    top: 50%;          
+    left: 100%;        
+    transform: translateY(-50%) translateX(12px); 
     width: 160px;
     height: 30px;
-    background-color: rgba(6, 28, 168, 0.68); /* 淺白色＋透明 */
-    color: #eaeeee; /* 深灰色文字 */
+    background-color: rgba(6, 28, 168, 0.68); 
+    color: #eaeeee; 
     font-size: 13px;
     padding: 5px 10px;
     border-radius: 4px;
@@ -226,19 +247,19 @@ body {
     content: "";
     position: absolute;
     top: 50%;
-    left: -12px; /* 箭頭出現在 tooltip 左邊 */
+    left: -12px; /* The arrow appears to the left of the tooltip */
     transform: translateY(-50%);
     border-width: 6px;
     border-style: solid;
     border-color: transparent rgba(6, 28, 168, 0.68) transparent transparent;
 }
 
-/* 滑入整個 stock-list-item 時顯示 tooltip */
+
 .stock-list-item:hover .stock-tooltip {
     display: block;
 }
 
-/* 隱藏代碼本體 */
+
 .stock-list-item-code {
     display: none;
 }
@@ -377,6 +398,47 @@ body {
     text-align: left;
     margin-bottom: 10px;    
 }
+.errorMessage{
+    font-family: Noto Sans TC;
+    font-size: 25px;
+    font-weight: 700;
+    color: rgb(229, 6, 6);
+    text-align: center;
+    margin-top: 100px; 
+    margin-bottom: 100px;  
+}
+#loading-indicator {
+    display: flex; 
+    flex-direction: column; 
+    align-items: center; 
+    justify-content: center; 
+    height: 200px; 
+    width: 100vw;
+    display: none; /* Make sure it is hidden initially, JavaScript will control its display */
+    font-family: Noto Sans TC;
+    font-size: 20px; 
+    font-weight: 700;
+    color: rgba(221, 177, 44, 0.574);
+    margin-top: 50px; 
+    margin-bottom: 50px;
+}
+
+
+.spinner {
+    border: 8px solid rgba(255, 255, 255, 0.3); 
+    border-top: 8px solid rgba(221, 177, 44, 0.574); 
+    border-radius: 50%; 
+    width: 60px; 
+    height: 60px; 
+    animation: spin 1s linear infinite; 
+    margin-bottom: 15px; 
+}
+
+/* Rotation animation definition */
+@keyframes spin {
+    0% { transform: rotate(0deg); } /* Start at 0 degrees */
+    100% { transform: rotate(360deg); } /* Rotate 360 ​​degrees */
+}
 .footer{
     flex: none;
     display: flex;
@@ -385,7 +447,7 @@ body {
     padding-top: 40px;
     padding-bottom: 40px;
     width: 100%;
-    height: 104px;
+    height: 110px;
     background-color:#75757597;
     box-sizing: border-box;
 }
@@ -393,12 +455,12 @@ body {
     display: flex;
     justify-content: center;
     align-items: center;
-    width: 300px;
+    width: 800px;
     height: 24px;
     /* padding: 5px 0px 5px 0px; */
     /* top: 5px; */
     font-family: Noto Sans TC;
-    font-size: 16px;
+    font-size: 15px;
     font-weight: 700;
     text-align: center;
     color:#FFFFFF;
