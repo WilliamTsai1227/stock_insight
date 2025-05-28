@@ -1,22 +1,28 @@
-document.addEventListener('DOMContentLoaded', () => {
-
-
+function initializeHamburgerMenu() {
     const hamburgerMenu = document.querySelector('.hamburger-menu');
     const navDropdown = document.querySelector('.nav-dropdown');
-    const hamburgerClose = document.querySelector('.hamburger-menu-close'); // 獲取關閉按鈕
+    const hamburgerClose = document.querySelector('.hamburger-menu-close');
+
+    if (!hamburgerMenu || !navDropdown) {
+        console.warn('漢堡選單或導覽下拉選單元素不存在。');
+        return; // 如果必要的元素不存在，則不執行後續程式碼
+    }
 
     hamburgerMenu.addEventListener('click', () => {
         hamburgerMenu.classList.toggle('active');
         navDropdown.classList.toggle('active');
     });
 
-    // 監聽關閉按鈕點擊事件
-    hamburgerClose.addEventListener('click', () => {
-        hamburgerMenu.classList.remove('active');
-        navDropdown.classList.remove('active');
-    });
+    if (hamburgerClose) { // 確保關閉按鈕存在才綁定事件
+        hamburgerClose.addEventListener('click', () => {
+            hamburgerMenu.classList.remove('active');
+            navDropdown.classList.remove('active');
+        });
+    } else {
+        console.warn('漢堡選單關閉按鈕元素不存在。');
+    }
 
-    // 點擊下拉選單中的連結後，收起選單
+
     navDropdown.querySelectorAll('a').forEach(link => {
         link.addEventListener('click', () => {
             hamburgerMenu.classList.remove('active');
@@ -24,16 +30,18 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
-    // 處理視窗大小改變時的導覽列顯示/隱藏
     const handleResize = () => {
         if (window.innerWidth > 768) {
-            // 如果是桌面版，確保漢堡選單和下拉選單是隱藏的
             hamburgerMenu.classList.remove('active');
             navDropdown.classList.remove('active');
         }
     };
 
     window.addEventListener('resize', handleResize);
-    // 首次載入時執行一次，以確保狀態正確
-    handleResize();
-});
+    handleResize(); // 初始載入時執行一次
+}
+
+function excute(){
+    initializeHamburgerMenu()
+}
+window.addEventListener("DOMContentLoaded", excute);

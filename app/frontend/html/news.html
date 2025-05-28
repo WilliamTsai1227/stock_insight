@@ -7,7 +7,15 @@
     <meta name="keywords" content="AI股票新聞, 股票分析, 財經AI, 股票推薦, 產業分析, 新聞摘要, 市場情緒, 股票爬蟲, AI財經摘要, 潛力股票, AI stock news, stock analysis, financial AI, stock recommendation, industry analysis, news summary, market sentiment, web scraping, AI financial summary, potential stocks">
     <meta name="author" content="william tsai">
     <title>News</title>
-    <!-- <link rel="stylesheet" href="/frontend/css/ai_news.css"> -->
+    <link rel="icon" type="image/x-icon" href="data:image/x-icon;base64," />
+
+    <link rel="preconnect" href="https://fonts.gstatic.com/" crossorigin />
+    <link
+      rel="stylesheet"
+      as="style"
+      onload="this.rel='stylesheet'"
+      href="https://fonts.googleapis.com/css2?display=swap&family=Noto+Sans%3Awght%40400%3B500%3B700%3B900&family=Work+Sans%3Awght%40400%3B500%3B700%3B900"
+    />
     <link rel="stylesheet" href="../css/news.css">
     <script src="../js/news.js" defer></script>
 </head>
@@ -28,43 +36,49 @@
                 <h2 class="logo-title">Stock Insight</h2>
             </div>
             <div class="nav-links">
-                <a href="#">首頁</a>
-                <a href="#">新聞</a>
-                <a href="#">AI 新聞分析</a>
+                <a href="http://0.0.0.0:8000/home">首頁</a>
+                <a href="http://0.0.0.0:8000/news">新聞</a>
+                <a href="http://0.0.0.0:8000/ai_news">AI 新聞分析</a>
                 <a href="#">分析</a>
                 <a href="#">股票</a>
             </div>
         </div>
         <div class="header-right-section">
-            <label class="search-label">
-                <div class="search-input-wrapper">
-                    <div class="search-icon-container">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="24px" height="24px" fill="currentColor" viewBox="0 0 256 256">
-                            <path d="M229.66,218.34l-50.07-50.06a88.11,88.11,0,1,0-11.31,11.31l50.06,50.07a8,8,0,0,0,11.32-11.32ZM40,112a72,72,0,1,1,72,72A72.08,72.08,0,0,1,40,112Z"></path>
-                        </svg>
-                    </div>
-                    <input placeholder="搜尋" class="search-input" value="" />
-                </div>
-            </label>
-            <button class="notification-button">
-                <div>
-                    <svg xmlns="http://www.w3.org/2000/svg" width="20px" height="20px" fill="currentColor" viewBox="0 0 256 256">
-                        <path d="M221.8,175.94C216.25,166.38,208,139.33,208,104a80,80,0,1,0-160,0c0,35.34-8.26,62.38-13.81,71.94A16,16,0,0,0,48,200H88.81a40,40,0,0,0,78.38,0H208a16,16,0,0,0,13.8-24.06ZM128,216a24,24,0,0,1-22.62-16h45.24A24,24,0,0,1,128,216ZM48,184c7.7-13.24,16-43.92,16-80a64,64,0,1,1,128,0c0,36.05,8.28,66.73,16,80Z"></path>
-                    </svg>
-                </div>
-            </button>
-            <div class="profile-image" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuACQH4kvaP_K_UQ2FuQjcc1XgHHLK1hIVd6UdPgZGEJjk17DcnSqGPKs3MQcdq4Cwsxzuo4m3nKrVQPVsfCU9oPbq8cJIDVDgREz6W867MMDDXLlNDKpCeFBYaMBJNyNlY2l4Of_CwNxNeFBz6K6OPEZP4PdQL8fYt8qGCeV2MbuC-m07EYyBWsIBQFa3DQAHu3Li-ms39AHGW6WVEgdT8bMDFHp-W4z6CwOiGQPE1F5Z1QByr11TOSyI56gyAufrgeoKUzJMqKIe0");'></div>
+            <div class="user-page-button">
+                <div class="profile-image" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuACQH4kvaP_K_UQ2FuQjcc1XgHHLK1hIVd6UdPgZGEJjk17DcnSqGPKs3MQcdq4Cwsxzuo4m3nKrVQPVsfCU9oPbq8cJIDVDgREz6W867MMDDXLlNDKpCeFBYaMBJNyNlY2l4Of_CwNxNeFBz6K6OPEZP4PdQL8fYt8qGCeV2MbuC-m07EYyBWsIBQFa3DQAHu3Li-ms39AHGW6WVEgdT8bMDFHp-W4z6CwOiGQPE1F5Z1QByr11TOSyI56gyAufrgeoKUzJMqKIe0");'></div>
+            </div>
+            <div class="hamburger-menu">
+                <div class="bar"></div>
+                <div class="bar"></div>
+                <div class="bar"></div>
+            </div>
         </div>
     </header>
 
+    <div class="nav-dropdown">
+        <div class="hamburger-menu-close"></div> 
+        <a href="http://0.0.0.0:8000/home">首頁</a>
+        <a href="http://0.0.0.0:8000/news">新聞</a>
+        <a href="http://0.0.0.0:8000/ai_news">AI 新聞分析</a>
+        <a href="#">分析</a>
+        <a href="#">股票</a>
+        <a href="#">使用者頁面</a> 
+    </div>
+
     <div class="search-block">
-        <div class="start-time-title">開始時間:</div>
-        <input type="datetime-local" class="start-time-calendar">
-        <div class="end-time-title">結束時間:</div>
-        <input type="datetime-local" class="end-time-calendar">
-        <div class="search-bar-title">關鍵字搜尋:</div>
-        <input type="text" class="search-bar" placeholder="Search...">
-        <div class="search_icon"></div>
+        <div class="start-time-div">
+            <div class="start-time-title">開始時間:</div>
+            <input type="datetime-local" class="start-time-calendar">
+        </div>
+        <div class="end-time-div">
+            <div class="end-time-title">結束時間:</div>
+            <input type="datetime-local" class="end-time-calendar">
+        </div>
+        <div class="search-bar-div">
+            <div class="search-bar-title">關鍵字搜尋:</div>
+            <input type="text" class="search-bar" placeholder="Search...">
+            <div class="search_icon"></div>
+        </div>
     </div>
     <div class="container">
     </div>
@@ -73,7 +87,7 @@
         <p>載入中...</p>
     </div>
     <div class="footer">
-        <div class="footer_text">COPYRIGHT © William Tsai<br>
+        <div class="footer_text">COPYRIGHT © Stock Insight<br>
             免責聲明：<br>
             **本網站內容不構成任何投資建議，所有內容僅供參考。投資有風險，請謹慎評估。**
         </div>
