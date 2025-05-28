@@ -3,6 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Stock Insight</title>
+    <link rel="icon" type="image/x-icon" href="data:image/x-icon;base64," />
+
     <link rel="preconnect" href="https://fonts.gstatic.com/" crossorigin />
     <link
       rel="stylesheet"
@@ -10,167 +13,131 @@
       onload="this.rel='stylesheet'"
       href="https://fonts.googleapis.com/css2?display=swap&family=Noto+Sans%3Awght%40400%3B500%3B700%3B900&family=Work+Sans%3Awght%40400%3B500%3B700%3B900"
     />
-    <title>Stock Insight</title>
-    <link rel="icon" type="image/x-icon" href="data:image/x-icon;base64," />
-    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link rel="stylesheet" href="../css/index.css">
+    <script src="../js/index.js" defer></script>
 </head>
 <body>
-    <div class="relative flex size-full min-h-screen flex-col bg-white group/design-root overflow-x-hidden" style='font-family: "Work Sans", "Noto Sans", sans-serif;'>
-        <div class="layout-container flex h-full grow flex-col">
-            <header class="flex items-center justify-between whitespace-nowrap border-b border-solid border-b-[#f0f2f5] px-10 py-3">
-                <div class="flex items-center gap-8">
-                    <div class="flex items-center gap-4 text-[#111418]">
-                        <div class="size-4">
-                            <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                <g clip-path="url(#clip0_6_330)">
-                                    <path fill-rule="evenodd" clip-rule="evenodd" d="M24 0.757355L47.2426 24L24 47.2426L0.757355 24L24 0.757355ZM21 35.7574V12.2426L9.24264 24L21 35.7574Z" fill="currentColor"></path>
-                                </g>
-                                <defs>
-                                    <clipPath id="clip0_6_330"><rect width="48" height="48" fill="white"></rect></clipPath>
-                                </defs>
+    <div class="layout-container">
+        <header class="main-header">
+            <div class="header-left-section">
+                <div class="logo-section">
+                    <div class="logo-icon">
+                        <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <g clip-path="url(#clip0_6_330)">
+                                <path fill-rule="evenodd" clip-rule="evenodd" d="M24 0.757355L47.2426 24L24 47.2426L0.757355 24L24 0.757355ZM21 35.7574V12.2426L9.24264 24L21 35.7574Z" fill="currentColor"></path>
+                            </g>
+                            <defs>
+                                <clipPath id="clip0_6_330"><rect width="48" height="48" fill="white"></rect></clipPath>
+                            </defs>
+                        </svg>
+                    </div>
+                    <h2 class="logo-title">Stock Insight</h2>
+                </div>
+                <div class="nav-links">
+                    <a href="http://0.0.0.0:8000/home">首頁</a>
+                    <a href="http://0.0.0.0:8000/news">新聞</a>
+                    <a href="http://0.0.0.0:8000/ai_news">AI 新聞分析</a>
+                    <a href="#">分析</a>
+                    <a href="#">股票</a>
+                </div>
+            </div>
+            <div class="header-right-section">
+                <div class="user-page-button">
+                    <div class="profile-image" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuACQH4kvaP_K_UQ2FuQjcc1XgHHLK1hIVd6UdPgZGEJjk17DcnSqGPKs3MQcdq4Cwsxzuo4m3nKrVQPVsfCU9oPbq8cJIDVDgREz6W867MMDDXLlNDKpCeFBYaMBJNyNlY2l4Of_CwNxNeFBz6K6OPEZP4PdQL8fYt8qGCeV2MbuC-m07EYyBWsIBQFa3DQAHu3Li-ms39AHGW6WVEgdT8bMDFHp-W4z6CwOiGQPE1F5Z1QByr11TOSyI56gyAufrgeoKUzJMqKIe0");'></div>
+                </div>
+                <div class="hamburger-menu">
+                    <div class="bar"></div>
+                    <div class="bar"></div>
+                    <div class="bar"></div>
+                </div>
+            </div>
+        </header>
+
+        <div class="nav-dropdown">
+            <div class="hamburger-menu-close"></div> 
+            <a href="http://0.0.0.0:8000/home">首頁</a>
+            <a href="http://0.0.0.0:8000/news">新聞</a>
+            <a href="http://0.0.0.0:8000/ai_news">AI 新聞分析</a>
+            <a href="#">分析</a>
+            <a href="#">股票</a>
+            <a href="#">使用者頁面</a> 
+        </div>
+
+        <div class="content-area">
+            <div class="layout-content-container">
+                <div class="welcome-section">
+                    <p class="welcome-title">歡迎來到 Stock Insight</p>
+                </div>
+                <p class="welcome-description">
+                    探索 Stock Insight 的強大功能，提升您的股票分析能力。
+                </p>
+                <h2 class="features-title">主要功能</h2>
+                <div class="feature-grid">
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24px" height="24px" fill="currentColor" viewBox="0 0 256 256">
+                                <path d="M88,112a8,8,0,0,1,8-8h80a8,8,0,0,1,0,16H96A8,8,0,0,1,88,112Zm8,40h80a8,8,0,0,0,0-16H96a8,8,0,0,0,0,16ZM232,64V184a24,24,0,0,1-24,24H32A24,24,0,0,1,8,184.11V88a8,8,0,0,1,16,0v96a8,8,0,0,0,16,0V64A16,16,0,0,1,56,48H216A16,16,0,0,1,232,64Zm-16,0H56V184a23.84,23.84,0,0,1-1.37,8H208a8,8,0,0,0,8-8Z"></path>
                             </svg>
                         </div>
-                        <h2 class="text-[#111418] text-lg font-bold leading-tight tracking-[-0.015em]">Stock Insight</h2>
-                    </div>
-                    <div class="flex items-center gap-9">
-                        <a class="text-[#111418] text-sm font-medium leading-normal" href="#">首頁</a>
-                        <a class="text-[#111418] text-sm font-medium leading-normal" href="#">新聞</a>
-                        <a class="text-[#111418] text-sm font-medium leading-normal" href="#">AI 新聞分析</a>
-                        <a class="text-[#111418] text-sm font-medium leading-normal" href="#">分析</a>
-                        <a class="text-[#111418] text-sm font-medium leading-normal" href="#">股票</a>
-                    </div>
-                </div>
-                <div class="flex flex-1 justify-end gap-8">
-                    <label class="flex flex-col min-w-40 !h-10 max-w-64">
-                        <div class="flex w-full flex-1 items-stretch rounded-xl h-full">
-                            <div class="text-[#60748a] flex border-none bg-[#f0f2f5] items-center justify-center pl-4 rounded-l-xl border-r-0" data-icon="MagnifyingGlass" data-size="24px" data-weight="regular">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="24px" height="24px" fill="currentColor" viewBox="0 0 256 256">
-                                    <path d="M229.66,218.34l-50.07-50.06a88.11,88.11,0,1,0-11.31,11.31l50.06,50.07a8,8,0,0,0,11.32-11.32ZM40,112a72,72,0,1,1,72,72A72.08,72.08,0,0,1,40,112Z"></path>
-                                </svg>
-                            </div>
-                            <input
-                                placeholder="搜尋"
-                                class="form-input flex w-full min-w-0 flex-1 resize-none overflow-hidden rounded-xl text-[#111418] focus:outline-0 focus:ring-0 border-none bg-[#f0f2f5] focus:border-none h-full placeholder:text-[#60748a] px-4 rounded-l-none border-l-0 pl-2 text-base font-normal leading-normal"
-                                value=""
-                            />
+                        <div class="feature-text-content">
+                            <h2>即時新聞</h2>
+                            <p>即時掌握最新市場新聞與趨勢。</p>
                         </div>
-                    </label>
-                    <button class="flex max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-full h-10 bg-[#f0f2f5] text-[#111418] gap-2 text-sm font-bold leading-normal tracking-[0.015em] min-w-0 px-2.5">
-                        <div class="text-[#111418]" data-icon="Bell" data-size="20px" data-weight="regular">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="20px" height="20px" fill="currentColor" viewBox="0 0 256 256">
-                                <path d="M221.8,175.94C216.25,166.38,208,139.33,208,104a80,80,0,1,0-160,0c0,35.34-8.26,62.38-13.81,71.94A16,16,0,0,0,48,200H88.81a40,40,0,0,0,78.38,0H208a16,16,0,0,0,13.8-24.06ZM128,216a24,24,0,0,1-22.62-16h45.24A24,24,0,0,1,128,216ZM48,184c7.7-13.24,16-43.92,16-80a64,64,0,1,1,128,0c0,36.05,8.28,66.73,16,80Z"></path>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24px" height="24px" fill="currentColor" viewBox="0 0 256 256">
+                                <path d="M200,48H136V16a8,8,0,0,0-16,0V48H56A32,32,0,0,0,24,80V192a32,32,0,0,0,32,32H200a32,32,0,0,0,32-32V80A32,32,0,0,0,200,48Zm16,144a16,16,0,0,1-16,16H56a16,16,0,0,1-16-16V80A16,16,0,0,1,56,64H200a16,16,0,0,1,16,16Zm-52-56H92a28,28,0,0,0,0,56h72a28,28,0,0,0,0-56Zm-28,16v24H120V152ZM80,164a12,12,0,0,1,12-12h12v24H92A12,12,0,0,1,80,164Zm84,12H152V152h12a12,12,0,0,1,0,24ZM72,108a12,12,0,1,1,12,12A12,12,0,0,1,72,108Zm88,0a12,12,0,1,1,12,12A12,12,0,0,1,160,108Z"></path>
                             </svg>
                         </div>
-                    </button>
-                    <div class="bg-center bg-no-repeat aspect-square bg-cover rounded-full size-10" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuACQH4kvaP_K_UQ2FuQjcc1XgHHLK1hIVd6UdPgZGEJjk17DcnSqGPKs3MQcdq4Cwsxzuo4m3nKrVQPVsfCU9oPbq8cJIDVDgREz6W867MMDDXLlNDKpCeFBYaMBJNyNlY2l4Of_CwNxNeFBz6K6OPEZP4PdQL8fYt8qGCeV2MbuC-m07EYyBWsIBQFa3DQAHu3Li-ms39AHGW6WVEgdT8bMDFHp-W4z6CwOiGQPE1F5Z1QByr11TOSyI56gyAufrgeoKUzJMqKIe0");'></div>
-                </div>
-            </header>
-            <div class="px-40 flex flex-1 justify-center py-5">
-                <div class="layout-content-container flex flex-col max-w-[960px] flex-1">
-                    <div class="flex flex-wrap justify-between gap-3 p-4">
-                        <p class="text-[#111418] tracking-light text-[32px] font-bold leading-tight min-w-72">歡迎來到 Stock Insight</p>
+                        <div class="feature-text-content">
+                            <h2>AI 分析</h2>
+                            <p>利用 AI 驅動新聞的洞察，得出潛力股票。</p>
+                        </div>
                     </div>
-                    <p class="text-[#111418] text-base font-normal leading-normal pb-3 pt-1 px-4">
-                        探索 Stock Insight 的強大功能，提升您的股票分析和財務報告能力。
-                    </p>
-                    <h2 class="text-[#111418] text-[22px] font-bold leading-tight tracking-[-0.015em] px-4 pb-3 pt-5">主要功能</h2>
-                    <div class="grid grid-cols-[repeat(auto-fit,minmax(158px,1fr))] gap-3 p-4">
-                        <div class="flex flex-1 gap-3 rounded-lg border border-[#dbe0e6] bg-white p-4 flex-col">
-                            <div class="text-[#111418]" data-icon="Newspaper" data-size="24px" data-weight="regular">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="24px" height="24px" fill="currentColor" viewBox="0 0 256 256">
-                                    <path d="M88,112a8,8,0,0,1,8-8h80a8,8,0,0,1,0,16H96A8,8,0,0,1,88,112Zm8,40h80a8,8,0,0,0,0-16H96a8,8,0,0,0,0,16ZM232,64V184a24,24,0,0,1-24,24H32A24,24,0,0,1,8,184.11V88a8,8,0,0,1,16,0v96a8,8,0,0,0,16,0V64A16,16,0,0,1,56,48H216A16,16,0,0,1,232,64Zm-16,0H56V184a23.84,23.84,0,0,1-1.37,8H208a8,8,0,0,0,8-8Z"></path>
-                                </svg>
-                            </div>
-                            <div class="flex flex-col gap-1">
-                                <h2 class="text-[#111418] text-base font-bold leading-tight">即時新聞</h2>
-                                <p class="text-[#60748a] text-sm font-normal leading-normal">即時掌握最新市場新聞與趨勢。</p>
-                            </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24px" height="24px" fill="currentColor" viewBox="0 0 256 256">
+                                <path d="M216,40H136V24a8,8,0,0,0-16,0V40H40A16,16,0,0,0,24,56V176a16,16,0,0,0,16,16H79.36L57.75,219a8,8,0,0,0,12.5,10l29.59-37h56.32l29.59,37a8,8,0,1,0,12.5-10l-21.61-27H216a16,16,0,0,0,16-16V56A16,16,0,0,0,216,40Zm0,136H40V56H216V176ZM104,120v24a8,8,0,0,1-16,0V120a8,8,0,0,1,16,0Zm32-16v40a8,8,0,0,1-16,0V104a8,8,0,0,1,16,0Zm32-16v56a8,8,0,0,1-16,0V88a8,8,0,0,1,16,0Z"></path>
+                            </svg>
                         </div>
-                        <div class="flex flex-1 gap-3 rounded-lg border border-[#dbe0e6] bg-white p-4 flex-col">
-                            <div class="text-[#111418]" data-icon="Robot" data-size="24px" data-weight="regular">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="24px" height="24px" fill="currentColor" viewBox="0 0 256 256">
-                                    <path d="M200,48H136V16a8,8,0,0,0-16,0V48H56A32,32,0,0,0,24,80V192a32,32,0,0,0,32,32H200a32,32,0,0,0,32-32V80A32,32,0,0,0,200,48Zm16,144a16,16,0,0,1-16,16H56a16,16,0,0,1-16-16V80A16,16,0,0,1,56,64H200a16,16,0,0,1,16,16Zm-52-56H92a28,28,0,0,0,0,56h72a28,28,0,0,0,0-56Zm-28,16v24H120V152ZM80,164a12,12,0,0,1,12-12h12v24H92A12,12,0,0,1,80,164Zm84,12H152V152h12a12,12,0,0,1,0,24ZM72,108a12,12,0,1,1,12,12A12,12,0,0,1,72,108Zm88,0a12,12,0,1,1,12,12A12,12,0,0,1,160,108Z"></path>
-                                </svg>
-                            </div>
-                            <div class="flex flex-col gap-1">
-                                <h2 class="text-[#111418] text-base font-bold leading-tight">AI 分析</h2>
-                                <p class="text-[#60748a] text-sm font-normal leading-normal">利用 AI 驅動的洞察，進行深入的股票分析。</p>
-                            </div>
+                        <div class="feature-text-content">
+                            <h2>財務報告評分</h2>
+                            <p>透過自動化報告評分，評估公司財務健康狀況。</p>
                         </div>
-                        <div class="flex flex-1 gap-3 rounded-lg border border-[#dbe0e6] bg-white p-4 flex-col">
-                            <div class="text-[#111418]" data-icon="PresentationChart" data-size="24px" data-weight="regular">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="24px" height="24px" fill="currentColor" viewBox="0 0 256 256">
-                                    <path d="M216,40H136V24a8,8,0,0,0-16,0V40H40A16,16,0,0,0,24,56V176a16,16,0,0,0,16,16H79.36L57.75,219a8,8,0,0,0,12.5,10l29.59-37h56.32l29.59,37a8,8,0,1,0,12.5-10l-21.61-27H216a16,16,0,0,0,16-16V56A16,16,0,0,0,216,40Zm0,136H40V56H216V176ZM104,120v24a8,8,0,0,1-16,0V120a8,8,0,0,1,16,0Zm32-16v40a8,8,0,0,1-16,0V104a8,8,0,0,1,16,0Zm32-16v56a8,8,0,0,1-16,0V88a8,8,0,0,1,16,0Z"></path>
-                                </svg>
-                            </div>
-                            <div class="flex flex-col gap-1">
-                                <h2 class="text-[#111418] text-base font-bold leading-tight">財務報告評分</h2>
-                                <p class="text-[#60748a] text-sm font-normal leading-normal">透過自動化報告評分，評估公司財務健康狀況。</p>
-                            </div>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24px" height="24px" fill="currentColor" viewBox="0 0 256 256">
+                                <path d="M232,208a8,8,0,0,1-8,8H32a8,8,0,0,1-8-8V48a8,8,0,0,1,16,0v94.37L90.73,98a8,8,0,0,1,10.07-.38l58.81,44.11L218.73,90a8,8,0,1,1,10.54,12l-64,56a8,8,0,0,1-10.07.38L96.39,114.29,40,163.63V200H224A8,8,0,0,1,232,208Z"></path>
+                            </svg>
                         </div>
-                        <div class="flex flex-1 gap-3 rounded-lg border border-[#dbe0e6] bg-white p-4 flex-col">
-                            <div class="text-[#111418]" data-icon="ChartLine" data-size="24px" data-weight="regular">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="24px" height="24px" fill="currentColor" viewBox="0 0 256 256">
-                                    <path d="M232,208a8,8,0,0,1-8,8H32a8,8,0,0,1-8-8V48a8,8,0,0,1,16,0v94.37L90.73,98a8,8,0,0,1,10.07-.38l58.81,44.11L218.73,90a8,8,0,1,1,10.54,12l-64,56a8,8,0,0,1-10.07.38L96.39,114.29,40,163.63V200H224A8,8,0,0,1,232,208Z"></path>
-                                </svg>
-                            </div>
-                            <div class="flex flex-col gap-1">
-                                <h2 class="text-[#111418] text-base font-bold leading-tight">K 線圖</h2>
-                                <p class="text-[#60748a] text-sm font-normal leading-normal">透過互動式 K 線圖，視覺化股票價格變動。</p>
-                            </div>
+                        <div class="feature-text-content">
+                            <h2>K 線圖</h2>
+                            <p>透過互動式 K 線圖，視覺化股票價格變動。</p>
                         </div>
-                        <div class="flex flex-1 gap-3 rounded-lg border border-[#dbe0e6] bg-white p-4 flex-col">
-                            <div class="text-[#111418]" data-icon="Database" data-size="24px" data-weight="regular">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="24px" height="24px" fill="currentColor" viewBox="0 0 256 256">
-                                    <path d="M128,24C74.17,24,32,48.6,32,80v96c0,31.4,42.17,56,96,56s96-24.6,96-56V80C224,48.6,181.83,24,128,24Zm80,104c0,9.62-7.88,19.43-21.61,26.92C170.93,163.35,150.19,168,128,168s-42.93-4.65-58.39-13.08C55.88,147.43,48,137.62,48,128V111.36c17.06,15,46.23,24.64,80,24.64s62.94-9.68,80-24.64ZM69.61,53.08C85.07,44.65,105.81,40,128,40s42.93,4.65,58.39,13.08C200.12,60.57,208,70.38,208,80s-7.88,19.43-21.61,26.92C170.93,115.35,150.19,120,128,120s-42.93-4.65-58.39-13.08C55.88,99.43,48,89.62,48,80S55.88,60.57,69.61,53.08ZM186.39,202.92C170.93,211.35,150.19,216,128,216s-42.93-4.65-58.39-13.08C55.88,195.43,48,185.62,48,176V159.36c17.06,15,46.23,24.64,80,24.64s62.94-9.68,80-24.64V176C208,185.62,200.12,195.43,186.39,202.92Z"></path>
-                                </svg>
-                            </div>
-                            <div class="flex flex-col gap-1">
-                                <h2 class="text-[#111418] text-base font-bold leading-tight">數據分析</h2>
-                                <p class="text-[#60748a] text-sm font-normal leading-normal">深入探索市場數據，做出明智決策。</p>
-                            </div>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24px" height="24px" fill="currentColor" viewBox="0 0 256 256">
+                                <path d="M128,24C74.17,24,32,48.6,32,80v96c0,31.4,42.17,56,96,56s96-24.6,96-56V80C224,48.6,181.83,24,128,24Zm80,104c0,9.62-7.88,19.43-21.61,26.92C170.93,163.35,150.19,168,128,168s-42.93-4.65-58.39-13.08C55.88,147.43,48,137.62,48,128V111.36c17.06,15,46.23,24.64,80,24.64s62.94-9.68,80-24.64ZM69.61,53.08C85.07,44.65,105.81,40,128,40s42.93,4.65,58.39,13.08C200.12,60.57,208,70.38,208,80s-7.88,19.43-21.61,26.92C170.93,115.35,150.19,120,128,120s-42.93-4.65-58.39-13.08C55.88,99.43,48,89.62,48,80S55.88,60.57,69.61,53.08ZM186.39,202.92C170.93,211.35,150.19,216,128,216s-42.93-4.65-58.39-13.08C55.88,195.43,48,185.62,48,176V159.36c17.06,15,46.23,24.64,80,24.64s62.94-9.68,80-24.64V176C208,185.62,200.12,195.43,186.39,202.92Z"></path>
+                            </svg>
+                        </div>
+                        <div class="feature-text-content">
+                            <h2>數據分析</h2>
+                            <p>深入探索市場數據，做出明智決策。</p>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
+
+        <div class="footer">
+            <div class="footer_text">COPYRIGHT © William Tsai<br>
+                免責聲明：<br>
+                **本網站內容不構成任何投資建議，所有內容僅供參考。投資有風險，請謹慎評估。**
+            </div>
+        </div>
     </div>
-
-    <script>
-        // 您可以在此處添加 JavaScript 程式碼，用於處理互動功能，例如：
-        // 1. 導覽列項目點擊事件
-        // 2. 搜尋功能的實作
-        // 3. 通知按鈕的互動
-        // 4. 其他動態內容的載入
-
-        document.addEventListener('DOMContentLoaded', () => {
-            console.log('Stock Insight 頁面已載入。');
-
-            // 範例：點擊導覽列項目時在控制台輸出
-            const navLinks = document.querySelectorAll('header .flex.items-center.gap-9 a');
-            navLinks.forEach(link => {
-                link.addEventListener('click', (event) => {
-                    // event.preventDefault(); // 如果您不想讓連結實際導向頁面，可以取消註釋此行
-                    console.log(`點擊了導覽列項目: ${event.target.textContent}`);
-                });
-            });
-
-            // 範例：搜尋輸入框的輸入事件
-            const searchInput = document.querySelector('input[placeholder="搜尋"]');
-            if (searchInput) {
-                searchInput.addEventListener('input', (event) => {
-                    console.log(`搜尋框輸入: ${event.target.value}`);
-                });
-            }
-
-            // 範例：通知按鈕點擊事件
-            const notificationButton = document.querySelector('button.rounded-full');
-            if (notificationButton) {
-                notificationButton.addEventListener('click', () => {
-                    alert('您點擊了通知按鈕！');
-                });
-            }
-        });
-    </script>
 </body>
 </html>

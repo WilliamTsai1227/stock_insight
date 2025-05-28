@@ -28,6 +28,9 @@ app.mount("/css", StaticFiles(directory=CSS_DIR), name="css")
 app.mount("/js", StaticFiles(directory=JS_DIR), name="js")
 
 # 回傳 HTML 頁面
+@app.get("/home", include_in_schema=False)
+async def index(request: Request):
+    return FileResponse(HTML_DIR / "index.html", media_type="text/html")
 @app.get("/ai_news", include_in_schema=False)
 async def index(request: Request):
     return FileResponse(HTML_DIR / "ai_news.html", media_type="text/html")
