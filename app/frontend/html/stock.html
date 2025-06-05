@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>個股分析</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.2/dist/chart.umd.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns@3.0.0/dist/chartjs-adapter-date-fns.bundle.min.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            max-width: 1200px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        h1, h2, h3, h4 {
+            color: #333;
+        }
+        .section {
+            margin-bottom: 40px;
+            padding: 20px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+        }
+        .input-group {
+            margin-bottom: 20px;
+        }
+        .input-group label {
+            margin-right: 10px;
+        }
+        button {
+            padding: 10px 20px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        ul {
+            list-style-type: none;
+            padding: 0;
+        }
+        li {
+            margin: 5px 0;
+        }
+        .error {
+            color: red;
+        }
+        .chart-container {
+            max-width: 800px;
+            margin: 20px auto;
+        }
+    </style>
+</head>
+<body>
+    <h1>個股分析</h1>
+    <div class="section">
+        <div class="input-group">
+            <label>公司名稱: <input type="text" id="company-name" placeholder="例如：聯發科"></label>
+            <label>或 股票代碼: <input type="text" id="stock-symbol" placeholder="例如：2454"></label>
+            <label>國家: <input type="text" id="country" placeholder="例如：TW"></label>
+            <label>年份: <input type="number" id="year" value="2024"></label>
+            <button onclick="loadStockMetrics()">查詢</button>
+        </div>
+        <div id="stock-metrics"></div>
+        <div id="stock-growth-analysis"></div>
+    </div>
+
+    <script>
+        // 格式化貨幣（USD）
+        function formatUSD(value) {
+            return value ? new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(value) : 'N/A';
+        }
+
+        // 繪製折線圖
+        function createChart(canvasId, metric, companyData, industryData, yLabel) {
+            const ctx = document.getElementById(canvasId).getContext('2d');
+            new Chart(ctx, {
+                type: 'line',
+                data: {
+                    datasets: [
+                        {
+                            label: `公司 ${metric}`,
+                            data: companyData.map(h => ({
+                                x: `${h.year}-Q${h.quarter}`,
+                                y: h[metric]
+                            })),
+                            borderColor: '#007bff',
+                            backgroundColor: 'rgba(0, 123, 255, 0.1)',
+                            fill: false,
+                            tension: 0.1
+                        },
+                        {
+                            label: `產業平均 ${metric}`,
+                            data: industryData.map(h => ({
+                                x: `${h.year}-Q${h.quarter}`,
+                                y: h[`avg_${metric}`]
+                            })),
+                            borderColor: '#28a745',
+                            backgroundColor: 'rgba(40, 167, 69, 0.1)',
+                            fill: false,
+                            tension: 0.1
+                        }
+                    ]
+                },
+                options: {
+                    scales: {
+                        x: {
+                            type: 'time',
+                            time: {
+                                parser: 'yyyy-[Q]Q',
+                                unit: 'quarter',
+                                displayFormats: { quarter: 'yyyy-QQQ' }
+                            },
+                            title: { display: true, text: '年份-季度' }
+                        },
+                        y: { title: { display: true, text: yLabel } }
+                    },
+                    plugins: {
+                        legend: { display: true },
+                        tooltip: { mode: 'index', intersect: false }
+                    }
+                }
+            });
+        }
+
+        // 載入個股數據
+        function loadStockMetrics() {
+            const companyName = document.getElementById('company-name').value.trim();
+            const stockSymbol = document.getElementById('stock-symbol').value.trim();
+            const country = document.getElementById('country').value.trim().toUpperCase();
+            const year = document.getElementById('year').value;
+            const metricsDiv = document.getElementById('stock-metrics');
+            metricsDiv.innerHTML = '載入中...';
+
+            let queryParams = `year=${year}`;
+            if (companyName) {
+                queryParams += `&company_name=${encodeURIComponent(companyName)}`;
+            } else if (stockSymbol && country) {
+                queryParams += `&stock_symbol=${encodeURIComponent(stockSymbol)}&country=${encodeURIComponent(country)}`;
+            } else {
+                metricsDiv.innerHTML = '<p class="error">請輸入公司名稱或股票代碼+國家</p>';
+                return;
+            }
+
+            fetch(`http://localhost:8000/stock_metrics?${queryParams}`)
+                .then(response => {
+                    if (!response.ok) throw new Error('公司或數據不存在');
+                    return response.json();
+                })
+                .then(data => {
+                    metricsDiv.innerHTML = `
+                        <h3>${data.company_name} (${data.country}) - ${data.sector_name}</h3>
+                        <h4>PE Ratio (${year})</h4>
+                        <p>排名: ${data.pe_rank || 'N/A'} / ${data.total_companies || 'N/A'}</p>
+                        <p>${data.company_name}: ${data.pe_ratio?.toFixed(2) || 'N/A'} | 產業平均: ${data.avg_pe_ratio?.toFixed(2) || 'N/A'}</p>
+                        <div class="chart-container"><canvas id="pe-ratio-chart"></canvas></div>
+                        <h4>Revenue (${year})</h4>
+                        <p>排名: ${data.revenue_rank || 'N/A'} / ${data.total_companies || 'N/A'}</p>
+                        <p>${data.company_name}: ${formatUSD(data.revenue)} | 產業平均: ${formatUSD(data.avg_revenue)}</p>
+                        <div class="chart-container"><canvas id="revenue-chart"></canvas></div>
+                        <h4>Operating Income (${year})</h4>
+                        <p>排名: ${data.operating_income_rank || 'N/A'} / ${data.total_companies || 'N/A'}</p>
+                        <p>${data.company_name}: ${formatUSD(data.operating_income)} | 產業平均: ${formatUSD(data.avg_operating_income)}</p>
+                        <div class="chart-container"><canvas id="operating-income-chart"></canvas></div>
+                        <h4>Net Income (${year})</h4>
+                        <p>排名: ${data.net_income_rank || 'N/A'} / ${data.total_companies || 'N/A'}</p>
+                        <p>${data.company_name}: ${formatUSD(data.net_income)} | 產業平均: ${formatUSD(data.avg_net_income)}</p>
+                        <div class="chart-container"><canvas id="net-income-chart"></canvas></div>
+                    `;
+
+                    createChart('pe-ratio-chart', 'pe_ratio', data.company_history, data.industry_history, 'PE Ratio');
+                    createChart('revenue-chart', 'revenue', data.company_history, data.industry_history, 'Revenue (USD)');
+                    createChart('operating-income-chart', 'operating_income', data.company_history, data.industry_history, 'Operating Income (USD)');
+                    createChart('net-income-chart', 'net_income', data.company_history, data.industry_history, 'Net Income (USD)');
+
+                    loadStockGrowthAnalysis(companyName, stockSymbol, country);
+                })
+                .catch(error => {
+                    metricsDiv.innerHTML = `<p class="error">錯誤：${error.message}</p>`;
+                });
+        }
+
+        // 載入成長分析
+        function loadStockGrowthAnalysis(companyName, stockSymbol, country) {
+            const growthDiv = document.getElementById('stock-growth-analysis');
+            growthDiv.innerHTML = '載入中...';
+
+            let queryParams = '';
+            if (companyName) {
+                queryParams = `company_name=${encodeURIComponent(companyName)}`;
+            } else if (stockSymbol && country) {
+                queryParams = `stock_symbol=${encodeURIComponent(stockSymbol)}&country=${encodeURIComponent(country)}`;
+            }
+
+            fetch(`http://localhost:8000/stock_growth_analysis?${queryParams}`)
+                .then(response => {
+                    if (!response.ok) throw new Error('公司或數據不存在');
+                    return response.json();
+                })
+                .then(data => {
+                    let html = `<h3>${data.company_name} 成長分析</h3>`;
+                    const metrics = [
+                        { key: 'revenue', label: 'Revenue' },
+                        { key: 'operating_income', label: 'Operating Income' },
+                        { key: 'net_income', label: 'Net Income' },
+                        { key: 'current_assets_vs_liabilities', label: '流動資產 vs 流動負債' },
+                        { key: 'shareholders_equity', label: '股東權益' },
+                        { key: 'free_cash_flow', label: '自由現金流' }
+                    ];
+                    metrics.forEach(metric => {
+                        html += `<h4>${metric.label}</h4>`;
+                        if (metric.key === 'current_assets_vs_liabilities') {
+                            html += `<p>年度數據:</p><ul>`;
+                            data.analysis[metric.key].forEach(d => {
+                                html += `<li>${d.year}: ${d.status} (流動資產: ${formatUSD(d.current_assets)}, 流動負債: ${formatUSD(d.current_liabilities)})</li>`;
+                            });
+                            html += `</ul>`;
+                        } else {
+                            html += `<p>年度數據:</p><ul>`;
+                            data.analysis[metric.key].forEach(d => {
+                                html += `<li>${d.year}: ${formatUSD(d.value)}</li>`;
+                            });
+                            html += `</ul>`;
+                            html += `<p>年度變化:</p><ul>`;
+                            data.analysis[metric.key + '_changes'].forEach(c => {
+                                html += `<li>${c.from_year} → ${c.to_year}: ${c.direction || ''} ${c.percentage?.toFixed(1) || 'N/A'}% (${formatUSD(c.change)})</li>`;
+                            });
+                            html += `</ul>`;
+                            if (data.analysis[metric.key + '_pandemic']) {
+                                html += `<p>疫情恢復分析 (2022 → 2024):</p>`;
+                                html += `<p>${data.analysis[metric.key + '_pandemic'].status}: ${data.analysis[metric.key + '_pandemic'].percentage?.toFixed(1) || 'N/A'}% (${formatUSD(data.analysis[metric.key + '_pandemic'].change)})</p>`;
+                                html += `<p>排除 2023 年成長: ${data.analysis[metric.key + '_non_2023_growth'] ? '✓ 符合' : '✗ 不符合'}</p>`;
+                            }
+                        }
+                    });
+                    growthDiv.innerHTML = html;
+                })
+                .catch(error => {
+                    growthDiv.innerHTML = `<p class="error">錯誤：${error.message}</p>`;
+                });
+        }
+
+        window.onload = () => {
+            document.getElementById('company-name').addEventListener('input', () => {
+                if (document.getElementById('company-name').value) {
+                    document.getElementById('stock-symbol').disabled = true;
+                    document.getElementById('country').disabled = true;
+                } else {
+                    document.getElementById('stock-symbol').disabled = false;
+                    document.getElementById('country').disabled = false;
+                }
+            });
+            document.getElementById('stock-symbol').addEventListener('input', () => {
+                if (document.getElementById('stock-symbol').value) {
+                    document.getElementById('company-name').disabled = true;
+                } else {
+                    document.getElementById('company-name').disabled = false;
+                }
+            });
+        };
+    </script>
+</body>
+</html>

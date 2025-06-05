@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>進階搜索</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            max-width: 800px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        h1, h3 {
+            color: #333;
+        }
+        .section {
+            margin-bottom: 20px;
+            padding: 20px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+        }
+        .checkbox-group {
+            display: block;
+            margin: 10px 0;
+        }
+        .checkbox-group label {
+            display: inline-block;
+            width: 250px;
+            margin-bottom: 5px;
+        }
+        button {
+            padding: 10px 20px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        ul {
+            list-style-type: none;
+            padding: 0;
+        }
+        li {
+            margin: 10px 0;
+        }
+        .error {
+            color: red;
+        }
+    </style>
+</head>
+<body>
+    <h1>進階搜索</h1>
+    <div class="section">
+        <div class="checkbox-group" id="years-group">
+            <h3>年份</h3>
+            <label><input type="checkbox" name="years" value="2021"> 2021</label>
+            <label><input type="checkbox" name="years" value="2022"> 2022</label>
+            <label><input type="checkbox" name="years" value="2023"> 2023</label>
+            <label><input type="checkbox" name="years" value="2024"> 2024</label>
+        </div>
+        <div class="checkbox-group" id="quarters-group">
+            <h3>季度</h3>
+            <label><input type="checkbox" name="quarters" value="1"> Q1</label>
+            <label><input type="checkbox" name="quarters" value="2"> Q2</label>
+            <label><input type="checkbox" name="quarters" value="3"> Q3</label>
+            <label><input type="checkbox" name="quarters" value="4"> Q4</label>
+            <label><input type="checkbox" name="quarters" value="YEAR"> 全年</label>
+        </div>
+        <div class="checkbox-group" id="countries-group">
+            <h3>國家</h3>
+            <!-- 動態生成 -->
+        </div>
+        <div class="checkbox-group" id="sectors-group">
+            <h3>產業</h3>
+            <!-- 動態生成 -->
+        </div>
+        <div class="checkbox-group">
+            <h3>篩選條件</h3>
+            <label><input type="checkbox" name="filters" value="pe_ratio_below_25"> PE Ratio < 25</label>
+            <label><input type="checkbox" name="filters" value="pe_ratio_below_25_current"> PE Ratio < 25 (當年)</label>
+            <label><input type="checkbox" name="filters" value="revenue_growth"> Revenue 成長</label>
+            <label><input type="checkbox" name="filters" value="operating_income_growth"> Operating Income 成長</label>
+            <label><input type="checkbox" name="filters" value="net_income_growth"> Net Income 成長</label>
+            <label><input type="checkbox" name="filters" value="current_assets_above_liabilities"> 流動資產 > 流動負債</label>
+            <label><input type="checkbox" name="filters" value="current_assets_above_liabilities_current"> 流動資產 > 流動負債 (當年)</label>
+            <label><input type="checkbox" name="filters" value="long_term_debt_to_net_income_below_4"> 長期負債/淨利 < 4</label>
+            <label><input type="checkbox" name="filters" value="long_term_debt_to_net_income_below_4_current"> 長期負債/淨利 < 4 (當年)</label>
+            <label><input type="checkbox" name="filters" value="shareholders_equity_growth"> 股東權益成長</label>
+            <label><input type="checkbox" name="filters" value="shares_outstanding_decline"> 流通股數下降</label>
+            <label><input type="checkbox" name="filters" value="operating_cash_flow_above_investing_financing"> 營業現金流 > 投資+融資現金流</label>
+            <label><input type="checkbox" name="filters" value="operating_cash_flow_above_investing_financing_current"> 營業現金流 > 投資+融資現金流 (當年)</label>
+            <label><input type="checkbox" name="filters" value="free_cash_flow_growth"> 自由現金流成長</label>
+        </div>
+        <button onclick="advancedSearch()">搜尋公司</button>
+    </div>
+    <div id="search-results"></div>
+
+    <script>
+        // 動態載入國家和產業選項
+        function loadOptions() {
+            fetch('http://localhost:8000/get_countries')
+                .then(response => response.json())
+                .then(countries => {
+                    const countriesGroup = document.getElementById('countries-group');
+                    countries.forEach(country => {
+                        const label = document.createElement('label');
+                        label.innerHTML = `<input type="checkbox" name="countries" value="${country}"> ${country}`;
+                        countriesGroup.appendChild(label);
+                    });
+                })
+                .catch(error => console.error('載入國家失敗:', error));
+
+            fetch('http://localhost:8000/get_sectors')
+                .then(response => response.json())
+                .then(sectors => {
+                    const sectorsGroup = document.getElementById('sectors-group');
+                    sectors.forEach(sector => {
+                        const label = document.createElement('label');
+                        label.innerHTML = `<input type="checkbox" name="sectors" value="${sector}"> ${sector}`;
+                        sectorsGroup.appendChild(label);
+                    });
+                })
+                .catch(error => console.error('載入產業失敗:', error));
+        }
+
+        // 進階查詢
+        function advancedSearch() {
+            const years = Array.from(document.querySelectorAll('input[name="years"]:checked')).map(input => parseInt(input.value));
+            const quarters = Array.from(document.querySelectorAll('input[name="quarters"]:checked')).map(input => input.value);
+            const countries = Array.from(document.querySelectorAll('input[name="countries"]:checked')).map(input => input.value);
+            const sectors = Array.from(document.querySelectorAll('input[name="sectors"]:checked')).map(input => input.value);
+            const filters = Array.from(document.querySelectorAll('input[name="filters"]:checked')).map(input => input.value);
+            const resultsDiv = document.getElementById('search-results');
+            resultsDiv.innerHTML = '載入中...';
+
+            fetch('http://localhost:8000/advanced_search', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ years, quarters, countries, sectors, filters })
+            })
+                .then(response => {
+                    if (!response.ok) throw new Error('查詢失敗');
+                    return response.json();
+                })
+                .then(data => {
+                    if (data.length === 0) {
+                        resultsDiv.innerHTML = '<p>無符合條件的公司</p>';
+                        return;
+                    }
+                    let html = '<h3>查詢結果</h3><ul>';
+                    data.forEach(r => {
+                        html += `<li>${r.company_name} (${r.country}, ${r.sector_name})</li>`;
+                    });
+                    html += '</ul>';
+                    resultsDiv.innerHTML = html;
+                })
+                .catch(error => {
+                    resultsDiv.innerHTML = `<p class="error"}>錯誤：${error.message}}</p>`;
+                });
+        }
+
+        window.onload = loadOptions;
+    </script>
+</body>
+</html>

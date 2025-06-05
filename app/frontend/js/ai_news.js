@@ -403,6 +403,87 @@ function monitorNewsClicks(){
 }
 
 
+function monitorStockClicks() {
+    let listItems = document.querySelectorAll(".stock-list-item");
+    listItems.forEach(item => {
+        item.addEventListener("click", () => {
+            // 獲取股票名稱
+            let stockName = item.childNodes[0].textContent.trim();
+            
+            // 獲取股票代碼（例如 tw,4938 或 us,TSLA）
+            let stockCodeElement = item.querySelector(".stock-list-item-code");
+            let stockCodeText = stockCodeElement ? stockCodeElement.textContent.trim() : "";
+            let [market, stockCode] = stockCodeText.split(",");
+            
+            // 開啟第一個網頁（Google 搜尋）並保持當前窗口焦點
+            let googleStockWindow = window.open(`https://www.google.com/search?q=${stockName}`, '_blank');
+            if (!googleStockWindow) {
+                alert("Google 搜尋窗口被攔截，請檢查瀏覽器彈窗設定。");
+            } else {
+                window.focus(); // 保持當前窗口焦點
+            }
+            
+            // 根據市場代碼生成 TradingView URL
+            let tradingViewUrl = "";
+            if (market && stockCode) {
+                stockCode = stockCode.trim();
+                // 特殊處理香港股票代碼（移除前綴的 00）
+                if (market === "hk") {
+                    stockCode = stockCode.replace(/^00/, "");
+                }
+                
+                switch (market) {
+                    case "tw":
+                        // 首先嘗試 TWSE
+                        tradingViewUrl = `https://tw.tradingview.com/chart/?symbol=TWSE%3A${stockCode}`;
+                        break;
+                    case "us":
+                        tradingViewUrl = `https://tw.tradingview.com/chart/?symbol=NASDAQ%3A${stockCode}`;
+                        break;
+                    case "cn":
+                        tradingViewUrl = `https://tw.tradingview.com/chart/?symbol=SZSE%3A${stockCode}`;
+                        break;
+                    case "hk":
+                        tradingViewUrl = `https://tw.tradingview.com/chart/?symbol=HKEX%3A${stockCode}`;
+                        break;
+                    case "jp":
+                        tradingViewUrl = `https://tw.tradingview.com/chart/?symbol=TSE%3A${stockCode}`;
+                        break;
+                    case "kr":
+                        tradingViewUrl = `https://tw.tradingview.com/chart/?symbol=KRX%3A${stockCode}`;
+                        break;
+                    default:
+                        tradingViewUrl = null; // 如果市場代碼無效，不開啟第二個網頁
+                }
+                
+                // 開啟 TradingView 網頁（延遲 2 秒）
+                if (tradingViewUrl) {
+                    setTimeout(() => {
+                        let tradingViewWindow = window.open(tradingViewUrl, '_blank');
+                        if (!tradingViewWindow) {
+                            alert("TradingView 窗口被攔截，請檢查瀏覽器彈窗設定。");
+                        } else {
+                            window.focus(); // 保持當前窗口焦點
+                            if (market === "tw") {
+                                // 對於 tw 市場，額外嘗試 TPEX（延遲 4 秒）
+                                setTimeout(() => {
+                                    let tpexWindow = window.open(`https://tw.tradingview.com/chart/?symbol=TPEX%3A${stockCode}`, '_blank');
+                                    if (!tpexWindow) {
+                                        alert("TradingView TPEX 窗口被攔截，請檢查瀏覽器彈窗設定。");
+                                    } else {
+                                        window.focus(); // 保持當前窗口焦點
+                                    }
+                                }, 3000);
+                            }
+                        }
+                    }, 2000);
+                }
+            }
+        });
+    });
+}
+
+
 function initializeHamburgerMenu() {
     const hamburgerMenu = document.querySelector('.hamburger-menu');
     const navDropdown = document.querySelector('.nav-dropdown');
@@ -457,7 +538,8 @@ async function excute(){
     await loadAllAIAnalysis();
     scrollingAddAIAnalysis();
     search();
-    initializeHamburgerMenu()
+    monitorStockClicks();
+    initializeHamburgerMenu();
     
 }
 window.addEventListener("DOMContentLoaded", excute);
