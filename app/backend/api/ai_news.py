@@ -1,24 +1,13 @@
 from fastapi import APIRouter, HTTPException, Query
 from typing import Optional
 from fastapi.responses import JSONResponse
-from pymongo import MongoClient
-from dotenv import load_dotenv
-import os
-load_dotenv()
-
-# MongoDB 連線
-db_user = os.getenv('mongodb_user')
-db_password = os.getenv('mongodb_password')
-uri = f"mongodb+srv://{db_user}:{db_password}@stock-main.kbyokcd.mongodb.net/?retryWrites=true&w=majority&appName=stock-main"
-client = MongoClient(uri)
-db = client["stock_insight"]
-collection = db["AI_news_analysis"]
-
-
-
+from bson import ObjectId
+from module.mongodb_connection_pool import mongodb_pool
 
 router = APIRouter()
 
+# 使用連接池獲取 AI_news_analysis collection
+collection = mongodb_pool.get_collection("AI_news_analysis")
 
 @router.get("/api/ai_news")
 async def get_ai_news(
@@ -68,4 +57,4 @@ async def get_ai_news(
     for r in results:
         r["_id"] = str(r["_id"])
 
-    return JSONResponse(content={"nextPage":page + 1 if len(results) == limit else None,"page": page, "data": results})
+    return JSONResponse(content={"nextPage":page + 1 if len(results) == limit else None,"page": page, "data": results}) 

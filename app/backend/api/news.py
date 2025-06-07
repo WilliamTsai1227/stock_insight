@@ -1,22 +1,13 @@
 from fastapi import APIRouter, HTTPException
 from fastapi.responses import JSONResponse
-from pymongo import MongoClient
-from dotenv import load_dotenv
-import os
 from bson import ObjectId
 from typing import Optional
-
-load_dotenv()
-
-# MongoDB 連線
-db_user = os.getenv('mongodb_user')
-db_password = os.getenv('mongodb_password')
-uri = f"mongodb+srv://{db_user}:{db_password}@stock-main.kbyokcd.mongodb.net/?retryWrites=true&w=majority&appName=stock-main"
-client = MongoClient(uri)
-db = client["stock_insight"]
-collection = db["news"]
+from module.mongodb_connection_pool import mongodb_pool
 
 router = APIRouter()
+
+# 使用連接池獲取 news collection
+collection = mongodb_pool.get_collection("news")
 
 @router.get("/api/news/{object_id}")
 async def get_single_news(object_id: str):

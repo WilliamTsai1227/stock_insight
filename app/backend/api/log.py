@@ -1,9 +1,13 @@
 from fastapi import APIRouter, HTTPException, Query
-from module.connection_pool import get_log_data_db
+from fastapi.responses import JSONResponse
+from module.mongodb_connection_pool import mongodb_pool
 from datetime import datetime, timedelta
 
 
 router = APIRouter()
+
+# 使用連接池獲取 log collection
+collection = mongodb_pool.get_collection("log")
 
 @router.get("/api/log/ai_headline_news_error")
 def get_ai_headline_news_error(
@@ -13,21 +17,15 @@ def get_ai_headline_news_error(
     sort_order: int = Query(-1, description="排序方式：1 為舊到新，-1 為新到舊")
 ):
     try:
-        db = get_log_data_db()
-        collection = db["AI_headline_news_error"]
-
-        # 把 timestamp 轉為當天的起始與結束（秒）
-        start_ts = date_ts
-        end_ts = date_ts + 86400  # 加一天（秒）
-
+        # 使用已定義的 collection
         cursor = collection.find(
             {
                 "timestamp": {
-                    "$gte": start_ts,
-                    "$lt": end_ts
+                    "$gte": date_ts,
+                    "$lt": date_ts + 86400  # 加一天（秒）
                 }
             }
-        ).skip(skip).limit(limit).sort("timestamp", sort_order)  # 預設為-1 為最新到舊
+        ).skip(skip).limit(limit).sort("timestamp", sort_order)
 
         results = list(cursor)
 

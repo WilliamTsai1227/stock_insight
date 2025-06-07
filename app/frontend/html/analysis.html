@@ -3,168 +3,98 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>進階搜索</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 20px;
-            max-width: 800px;
-            margin-left: auto;
-            margin-right: auto;
-        }
-        h1, h3 {
-            color: #333;
-        }
-        .section {
-            margin-bottom: 20px;
-            padding: 20px;
-            border: 1px solid #ddd;
-            border-radius: 8px;
-        }
-        .checkbox-group {
-            display: block;
-            margin: 10px 0;
-        }
-        .checkbox-group label {
-            display: inline-block;
-            width: 250px;
-            margin-bottom: 5px;
-        }
-        button {
-            padding: 10px 20px;
-            background-color: #007bff;
-            color: white;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-        }
-        button:hover {
-            background-color: #0056b3;
-        }
-        ul {
-            list-style-type: none;
-            padding: 0;
-        }
-        li {
-            margin: 10px 0;
-        }
-        .error {
-            color: red;
-        }
-    </style>
+    <meta name="description" content="AI股票新聞平台，透過即時爬蟲與AI分析提供重點摘要與股票建議。AI-powered stock news platform offering summaries and stock recommendations based on real-time financial news.">
+    <meta name="keywords" content="AI股票新聞, 股票分析, 財經AI, 股票推薦, 產業分析, 新聞摘要, 市場情緒, 股票爬蟲, AI財經摘要, 潛力股票, AI stock news, stock analysis, financial AI, stock recommendation, industry analysis, news summary, market sentiment, web scraping, AI financial summary, potential stocks">
+    <meta name="author" content="william tsai">
+    <title>Analysis</title>
+    <link rel="icon" type="image/x-icon" href="data:image/x-icon;base64," />
+
+    <link rel="preconnect" href="https://fonts.gstatic.com/" crossorigin />
+    <link
+      rel="stylesheet"
+      as="style"
+      onload="this.rel='stylesheet'"
+      href="https://fonts.googleapis.com/css2?display=swap&family=Noto+Sans%3Awght%40400%3B500%3B700%3B900&family=Work+Sans%3Awght%40400%3B500%3B700%3B900"
+    />
+    <link rel="stylesheet" href="../css/analysis.css">
+    <script src="../js/analysis.js" defer></script>
 </head>
 <body>
-    <h1>進階搜索</h1>
-    <div class="section">
-        <div class="checkbox-group" id="years-group">
-            <h3>年份</h3>
-            <label><input type="checkbox" name="years" value="2021"> 2021</label>
-            <label><input type="checkbox" name="years" value="2022"> 2022</label>
-            <label><input type="checkbox" name="years" value="2023"> 2023</label>
-            <label><input type="checkbox" name="years" value="2024"> 2024</label>
+    <header class="main-header">
+        <div class="header-left-section">
+            <div class="logo-section">
+                <div class="logo-icon">
+                    <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <g clip-path="url(#clip0_6_330)">
+                            <path fill-rule="evenodd" clip-rule="evenodd" d="M24 0.757355L47.2426 24L24 47.2426L0.757355 24L24 0.757355ZM21 35.7574V12.2426L9.24264 24L21 35.7574Z" fill="currentColor"></path>
+                        </g>
+                        <defs>
+                            <clipPath id="clip0_6_330"><rect width="48" height="48" fill="white"></rect></clipPath>
+                        </defs>
+                    </svg>
+                </div>
+                <h2 class="logo-title">Stock Insight</h2>
+            </div>
+            <div class="nav-links">
+                <a href="http://0.0.0.0:8000/home">首頁</a>
+                <a href="http://0.0.0.0:8000/news">新聞</a>
+                <a href="http://0.0.0.0:8000/ai_news">AI 新聞分析</a>
+                <a href="#">分析</a>
+                <a href="#">股票</a>
+            </div>
         </div>
-        <div class="checkbox-group" id="quarters-group">
-            <h3>季度</h3>
-            <label><input type="checkbox" name="quarters" value="1"> Q1</label>
-            <label><input type="checkbox" name="quarters" value="2"> Q2</label>
-            <label><input type="checkbox" name="quarters" value="3"> Q3</label>
-            <label><input type="checkbox" name="quarters" value="4"> Q4</label>
-            <label><input type="checkbox" name="quarters" value="YEAR"> 全年</label>
+        <div class="header-right-section">
+            <div class="user-page-button">
+                <div class="profile-image" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuACQH4kvaP_K_UQ2FuQjcc1XgHHLK1hIVd6UdPgZGEJjk17DcnSqGPKs3MQcdq4Cwsxzuo4m3nKrVQPVsfCU9oPbq8cJIDVDgREz6W867MMDDXLlNDKpCeFBYaMBJNyNlY2l4Of_CwNxNeFBz6K6OPEZP4PdQL8fYt8qGCeV2MbuC-m07EYyBWsIBQFa3DQAHu3Li-ms39AHGW6WVEgdT8bMDFHp-W4z6CwOiGQPE1F5Z1QByr11TOSyI56gyAufrgeoKUzJMqKIe0");'></div>
+            </div>
+            <div class="hamburger-menu">
+                <div class="bar"></div>
+                <div class="bar"></div>
+                <div class="bar"></div>
+            </div>
         </div>
-        <div class="checkbox-group" id="countries-group">
-            <h3>國家</h3>
-            <!-- 動態生成 -->
-        </div>
-        <div class="checkbox-group" id="sectors-group">
-            <h3>產業</h3>
-            <!-- 動態生成 -->
-        </div>
-        <div class="checkbox-group">
-            <h3>篩選條件</h3>
-            <label><input type="checkbox" name="filters" value="pe_ratio_below_25"> PE Ratio < 25</label>
-            <label><input type="checkbox" name="filters" value="pe_ratio_below_25_current"> PE Ratio < 25 (當年)</label>
-            <label><input type="checkbox" name="filters" value="revenue_growth"> Revenue 成長</label>
-            <label><input type="checkbox" name="filters" value="operating_income_growth"> Operating Income 成長</label>
-            <label><input type="checkbox" name="filters" value="net_income_growth"> Net Income 成長</label>
-            <label><input type="checkbox" name="filters" value="current_assets_above_liabilities"> 流動資產 > 流動負債</label>
-            <label><input type="checkbox" name="filters" value="current_assets_above_liabilities_current"> 流動資產 > 流動負債 (當年)</label>
-            <label><input type="checkbox" name="filters" value="long_term_debt_to_net_income_below_4"> 長期負債/淨利 < 4</label>
-            <label><input type="checkbox" name="filters" value="long_term_debt_to_net_income_below_4_current"> 長期負債/淨利 < 4 (當年)</label>
-            <label><input type="checkbox" name="filters" value="shareholders_equity_growth"> 股東權益成長</label>
-            <label><input type="checkbox" name="filters" value="shares_outstanding_decline"> 流通股數下降</label>
-            <label><input type="checkbox" name="filters" value="operating_cash_flow_above_investing_financing"> 營業現金流 > 投資+融資現金流</label>
-            <label><input type="checkbox" name="filters" value="operating_cash_flow_above_investing_financing_current"> 營業現金流 > 投資+融資現金流 (當年)</label>
-            <label><input type="checkbox" name="filters" value="free_cash_flow_growth"> 自由現金流成長</label>
-        </div>
-        <button onclick="advancedSearch()">搜尋公司</button>
+    </header>
+
+    <div class="nav-dropdown">
+        <div class="hamburger-menu-close"></div> 
+        <a href="http://0.0.0.0:8000/home">首頁</a>
+        <a href="http://0.0.0.0:8000/news">新聞</a>
+        <a href="http://0.0.0.0:8000/ai_news">AI 新聞分析</a>
+        <a href="#">分析</a>
+        <a href="#">股票</a>
+        <a href="#">使用者頁面</a> 
     </div>
-    <div id="search-results"></div>
 
-    <script>
-        // 動態載入國家和產業選項
-        function loadOptions() {
-            fetch('http://localhost:8000/get_countries')
-                .then(response => response.json())
-                .then(countries => {
-                    const countriesGroup = document.getElementById('countries-group');
-                    countries.forEach(country => {
-                        const label = document.createElement('label');
-                        label.innerHTML = `<input type="checkbox" name="countries" value="${country}"> ${country}`;
-                        countriesGroup.appendChild(label);
-                    });
-                })
-                .catch(error => console.error('載入國家失敗:', error));
-
-            fetch('http://localhost:8000/get_sectors')
-                .then(response => response.json())
-                .then(sectors => {
-                    const sectorsGroup = document.getElementById('sectors-group');
-                    sectors.forEach(sector => {
-                        const label = document.createElement('label');
-                        label.innerHTML = `<input type="checkbox" name="sectors" value="${sector}"> ${sector}`;
-                        sectorsGroup.appendChild(label);
-                    });
-                })
-                .catch(error => console.error('載入產業失敗:', error));
-        }
-
-        // 進階查詢
-        function advancedSearch() {
-            const years = Array.from(document.querySelectorAll('input[name="years"]:checked')).map(input => parseInt(input.value));
-            const quarters = Array.from(document.querySelectorAll('input[name="quarters"]:checked')).map(input => input.value);
-            const countries = Array.from(document.querySelectorAll('input[name="countries"]:checked')).map(input => input.value);
-            const sectors = Array.from(document.querySelectorAll('input[name="sectors"]:checked')).map(input => input.value);
-            const filters = Array.from(document.querySelectorAll('input[name="filters"]:checked')).map(input => input.value);
-            const resultsDiv = document.getElementById('search-results');
-            resultsDiv.innerHTML = '載入中...';
-
-            fetch('http://localhost:8000/advanced_search', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ years, quarters, countries, sectors, filters })
-            })
-                .then(response => {
-                    if (!response.ok) throw new Error('查詢失敗');
-                    return response.json();
-                })
-                .then(data => {
-                    if (data.length === 0) {
-                        resultsDiv.innerHTML = '<p>無符合條件的公司</p>';
-                        return;
-                    }
-                    let html = '<h3>查詢結果</h3><ul>';
-                    data.forEach(r => {
-                        html += `<li>${r.company_name} (${r.country}, ${r.sector_name})</li>`;
-                    });
-                    html += '</ul>';
-                    resultsDiv.innerHTML = html;
-                })
-                .catch(error => {
-                    resultsDiv.innerHTML = `<p class="error"}>錯誤：${error.message}}</p>`;
-                });
-        }
-
-        window.onload = loadOptions;
-    </script>
+    <div class="search-block">
+        <div class="start-time-div">
+            <div class="start-time-title">開始時間:</div>
+            <input type="datetime-local" class="start-time-calendar">
+        </div>
+        <div class="end-time-div">
+            <div class="end-time-title">結束時間:</div>
+            <input type="datetime-local" class="end-time-calendar">
+        </div>
+        <div class="search-bar-div">
+            <div class="search-bar-title">關鍵字搜尋:</div>
+            <input type="text" class="search-bar" placeholder="Search...">
+            <div class="search_icon"></div>
+        </div>
+    </div>
+    <div class="container">
+    </div>
+    <div id="loading-indicator">
+        <div class="spinner"></div> 
+        <p>載入中...</p>
+    </div>
+    <div class="footer">
+        <div class="footer_text">COPYRIGHT © Stock Insight<br>
+            免責聲明：<br>
+            **網站內容僅供參考，不構成任何投資建議。
+            所有數據和資訊僅供研究與學習使用。
+            投資有風險，任何依據本網站資訊進行的投資決策，風險由投資人自行承擔。
+            本站提供之分析資料、選股工具僅供參考，不暗示買賣建議，本站對資訊正確、更新延誤或傳輸中斷不負任何責任，依本站資訊交易發生損失需自行負責，請謹慎評估風險。
+            **
+        </div>
+    </div>
 </body>
 </html>
