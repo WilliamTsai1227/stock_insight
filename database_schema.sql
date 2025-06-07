@@ -1,7 +1,6 @@
 CREATE TABLE Sectors (
     sector_id SERIAL PRIMARY KEY,
     sector_name VARCHAR(100) NOT NULL UNIQUE,
-    description TEXT,
     last_updated TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 CREATE INDEX idx_sectors_sector_name ON Sectors(sector_name);
@@ -12,9 +11,6 @@ CREATE TABLE Countrys (
     country_name VARCHAR(100) NOT NULL UNIQUE
 );
 CREATE INDEX idx_countrys_country_name ON Countrys(country_name);
-
-
-
 
 
 -- Companies Table 企業基本資料表
@@ -45,8 +41,8 @@ CREATE TABLE Companies (
     description TEXT,                         -- 公司簡介
     is_verified BOOLEAN DEFAULT FALSE,        -- 是否已驗證
     sector_id INTEGER REFERENCES Sectors(sector_id), -- 產業ID (外部鍵)
-    last_updated TIMESTAMP DEFAULT CURRENT_TIMESTAMP -- 最後更新時間
-    CONSTRAINT uq_companies_company_country UNIQUE (stock_symbol, country_id)
+    last_updated TIMESTAMP DEFAULT CURRENT_TIMESTAMP, -- 最後更新時間
+    CONSTRAINT uq_companies_stock_country UNIQUE (stock_symbol, country_id) 
 );
 CREATE INDEX idx_companies_sector_id ON Companies(sector_id);
 CREATE INDEX idx_companies_country_id ON Companies(country_id);
@@ -81,7 +77,7 @@ CREATE TABLE Balance_Sheets (
     retained_earnings DECIMAL(20,2),
     shares_outstanding BIGINT,
     report_date DATE NOT NULL,
-    CONSTRAINT unique_balance_company_year_quarter UNIQUE (company_id, year, quarter)
+    CONSTRAINT uq_balance_company_year_quarter UNIQUE (company_id, year, quarter) 
 );
 CREATE INDEX idx_balance_sheets_secto_country_year_quarter ON Balance_Sheets (sector_id, country_id, year, quarter);
 
@@ -109,7 +105,7 @@ CREATE TABLE Income_Statements (
     total_other_expenditure DECIMAL(20,2),
     cost_of_revenue DECIMAL(20,2),
     report_date DATE NOT NULL,
-    CONSTRAINT unique_income_company_year_quarter UNIQUE (company_id, year, quarter)
+    CONSTRAINT uq_income_company_year_quarter UNIQUE (company_id, year, quarter) 
 );
 CREATE INDEX idx_income_statements_sector_country_year_quarter ON Income_Statements (sector_id, country_id, year, quarter);
 
@@ -124,9 +120,8 @@ CREATE TABLE Cash_Flow_Statements (
     quarter INTEGER CHECK (quarter IN (1, 2, 3, 4) OR quarter IS NULL),
     original_currency VARCHAR(3) NOT NULL, -- e.g., 'TWD', 'USD', 'JPY'
     operating_cash_flow DECIMAL(20,2),
-    investing_cash_flow DECIMAL(20,2),
+    investing_cash_flow DECIMAL(20,2), 
     capital_expenditures DECIMAL(20,2),
-    investing_cash_flow DECIMAL(20,2),
     financing_cash_flow DECIMAL(20,2),
     stock_issuance_repurchase DECIMAL(20,2),
     debt_issuance_repayment DECIMAL(20,2),
@@ -134,7 +129,7 @@ CREATE TABLE Cash_Flow_Statements (
     free_cash_flow DECIMAL(20,2),
     net_change_in_cash DECIMAL(20,2),
     report_date DATE NOT NULL,
-    CONSTRAINT unique_cash_flow_company_year_quarter UNIQUE (company_id, year, quarter)
+    CONSTRAINT uq_cash_flow_company_year_quarter UNIQUE (company_id, year, quarter) 
 );
 CREATE INDEX idx_cash_flow_statements_sector_country_year_quarter ON Cash_Flow_Statements (sector_id, country_id, year, quarter);
 
@@ -163,12 +158,9 @@ CREATE TABLE Stock_Analysis (
     longTermBebt_netIncome_ratio_below4 BOOLEAN,    -- 長期負債／淨利是否 <4
     shareholders_equity_growth BOOLEAN,             -- 股東權益有無成長
     OCF_above_InvestCF BOOLEAN,                     -- 營業現金流 > 投資現金流      
-    CONSTRAINT unique_analysis UNIQUE (company_id, year, quarter)
+    CONSTRAINT uq_stock_analysis_company_year_quarter UNIQUE (company_id, year, quarter) 
 );
 CREATE INDEX idx_Stock_Analysis_sector_country_year_quarter ON Stock_Analysis (sector_id, country_id, year, quarter);
-
-
-
 
 
 CREATE TABLE Sector_Analysis (
@@ -185,6 +177,6 @@ CREATE TABLE Sector_Analysis (
     operating_income_median DECIMAL(20,2),
     net_income_avg DECIMAL(20,2),
     net_income_median DECIMAL(20,2),
-    CONSTRAINT unique_analysis UNIQUE (sector_id, year, quarter)
+    CONSTRAINT uq_sector_analysis_sector_year_quarter UNIQUE (sector_id, year, quarter) 
 );
 CREATE INDEX idx_Sector_Analysis_sector_country_year_quarter ON Sector_Analysis (sector_id, country_id, year, quarter);
