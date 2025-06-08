@@ -4,7 +4,7 @@ from fastapi.staticfiles import StaticFiles
 from pathlib import Path
 import os
 from fastapi.middleware.cors import CORSMiddleware
-from api import log, ai_news, news
+from api import log, ai_news, news, stock
 
 app = FastAPI()
 
@@ -24,24 +24,37 @@ HTML_DIR = BASE_DIR / "frontend" / "html"
 CSS_DIR = BASE_DIR / "frontend" / "css"
 JS_DIR = BASE_DIR / "frontend" / "js"
 
-app.mount("/css", StaticFiles(directory=CSS_DIR), name="css")
-app.mount("/js", StaticFiles(directory=JS_DIR), name="js")
+# 掛載靜態檔案目錄
+app.mount("/css", StaticFiles(directory=str(CSS_DIR), html=True), name="css")
+app.mount("/js", StaticFiles(directory=str(JS_DIR), html=True), name="js")
 
 # 回傳 HTML 頁面
-@app.get("/home", include_in_schema=False)
+@app.get("/", include_in_schema=False)
 async def index(request: Request):
     return FileResponse(HTML_DIR / "index.html", media_type="text/html")
+
+@app.get("/home", include_in_schema=False)
+async def home(request: Request):
+    return FileResponse(HTML_DIR / "index.html", media_type="text/html")
+
 @app.get("/ai_news", include_in_schema=False)
-async def index(request: Request):
+async def ai_news_page(request: Request):
     return FileResponse(HTML_DIR / "ai_news.html", media_type="text/html")
+
 @app.get("/news", include_in_schema=False)
-async def attraction(request: Request):
-	return FileResponse(HTML_DIR / "news.html", media_type="text/html")
+async def news_page(request: Request):
+    return FileResponse(HTML_DIR / "news.html", media_type="text/html")
+
 @app.get("/news/{id}", include_in_schema=False)
-async def attraction(request: Request, id: str):
-	return FileResponse(HTML_DIR / "detail_news.html", media_type="text/html")
+async def news_detail(request: Request, id: str):
+    return FileResponse(HTML_DIR / "detail_news.html", media_type="text/html")
+
+@app.get("/stock/{symbol}/{country}", include_in_schema=False)
+async def stock_page(request: Request, symbol: str, country: str):
+    return FileResponse(HTML_DIR / "stock.html", media_type="text/html")
 
 # 加入 API router
 app.include_router(log.router)
 app.include_router(ai_news.router)
 app.include_router(news.router)
+app.include_router(stock.router)
