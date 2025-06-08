@@ -13,6 +13,13 @@ body {
     overflow-x: hidden;
 }
 
+.layout-container {
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+    height: 100%;
+}
+
 /* Header 樣式 */
 .main-header {
     display: flex;
@@ -100,6 +107,7 @@ body {
     transition: 0.4s;
 }
 
+/* Hamburger Animation */
 .hamburger-menu.active .bar:nth-child(1) {
     transform: translateY(7px) rotate(45deg);
 }
@@ -184,78 +192,66 @@ body {
     border-bottom: none;
 }
 
-/* Search Block 樣式 */
-.search-block {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 20px;
-    padding: 20px 40px;
+/* Content Area 樣式 */
+.content-area {
+    flex: 1;
+    padding: 20px;
     background-color: #f8f9fa;
-    border-bottom: 1px solid #e9ecef;
 }
 
-.start-time-div,
-.end-time-div,
+/* Search Block 樣式 */
+.search-block {
+    background-color: #ffffff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    margin-bottom: 20px;
+}
+
 .search-bar-div {
     display: flex;
     align-items: center;
     gap: 10px;
 }
 
-.start-time-title,
-.end-time-title,
 .search-bar-title {
-    font-size: 14px;
+    font-size: 16px;
     font-weight: 500;
-    color: #495057;
+    color: #111418;
 }
 
-.start-time-calendar,
-.end-time-calendar,
 .search-bar {
+    flex: 1;
     padding: 8px 12px;
-    border: 1px solid #ced4da;
+    border: 1px solid #e0e0e0;
     border-radius: 4px;
     font-size: 14px;
-    color: #495057;
-    background-color: #fff;
-}
-
-.search-bar {
-    width: 300px;
 }
 
 .search_icon {
-    width: 20px;
-    height: 20px;
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23495057'%3E%3Cpath d='M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z'/%3E%3C/svg%3E");
+    width: 24px;
+    height: 24px;
+    background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="%23111418"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/></svg>');
     background-repeat: no-repeat;
     background-position: center;
-    background-size: contain;
     cursor: pointer;
 }
 
 /* Container 樣式 */
 .container {
-    flex: 1;
-    padding: 20px 40px;
-    max-width: 1200px;
-    margin: 0 auto;
+    background-color: #ffffff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
 }
 
 /* Loading Indicator 樣式 */
 #loading-indicator {
     display: none;
-    position: fixed;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    background-color: rgba(255, 255, 255, 0.9);
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
     padding: 20px;
-    border-radius: 8px;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-    text-align: center;
-    z-index: 1000;
 }
 
 .spinner {
@@ -265,7 +261,7 @@ body {
     border-top: 4px solid #3498db;
     border-radius: 50%;
     animation: spin 1s linear infinite;
-    margin: 0 auto 10px;
+    margin-bottom: 10px;
 }
 
 @keyframes spin {
@@ -273,21 +269,92 @@ body {
     100% { transform: rotate(360deg); }
 }
 
+/* Stock Header 樣式 */
+#stock-header {
+    margin-bottom: 20px;
+}
+
+.stock-title {
+    font-size: 24px;
+    font-weight: 700;
+    color: #111418;
+    margin: 0;
+}
+
+/* Stock Chart 樣式 */
+#stock-chart {
+    margin-bottom: 20px;
+    min-height: 400px;
+    background-color: #ffffff;
+    border: 1px solid #e0e0e0;
+    border-radius: 4px;
+}
+
+/* Stock Info 樣式 */
+#stock-info {
+    margin-bottom: 20px;
+}
+
+.stock-info-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.stock-info-table th,
+.stock-info-table td {
+    padding: 12px;
+    border: 1px solid #e0e0e0;
+    text-align: left;
+}
+
+.stock-info-table th {
+    background-color: #f8f9fa;
+    font-weight: 500;
+    color: #111418;
+    width: 20%;
+}
+
+.stock-info-table td {
+    color: #333;
+}
+
+/* Error Message 樣式 */
+.error-message {
+    color: #dc3545;
+    padding: 10px;
+    margin: 10px 0;
+    border: 1px solid #dc3545;
+    border-radius: 4px;
+    background-color: #fff;
+}
+
 /* Footer 樣式 */
 .footer {
-    background-color: #f8f9fa;
-    padding: 20px;
-    text-align: center;
-    border-top: 1px solid #e9ecef;
+    border-top: 1px solid #e0e4e8;
+    flex: none;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px 0;
+    width: 100%;
+    background-color: #f0f2f5;
+    box-sizing: border-box;
+    margin-top: auto;
 }
 
 .footer_text {
-    color: #6c757d;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 800px;
     font-size: 14px;
-    line-height: 1.5;
+    line-height: 1.6;
+    text-align: center;
+    color: #60748a;
+    padding: 0 20px;
 }
 
-/* 響應式設計 */
+/* RWD 樣式 */
 @media (max-width: 768px) {
     .main-header {
         padding: 12px 20px;
@@ -305,6 +372,15 @@ body {
         gap: 16px;
     }
 
+    .user-page-button {
+        display: none;
+    }
+
+    .profile-image {
+        width: 32px;
+        height: 32px;
+    }
+
     .hamburger-menu {
         display: flex;
     }
@@ -320,30 +396,39 @@ body {
     .nav-dropdown a {
         padding: 12px 20px;
         height: auto;
+        font-size: 18px;
     }
 
     .hamburger-menu-close {
         display: block;
     }
 
-    .search-block {
-        padding: 15px 20px;
-        flex-direction: column;
-        align-items: stretch;
+    .content-area {
+        padding: 10px;
     }
 
-    .search-bar {
-        width: 100%;
+    .search-block {
+        padding: 15px;
     }
 
     .container {
-        padding: 15px 20px;
+        padding: 15px;
+    }
+
+    .stock-title {
+        font-size: 20px;
+    }
+
+    .stock-info-table th,
+    .stock-info-table td {
+        padding: 8px;
+        font-size: 14px;
     }
 }
 
 @media (max-width: 480px) {
     .main-header {
-        padding: 10px 15px;
+        padding: 10px;
     }
 
     .nav-dropdown {
@@ -351,12 +436,12 @@ body {
     }
 
     .nav-dropdown a {
-        font-size: 18px;
         padding: 10px 15px;
+        font-size: 16px;
     }
 
     .hamburger-menu-close {
-        top: 20px;
+        top: 15px;
         right: 15px;
     }
 } 
