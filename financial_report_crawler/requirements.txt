@@ -1,0 +1,9 @@
+fastapi==0.109.2
+uvicorn==0.27.1
+pymongo==4.6.1
+python-dotenv==1.0.1
+pydantic==2.6.1
+python-multipart==0.0.9
+psycopg2-binary==2.9.9
+selenium==4.18.1
+webdriver-manager==4.0.1 
