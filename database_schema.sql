@@ -55,28 +55,27 @@ CREATE TABLE Balance_Sheets (
     company_id INTEGER REFERENCES Companies(company_id),
     sector_id INTEGER REFERENCES Sectors(sector_id), -- 產業ID (外部鍵)
     country_id INTEGER REFERENCES Countrys(country_id), -- 國家 (外鍵）
-    report_type VARCHAR(20) NOT NULL CHECK (report_type IN ('quarterly', 'annual')),
-    year INTEGER NOT NULL,
-    quarter INTEGER CHECK (quarter IN (1, 2, 3, 4) OR quarter IS NULL),
-    original_currency VARCHAR(3) NOT NULL, -- e.g., 'TWD', 'USD', 'JPY'
-    current_assets DECIMAL(20,2),
-    cash_and_equivalents DECIMAL(20,2),
-    accounts_receivable DECIMAL(20,2),
-    inventory DECIMAL(20,2),
-    total_assets DECIMAL(20,2),
-    property_plant_equipment DECIMAL(20,2),
-    intangible_assets DECIMAL(20,2),
-    long_term_investments DECIMAL(20,2),
-    current_liabilities DECIMAL(20,2),
-    accounts_payable DECIMAL(20,2),
-    short_term_debt DECIMAL(20,2),
-    total_liabilities DECIMAL(20,2),
-    long_term_debt DECIMAL(20,2),
-    shareholders_equity DECIMAL(20,2),
-    common_stock DECIMAL(20,2),
-    retained_earnings DECIMAL(20,2),
-    shares_outstanding BIGINT,
-    report_date DATE NOT NULL,
+    report_type VARCHAR(20) NOT NULL CHECK (report_type IN ('quarterly', 'annual')), -- 報告類型（季報/年報）
+    year INTEGER NOT NULL, -- 年度
+    quarter INTEGER CHECK (quarter IN (1, 2, 3, 4) OR quarter IS NULL), -- 季度
+    original_currency VARCHAR(3) NOT NULL, -- 原始幣別
+    current_assets DECIMAL(20,2), -- 流動資產
+    cash_and_equivalents DECIMAL(20,2), -- 現金及約當現金
+    accounts_receivable DECIMAL(20,2), -- 應收帳款
+    inventory DECIMAL(20,2), -- 存貨
+    total_assets DECIMAL(20,2), -- 資產總計
+    property_plant_equipment DECIMAL(20,2), -- 不動產、廠房及設備
+    intangible_assets DECIMAL(20,2), -- 無形資產
+    long_term_investments DECIMAL(20,2), -- 長期投資
+    current_liabilities DECIMAL(20,2), -- 流動負債
+    accounts_payable DECIMAL(20,2), -- 應付帳款
+    short_term_debt DECIMAL(20,2), -- 短期借款
+    total_liabilities DECIMAL(20,2), -- 負債總計
+    long_term_debt DECIMAL(20,2), -- 長期借款
+    shareholders_equity DECIMAL(20,2), -- 股東權益
+    common_stock DECIMAL(20,2), -- 普通股股本
+    retained_earnings DECIMAL(20,2), -- 保留盈餘
+    report_date DATE NOT NULL, -- 報告日期
     CONSTRAINT uq_balance_company_year_quarter UNIQUE (company_id, year, quarter) 
 );
 CREATE INDEX idx_balance_sheets_secto_country_year_quarter ON Balance_Sheets (sector_id, country_id, year, quarter);
@@ -87,24 +86,22 @@ CREATE TABLE Income_Statements (
     company_id INTEGER REFERENCES Companies(company_id),
     sector_id INTEGER REFERENCES Sectors(sector_id), -- 產業ID (外部鍵)
     country_id INTEGER REFERENCES Countrys(country_id), -- 國家 (外鍵）
-    report_type VARCHAR(20) NOT NULL CHECK (report_type IN ('quarterly', 'annual')),
-    year INTEGER NOT NULL,
-    quarter INTEGER CHECK (quarter IN (1, 2, 3, 4) OR quarter IS NULL),
-    eps DECIMAL(10,2), -- Earnings Per Share
-    pe_ratio DECIMAL(10,2), -- Price-to-Earnings Ratio
-    original_currency VARCHAR(3) NOT NULL, -- e.g., 'TWD', 'USD', 'JPY'
-    revenue DECIMAL(20,2),
-    gross_profit DECIMAL(20,2),
-    operating_income DECIMAL(20,2),
-    operating_expenses DECIMAL(20,2),
-    pre_tax_income DECIMAL(20,2),
-    interest_expense DECIMAL(20,2),
-    net_income DECIMAL(20,2),
-    ebitda DECIMAL(20,2),
-    total_other_income DECIMAL(20,2),
-    total_other_expenditure DECIMAL(20,2),
-    cost_of_revenue DECIMAL(20,2),
-    report_date DATE NOT NULL,
+    report_type VARCHAR(20) NOT NULL CHECK (report_type IN ('quarterly', 'annual')), -- 報告類型（季報/年報）
+    year INTEGER NOT NULL, -- 年度
+    quarter INTEGER CHECK (quarter IN (1, 2, 3, 4) OR quarter IS NULL), -- 季度
+    eps DECIMAL(10,2), -- 每股盈餘 
+    original_currency VARCHAR(3) NOT NULL, -- 原始幣別
+    revenue DECIMAL(20,2), -- 營業收入
+    gross_profit DECIMAL(20,2), -- 營業毛利
+    operating_income DECIMAL(20,2), -- 營業利益
+    operating_expenses DECIMAL(20,2), -- 營業費用
+    sales_expenses DECIMAL(20,2),     -- 推銷費用
+    administrative_expenses DECIMAL(20,2), -- 管理費用
+    research_and_development_expenses DECIMAL(20,2); -- 研究發展費用
+    pre_tax_income DECIMAL(20,2), -- 稅前淨利
+    net_income DECIMAL(20,2), -- 稅後淨利
+    cost_of_revenue DECIMAL(20,2), -- 營業成本
+    report_date DATE NOT NULL, -- 報告日期
     CONSTRAINT uq_income_company_year_quarter UNIQUE (company_id, year, quarter) 
 );
 CREATE INDEX idx_income_statements_sector_country_year_quarter ON Income_Statements (sector_id, country_id, year, quarter);
@@ -115,20 +112,20 @@ CREATE TABLE Cash_Flow_Statements (
     company_id INTEGER REFERENCES Companies(company_id),
     sector_id INTEGER REFERENCES Sectors(sector_id), -- 產業ID (外部鍵)
     country_id INTEGER REFERENCES Countrys(country_id), -- 國家 (外鍵）
-    report_type VARCHAR(20) NOT NULL CHECK (report_type IN ('quarterly', 'annual')),
-    year INTEGER NOT NULL,
-    quarter INTEGER CHECK (quarter IN (1, 2, 3, 4) OR quarter IS NULL),
-    original_currency VARCHAR(3) NOT NULL, -- e.g., 'TWD', 'USD', 'JPY'
-    operating_cash_flow DECIMAL(20,2),
-    investing_cash_flow DECIMAL(20,2), 
-    capital_expenditures DECIMAL(20,2),
-    financing_cash_flow DECIMAL(20,2),
-    stock_issuance_repurchase DECIMAL(20,2),
-    debt_issuance_repayment DECIMAL(20,2),
-    dividends_paid DECIMAL(20,2),
-    free_cash_flow DECIMAL(20,2),
-    net_change_in_cash DECIMAL(20,2),
-    report_date DATE NOT NULL,
+    report_type VARCHAR(20) NOT NULL CHECK (report_type IN ('quarterly', 'annual')), -- 報告類型（季報/年報）
+    year INTEGER NOT NULL, -- 年度
+    quarter INTEGER CHECK (quarter IN (1, 2, 3, 4) OR quarter IS NULL), -- 季度
+    original_currency VARCHAR(3) NOT NULL, -- 原始幣別
+    operating_cash_flow DECIMAL(20,2), -- 營業活動之現金流量
+    investing_cash_flow DECIMAL(20,2), -- 投資活動之現金流量
+    capital_expenditures DECIMAL(20,2), -- 資本支出
+    financing_cash_flow DECIMAL(20,2), -- 籌資活動之現金流量
+    stock_issuance_repurchase DECIMAL(20,2), -- 股票發行/買回
+    debt_issuance_repayment DECIMAL(20,2), -- 債務發行/償還
+    dividends_paid DECIMAL(20,2), -- 股利發放
+    free_cash_flow DECIMAL(20,2), -- 自由現金流量
+    net_change_in_cash DECIMAL(20,2), -- 現金及約當現金淨變動
+    report_date DATE NOT NULL, -- 報告日期
     CONSTRAINT uq_cash_flow_company_year_quarter UNIQUE (company_id, year, quarter) 
 );
 CREATE INDEX idx_cash_flow_statements_sector_country_year_quarter ON Cash_Flow_Statements (sector_id, country_id, year, quarter);
@@ -136,28 +133,28 @@ CREATE INDEX idx_cash_flow_statements_sector_country_year_quarter ON Cash_Flow_S
 
 CREATE TABLE Stock_Analysis (
     analysis_id SERIAL PRIMARY KEY,
-    company_id INTEGER REFERENCES Companies(company_id),
+    company_id INTEGER REFERENCES Companies(company_id), -- 公司ID
     sector_id INTEGER REFERENCES Sectors(sector_id), -- 產業ID (外部鍵)
     country_id INTEGER REFERENCES Countrys(country_id), -- 國家 (外鍵）
-    year INTEGER NOT NULL,
-    quarter INTEGER CHECK (quarter IN (1, 2, 3, 4) OR quarter IS NULL),
-    pe_ratio DECIMAL(20,2),
-    pe_achieved BOOLEAN,
-    pe_rank_above_median BOOLEAN,
-    pe_rank_in_sector INTEGER,
-    revenue_growth BOOLEAN,
-    revenue_rank_above_median BOOLEAN,
-    revenue_rank_in_sector INTEGER,
-    operating_income_growth BOOLEAN,
-    operating_income_rank_above_median BOOLEAN,
-    operating_income_rank_in_sector INTEGER,
-    net_income_growth BOOLEAN,
-    net_income_rank_above_median BOOLEAN,
-    net_income_rank_in_sector INTEGER,
-    current_ratio_above1 BOOLEAN,                   -- 流動資產是否大於流動負債
-    longTermBebt_netIncome_ratio_below4 BOOLEAN,    -- 長期負債／淨利是否 <4
-    shareholders_equity_growth BOOLEAN,             -- 股東權益有無成長
-    OCF_above_InvestCF BOOLEAN,                     -- 營業現金流 > 投資現金流      
+    year INTEGER NOT NULL, -- 年度
+    quarter INTEGER CHECK (quarter IN (1, 2, 3, 4) OR quarter IS NULL), -- 季度
+    pe_ratio DECIMAL(20,2), -- 本益比
+    pe_achieved BOOLEAN, -- 是否達到本益比目標
+    pe_rank_above_median BOOLEAN, -- 本益比是否高於產業中位數
+    pe_rank_in_sector INTEGER, -- 本益比在產業中的排名
+    revenue_growth BOOLEAN, -- 營收是否成長
+    revenue_rank_above_median BOOLEAN, -- 營收是否高於產業中位數
+    revenue_rank_in_sector INTEGER, -- 營收在產業中的排名
+    operating_income_growth BOOLEAN, -- 營業利益是否成長
+    operating_income_rank_above_median BOOLEAN, -- 營業利益是否高於產業中位數
+    operating_income_rank_in_sector INTEGER, -- 營業利益在產業中的排名
+    net_income_growth BOOLEAN, -- 稅後淨利是否成長
+    net_income_rank_above_median BOOLEAN, -- 稅後淨利是否高於產業中位數
+    net_income_rank_in_sector INTEGER, -- 稅後淨利在產業中的排名
+    current_ratio_above1 BOOLEAN, -- 流動比率是否大於1
+    longTermBebt_netIncome_ratio_below4 BOOLEAN, -- 長期負債/淨利是否小於4
+    shareholders_equity_growth BOOLEAN, -- 股東權益是否成長
+    OCF_above_InvestCF BOOLEAN, -- 營業現金流是否大於投資現金流
     CONSTRAINT uq_stock_analysis_company_year_quarter UNIQUE (company_id, year, quarter) 
 );
 CREATE INDEX idx_Stock_Analysis_sector_country_year_quarter ON Stock_Analysis (sector_id, country_id, year, quarter);
@@ -167,16 +164,38 @@ CREATE TABLE Sector_Analysis (
     analysis_id SERIAL PRIMARY KEY,
     sector_id INTEGER REFERENCES Sectors(sector_id), -- 產業ID (外鍵)
     country_id INTEGER REFERENCES Countrys(country_id), -- 國家 (外鍵）
-    year INTEGER NOT NULL,
-    quarter INTEGER CHECK (quarter IN (1, 2, 3, 4) OR quarter IS NULL),
-    pe_avg DECIMAL(20,2),
-    pe_median DECIMAL(20,2),
-    revenue_avg DECIMAL(20,2),
-    revenue_median DECIMAL(20,2),
-    operating_income_avg DECIMAL(20,2),
-    operating_income_median DECIMAL(20,2),
-    net_income_avg DECIMAL(20,2),
-    net_income_median DECIMAL(20,2),
+    year INTEGER NOT NULL, -- 年度
+    quarter INTEGER CHECK (quarter IN (1, 2, 3, 4) OR quarter IS NULL), -- 季度
+    pe_avg DECIMAL(20,2), -- 產業平均本益比
+    pe_median DECIMAL(20,2), -- 產業中位數本益比
+    revenue_avg DECIMAL(20,2), -- 產業平均營收
+    revenue_median DECIMAL(20,2), -- 產業中位數營收
+    operating_income_avg DECIMAL(20,2), -- 產業平均營業利益
+    operating_income_median DECIMAL(20,2), -- 產業中位數營業利益
+    net_income_avg DECIMAL(20,2), -- 產業平均稅後淨利
+    net_income_median DECIMAL(20,2), -- 產業中位數稅後淨利
     CONSTRAINT uq_sector_analysis_sector_year_quarter UNIQUE (sector_id, year, quarter) 
 );
 CREATE INDEX idx_Sector_Analysis_sector_country_year_quarter ON Sector_Analysis (sector_id, country_id, year, quarter);
+
+CREATE TABLE Financial_Ratios (
+    ratio_id SERIAL PRIMARY KEY,
+    company_id INTEGER REFERENCES Companies(company_id), -- 公司ID
+    sector_id INTEGER REFERENCES Sectors(sector_id), -- 產業ID (外部鍵)
+    country_id INTEGER REFERENCES Countrys(country_id), -- 國家 (外鍵）
+    year INTEGER NOT NULL, -- 年度
+    quarter INTEGER CHECK (quarter IN (1, 2, 3, 4) OR quarter IS NULL), -- 季度
+    
+    -- 獲利能力比率
+    gross_margin DECIMAL(5,2), -- 毛利率
+    operating_margin DECIMAL(5,2), -- 營業利益率
+    net_margin DECIMAL(5,2), -- 淨利率
+    
+    -- 市場價值比率
+    pe_ratio DECIMAL(5,2), -- 本益比
+    
+    report_date DATE , -- 報告日期
+    CONSTRAINT uq_financial_ratios_company_year_quarter UNIQUE (company_id, year, quarter)
+);
+
+CREATE INDEX idx_financial_ratios_sector_country_year_quarter ON Financial_Ratios (sector_id, country_id, year, quarter);
