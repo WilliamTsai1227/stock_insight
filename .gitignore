@@ -140,4 +140,6 @@ note.py
 #txt
 aws_command.txt 
 
-
+#JSON data and log after financial report crawling
+cash_flow_quarter_logs/
+cash_flow_quarter/
