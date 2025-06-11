@@ -1,0 +1,23 @@
+# 忽略所有 log 相關資料夾
+cash_flow_quarter_logs/
+
+# 忽略本地測試用的檔案 (因為您最終只需要 cash_flow_crawler_quarter_to_S3.py)
+cash_flow_crawler_quarter_to_S3_localtest.py
+
+# 忽略本地開發腳本和資料夾
+cash_flow_crawler_quarter.py
+companiesList_extract_from_db.py
+companies_list_source.json
+companies_list.json 
+push_companies_to_sqs.py
+cash_flow_quarter/ 
+.env # 環境變數檔案不應該被打包進 Image
+
+# 常見的 Python 相關忽略
+__pycache__/
+*.pyc
+*.log
+.pytest_cache/
+.mypy_cache/
+.venv/
+venv/
