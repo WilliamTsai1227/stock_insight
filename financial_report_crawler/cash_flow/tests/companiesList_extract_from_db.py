@@ -6,7 +6,7 @@ import os
 # 載入 .env 檔案中的環境變數。find_dotenv() 會自動向上尋找 .env 檔案。
 load_dotenv(find_dotenv()) 
 
-def generate_companies_list_json(output_filename='companies_list.json'):
+def generate_companies_list_json(output_filename='companies_list_source.json'):
     """
     從資料庫讀取股票代碼和公司名稱，並儲存為 JSON 字典格式。
     資料庫連接配置從環境變數中讀取。

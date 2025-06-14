@@ -55,5 +55,5 @@ def push_companies_to_sqs(companies_file_path):
                 print(f"發送任務 {stock_code} {company_name} 到 {queue_type} 佇列失敗：{e}")
 
 if __name__ == "__main__":
-    companies_list_file = 'companies_list_source.json'
+    companies_list_file = 'enriched_missing_stocks.json'
     push_companies_to_sqs(companies_list_file)
