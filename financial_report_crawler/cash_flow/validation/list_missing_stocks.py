@@ -2,8 +2,8 @@ import json
 import os
 
 def list_missing_stock_codes_to_json(
-    input_json_file_path='missing_cash_flow_data.json',
-    output_json_file_path='missing_stock_codes.json'
+    input_json_file_path='missing_cash_flow_data_v2.json',
+    output_json_file_path='missing_stock_codes_v2.json'
 ):
     """
     讀取 missing_cash_flow_data.json 檔案，並將所有有缺失數據的股票代碼

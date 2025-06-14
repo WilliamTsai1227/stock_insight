@@ -252,8 +252,11 @@ if __name__ == "__main__":
     max_messages = 1
     # VisibilityTimeout 應根據實際任務處理時間設定，確保在處理期間訊息不會被其他消費者看到
     # 如果任務處理時間可能超過 5 分鐘，請將此值設高
-    visibility_timeout_seconds = 300 # 假設爬取一家公司最多5分鐘 (300秒)
+    visibility_timeout_seconds = 900 # 假設爬取一家公司最多15分鐘 (900秒)
     wait_time_seconds = 20 # 長輪詢，減少空請求
+
+    no_message_count = 0
+    max_no_message_attempts = 3 # 設定連續沒有訊息的次數上限
 
     root_logger = logging.getLogger() # 使用根日誌記錄器來記錄 SQS 相關訊息
 
@@ -271,12 +274,15 @@ if __name__ == "__main__":
             messages = response.get('Messages', [])
             
             if not messages:
+                no_message_count += 1
                 root_logger.info("沒有可用的 SQS 訊息，等待...")
-                # 這裡可以加入退出機制，例如連續 N 次沒有訊息就退出，或等待特定時間後退出
-                # 對於 ECS Fargate 任務，如果沒有訊息可以設定為直接退出以節省成本，
-                # 或者在特定條件下由 ECS 服務自動重啟新的任務
+                if no_message_count >= max_no_message_attempts:
+                    root_logger.info(f"連續 {max_no_message_attempts} 次沒有收到 SQS 訊息，停止任務以節省成本。") # 加入退出機制，連續 N 次沒有訊息就退出，或等待特定時間後退出節省成本
+                    break # 跳出 while True 迴圈，程式結束                
                 time.sleep(wait_time_seconds)
                 continue
+
+            no_message_count = 0 #重置計數器
 
             for message in messages:
                 receipt_handle = message['ReceiptHandle'] # 訊息的唯一識別符，用於刪除訊息
@@ -290,7 +296,7 @@ if __name__ == "__main__":
                     if stock_code and company_name:
                         root_logger.info(f"\n--- 從 SQS 接收任務：開始爬取 {stock_code} {company_name} ---")
                         # 執行爬蟲邏輯
-                        # 這裡的 start_year_roc 和 end_year_roc 可以考慮從 SQS 訊息中傳遞，使任務更具彈性
+                        
                         crawler.crawl_cash_flow(stock_code, company_name, start_year_roc=105, end_year_roc=114) 
                         
                         # 爬蟲成功完成後，刪除 SQS 訊息
@@ -317,7 +323,7 @@ if __name__ == "__main__":
                 except Exception as e:
                     root_logger.error(f"處理 SQS 訊息或執行爬蟲時發生錯誤: {e}. 訊息將在 VisibilityTimeout 後重新可見。", exc_info=True)
                     # 如果這裡發生錯誤，訊息將在 VisibilityTimeout 後重新可見，並被重新處理
-                    # 如果是持續性錯誤，訊息將會進入死信佇列 (如果配置了的話)
+                    # 如果是持續性錯誤，訊息將會進入死信佇列 (可再配置)
                     # 不在此處刪除訊息，讓 SQS 處理重試邏輯
         
         except Exception as e:

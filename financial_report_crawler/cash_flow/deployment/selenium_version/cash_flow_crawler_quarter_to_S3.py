@@ -355,14 +355,18 @@ if __name__ == "__main__":
     # VisibilityTimeout: 訊息在佇列中對其他消費者不可見的時間 (秒)。這需要根據您的爬蟲處理一條訊息的時間來設定
     # WaitTimeSeconds: 長輪詢 (long polling) 時間 (最多20秒)，避免短輪詢的額外費用和請求
     max_messages = 1
-    visibility_timeout_seconds = 600 # 假設爬取一家公司最多10分鐘 (600秒)
+    visibility_timeout_seconds = 900 # 假設爬取一家公司最多15分鐘 (900秒)
     wait_time_seconds = 20 # 長輪詢，減少空請求
+
+    no_message_count = 0
+    max_no_message_attempts = 3 # 設定連續沒有訊息的次數上限
 
     root_logger = logging.getLogger() # 使用根日誌記錄器來記錄 SQS 相關訊息
 
     while True:
         try:
             # 從 SQS 佇列拉取訊息
+            root_logger.info(f"正在從 SQS 佇列 {SQS_QUEUE_URL} 接收訊息...")
             response = crawler.sqs_client.receive_message(
                 QueueUrl=SQS_QUEUE_URL,
                 MaxNumberOfMessages=max_messages,
@@ -373,10 +377,15 @@ if __name__ == "__main__":
             messages = response.get('Messages', [])
             
             if not messages:
+                no_message_count += 1
                 root_logger.info("沒有可用的 SQS 訊息，等待...")
-                # 這裡可以加入退出機制，例如連續 N 次沒有訊息就退出，或等待特定時間後退出
+                if no_message_count >= max_no_message_attempts:
+                    root_logger.info(f"連續 {max_no_message_attempts} 次沒有收到 SQS 訊息，停止任務以節省成本。") # 加入退出機制，連續 N 次沒有訊息就退出，或等待特定時間後退出節省成本
+                    break # 跳出 while True 迴圈，程式結束                  
                 time.sleep(wait_time_seconds) # 沒有訊息時稍作等待
                 continue
+                
+            no_message_count = 0 #重置計數器
 
             for message in messages:
                 receipt_handle = message['ReceiptHandle'] # 訊息的唯一識別符，用於刪除訊息
@@ -400,14 +409,14 @@ if __name__ == "__main__":
                         root_logger.info(f"--- 完成 {stock_code} {company_name} 爬取，並已從 SQS 佇列中刪除訊息 ---")
                     else:
                         root_logger.warning(f"SQS 訊息格式不正確，缺少 stock_code 或 company_name: {message['Body']}")
-                        # 對於格式不正確的訊息，也可以選擇刪除或移至死信佇列
+                        # 對於格式不正確的訊息，也可以選擇移至死信佇列
                         crawler.sqs_client.delete_message(
                             QueueUrl=SQS_QUEUE_URL,
                             ReceiptHandle=receipt_handle
                         )
 
                 except json.JSONDecodeError:
-                    root_logger.error(f"SQS 訊息體不是有效的 JSON 格式: {message['Body']}", exc_info=True)
+                    root_logger.error(f"SQS 訊息體不是有效的 JSON 格式: {message['Body']}. 將刪除此訊息以避免重複錯誤。", exc_info=True)
                     # 刪除無法解析的訊息，避免重複錯誤
                     crawler.sqs_client.delete_message(
                         QueueUrl=SQS_QUEUE_URL,
@@ -416,7 +425,7 @@ if __name__ == "__main__":
                 except Exception as e:
                     root_logger.error(f"處理 SQS 訊息或執行爬蟲時發生錯誤: {e}", exc_info=True)
                     # 如果這裡發生錯誤，訊息將在 VisibilityTimeout 後重新可見，並被重新處理
-                    # 如果是持續性錯誤，訊息將會進入死信佇列 (如果配置了的話)
+                    # 如果是持續性錯誤，訊息將會進入死信佇列 (可再配置)
                     root_logger.info(f"任務處理失敗，訊息將在 {visibility_timeout_seconds} 秒後重新可見。")
         
         except Exception as e:

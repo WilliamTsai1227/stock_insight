@@ -34,7 +34,7 @@ def generate_companies_list_json(output_filename='companies_list_source.json'):
             missing_vars.append('PostgreSQL_DB_NAME')
         if not db_config['user']:
             missing_vars.append('PostgreSQL_DB_USER')
-        # 對於密碼，我們只檢查 key 是否存在，因為空字串是合法的
+        # 對於密碼，檢查 key 是否存在，因為空字串是合法的
         if 'password' not in os.environ and db_config['password'] is None:
              missing_vars.append('PostgreSQL_DB_PASSWORD')
         if not db_config['port']:

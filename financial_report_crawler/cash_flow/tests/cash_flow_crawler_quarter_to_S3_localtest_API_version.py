@@ -133,7 +133,7 @@ class QuarterlyCashFlowAPICrawler:
             for quarter_query in quarters_to_crawl:
                 logger.info(f"正在透過 API 查詢 民國 {year_roc_query} 第 {quarter_query} 季的現金流量數據...")
                 
-                retries = 3
+                retries = 1
                 for attempt in range(retries):
                     api_result = self.fetch_data_from_api(stock_code, year_roc_query, quarter_query, logger)
                     
@@ -241,7 +241,7 @@ class QuarterlyCashFlowAPICrawler:
 if __name__ == "__main__":
     crawler = QuarterlyCashFlowAPICrawler()
     
-    companies_list_file = 'enriched_missing_stocks.json' # 本地檔案名稱
+    companies_list_file = 'enriched_missing_stocks_v2.json' # 本地檔案名稱
 
     try:
         with open(companies_list_file, 'r', encoding='utf-8') as f:

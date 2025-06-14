@@ -15,5 +15,4 @@ RUN pip install --no-cache-dir -r requirements.txt
 COPY cash_flow_api_crawler_ecs.py .
 
 # 定義容器啟動時執行的命令
-# 這將執行您的 Python 爬蟲程式
 CMD ["python", "cash_flow_api_crawler_ecs.py"]

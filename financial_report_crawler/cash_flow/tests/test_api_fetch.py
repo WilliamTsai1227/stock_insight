@@ -55,7 +55,7 @@ def fetch_cash_flow_data(stock_code, year_roc, quarter):
         print(f"無法解析回應為 JSON: {response.text}")
     return None
 
-# 範例使用
+
 if __name__ == "__main__":
     stock_code = "2630"
     year = 112
@@ -64,7 +64,7 @@ if __name__ == "__main__":
 
     if cash_flow_data:
         # 您可以進一步處理 cash_flow_data['reportList'] 來提取具體數值
-        # 例如，印出前幾行報告數據
+        # 印出前幾行報告數據
         print("\n部分報告數據：")
         for i, row in enumerate(cash_flow_data.get('reportList', [])[:10]):
             print(row)

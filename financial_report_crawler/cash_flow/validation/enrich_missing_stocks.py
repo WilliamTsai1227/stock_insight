@@ -2,9 +2,9 @@ import json
 import os
 
 def enrich_missing_stock_info(
-    missing_codes_file_path='missing_stock_codes.json',
+    missing_codes_file_path='missing_stock_codes_v2.json',
     companies_list_file_path='companies_list_source.json',
-    output_enriched_file_path='enriched_missing_stocks.json'
+    output_enriched_file_path='enriched_missing_stocks_v2.json'
 ):
     """
     讀取包含缺失股票代碼的 JSON 檔案，並從公司列表檔案中尋找對應的公司名稱，
