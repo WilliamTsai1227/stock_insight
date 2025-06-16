@@ -20,7 +20,7 @@ AWS_S3_ACCESS_KEY_ID = os.getenv('aws_s3_access_key_id')
 AWS_S3_SECRET_ACCESS_KEY = os.getenv('aws_s3_secret_access_key')
 
 COMPANIES_FILE_PATH = 'companies_list_source.json'
-OUTPUT_MISSING_FILE_PATH = 'missing_cash_flow_data.json'
+OUTPUT_MISSING_FILE_PATH = 'missing_cash_flow_data_v3.json'
 
 # 移除硬編碼的 START_YEAR_ROC 和 END_YEAR_ROC，它們將由參數傳入
 QUARTERS = [1, 2, 3, 4]

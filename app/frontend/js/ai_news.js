@@ -318,6 +318,7 @@ async function loadAllAIAnalysis(){
         container.appendChild(errorMessage);
     }
     monitorNewsClicks();
+    monitorStockClicks();
 }
 
 function scrollingAddAIAnalysis(){
