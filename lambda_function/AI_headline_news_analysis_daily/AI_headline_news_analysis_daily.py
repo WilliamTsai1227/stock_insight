@@ -120,7 +120,7 @@ def analyze_news(news_text: str) -> str:
     source = "AI_headline_news_analysis.py / analyze_news()"
     
     system_prompt = """
-    你是一位專業新聞分析師，請閱讀以下新聞並完成六項任務
+    你是一位專業新聞分析師，請閱讀以下新聞並完成七項任務
     請**僅以 JSON 物件格式回傳下方欄位內容**，不得輸出自然語言說明、換行或其他額外內容，JSON 必須為單一物件：
     範例：
     {
@@ -292,7 +292,7 @@ def analyze_news(news_text: str) -> str:
     final_system_prompt = """
         你將會看到多批次新聞摘要的整理結果，請基於這些內容，再次做出更高層級的整理與歸納。
     
-        請閱讀新聞並完成六項任務，並**以 JSON 格式回傳以下欄位的結果**：
+        請閱讀新聞並完成七項任務，並**以 JSON 格式回傳以下欄位的結果**：
 
         {
         "summary": "請填入第 1 項：當日新聞的精簡摘要。",
@@ -306,6 +306,11 @@ def analyze_news(news_text: str) -> str:
         "industry_list": [
             "半導體",
             "光電"
+        ],
+        "source_news":[
+            {"title":"美港口對陸船收費 長榮彈性調配不受影響","_id":"680b6917c3c5d94c43190b98"},
+            {"title":"關稅衝擊〉全面防堵「洗產地」！5/7起 MIT貨品出口至美國 須附原產地聲明書","_id":"680b6917c3c5d94c43190b99"},
+            {"title":"對美中貿易協議樂觀期待 美債殖利率持穩","_id":"680b6917c3c5d94c43190b9a"},
         ]
         }
 
@@ -325,11 +330,16 @@ def analyze_news(news_text: str) -> str:
         6. 將第 4 點提到的產業，**以 list 格式放入 industry_list 欄位**，範例如下：
         - ["半導體", "AI", "鋼鐵"]
         - 注意：**不要加上「產業」兩字**
+        7. source_news : 請將本次分析所根據的每一篇新聞，回傳其「標題」與「ID」，格式如下：
+        - [
+            {"title": "新聞標題A", "_id": "680b6917c3c5d94c43190b98"},
+            {"title": "新聞標題B", "_id": "680b6917c3c5d94c43190b99"}
+        ]
 
         特別注意：
         - 請優先挑出新聞中「雖然只出現一次但具有潛在重大意涵」的議題。
         - 在第 4 項中，若可提及具體公司名稱（如台積電、鴻海等）與產業（如半導體、AI、生技、綠能），並說明其與新聞的關聯，效果更佳。
-        - 所有欄位都必須填入對應的內容，並以 JSON 結構格式回傳（不要有自然語言或段落）。
+        - 所有欄位都必須填入對應的內容，並以 JSON 結構格式回傳（不要有自然語言或段落），請務必嚴格依照上述格式與內容回傳單一 JSON。
     """
     
     total_summary_json = json.dumps(total_summary, ensure_ascii=False, indent=2)
@@ -380,6 +390,7 @@ def analyze_news(news_text: str) -> str:
             potential_stocks_and_industries = parsed_result.get("potential_stocks_and_industries", False)
             stock_list = parsed_result.get("stock_list", False)
             industry_list = parsed_result.get("industry_list", False)
+            source_news = parsed_result.get("source_news", False)
             publishAt = int(time.time())
             # 儲存每次批次結果到資料庫
             db_final_ai_summary = {
@@ -393,7 +404,7 @@ def analyze_news(news_text: str) -> str:
                 "potential_stocks_and_industries":potential_stocks_and_industries,
                 "stock_list":stock_list,
                 "industry_list":industry_list,
-                "source_news":[]
+                "source_news":source_news
                 }
             # Store each AI analysis summary in the database
             insert_data_mongodb(
