@@ -388,16 +388,28 @@ function search(){
     });
 }
 
-function monitorNewsClicks(){
+function monitorNewsClicks() {
     let listItems = document.querySelectorAll(".news-item");
     listItems.forEach(item => {
-        item.addEventListener("click", () => {
+        item.addEventListener("click", async () => {
             let objectIdElement = item.querySelector(".news-item-id");
             if (objectIdElement) {
                 let objectId = objectIdElement.textContent.trim();
-                // window.location.href = `http://0.0.0.0:8000/news/${objectId}`;
-                window.open(`http://localhost:8000/news/${objectId}`, '_blank');
+                try {
+                    const response = await fetch(`/api/news/${objectId}`);
+                    if (!response.ok) {
+                        // 當 response.ok 為 false 時，表示 HTTP 狀態碼是 4xx 或 5xx,在這裡拋出錯誤，讓 catch 區塊處理
+                        throw new Error(`HTTP 錯誤狀態碼: ${response.status}`);
+                    }
+                    const data = await response.json();
+                    const news = data.data;
+                    const sourceURL = news.url.trim();
+                    window.open(sourceURL, '_blank');
 
+                } catch (error) {
+                    console.error("無法載入原始網站，請至搜尋引擎搜尋標題關鍵字，觀看原始網站文章", error);
+                    alert("無法載入原始網站，請至搜尋引擎搜尋標題關鍵字，觀看原始網站文章");
+                }
             }
         });
     });
