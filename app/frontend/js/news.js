@@ -57,7 +57,8 @@ async function loadAllNews(){
         if (isLoading === true || hasMoreData === false) return; // If data is being loaded, the load operation is not triggered
         isLoading = true; // Start loading data, set isLoading to true
         if (loadingIndicator) loadingIndicator.style.display = "flex"; // Display the loading indicator
-        console.log(`fetch startTime:${startTime}, endTime: ${endTime}`)
+        //Can add a printout of the search time to check
+        //console.log(`fetch startTime:${startTime}, endTime: ${endTime}`)
         const response = await fetch(`http://localhost:8000/api/news?keyword=${keyword}&start_time=${startTime}&end_time=${endTime}&page=${page}`);
         const result = await response.json();
         // 判斷是否還有下一頁資料
@@ -97,7 +98,7 @@ async function loadAllNews(){
             publishAtDiv.textContent = taiwanTime;
 
             // ---  News category ---
-            const newsCategory = document.createElement("div");
+            const newsCategory = document.createElement("span");
             let categoryContent = item["category"] || "";
             if (categoryContent === "headline"){
                 categoryContent = "頭條新聞";
@@ -105,16 +106,27 @@ async function loadAllNews(){
             newsCategory.textContent = categoryContent;
             newsCategory.className = "category";
 
-            // ---  News ID ---
-            const newsID = document.createElement("span");
-            newsID.textContent = item["_id"] || "";
-            newsID.className = "news-id";
+            // ---  News source ---
+            const newsSource = document.createElement("div");
+            let newsSourceContent = item["source"] || "";
+            if (newsSourceContent === "anue"){
+                newsSourceContent = "鉅亨網";
+            }
+            newsSource.textContent = newsSourceContent;
+            newsSource.className = "source";
+
+
+            // ---  News URL ---
+            const newsURL = document.createElement("div");
+            newsURL.textContent = item["url"] || "";
+            newsURL.className = "news-url";            
 
             newsSection.appendChild(newsTitle);
             newsSection.appendChild(newsContent);
             newsSection.appendChild(publishAtDiv);
+            newsSection.appendChild(newsSource);
             newsSection.appendChild(newsCategory);
-            newsSection.appendChild(newsID);
+            newsSection.appendChild(newsURL);
 
             block.appendChild(newsSection);
             container.appendChild(block);
@@ -199,14 +211,13 @@ function search(){
 }
 
 function monitorNewsClicks(){
-    let listItems = document.querySelectorAll(".block");
+    let listItems = document.querySelectorAll(".news-sesstion");
     listItems.forEach(item => {
         item.addEventListener("click", () => {
-            let objectIdElement = item.querySelector(".news-id");
-            if (objectIdElement) {
-                let objectId = objectIdElement.textContent.trim();
-                // window.location.href = `http://0.0.0.0:8000/news/${objectId}`;
-                window.open(`http://localhost:8000/news/${objectId}`, '_blank');
+            let objectURLElement = item.querySelector(".news-url");
+            if (objectURLElement) {
+                let objectURL = objectURLElement.textContent.trim();
+                window.open(objectURL, '_blank');
 
             }
         });
