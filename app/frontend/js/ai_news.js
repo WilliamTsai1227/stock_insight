@@ -551,7 +551,6 @@ async function excute(){
     await loadAllAIAnalysis();
     scrollingAddAIAnalysis();
     search();
-    monitorStockClicks();
     initializeHamburgerMenu();
     
 }
