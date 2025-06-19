@@ -9,20 +9,6 @@ router = APIRouter()
 # 使用連接池獲取 news collection
 collection = mongodb_pool.get_collection("news")
 
-@router.get("/api/news/{object_id}")
-async def get_single_news(object_id: str):
-    try:
-        obj_id = ObjectId(object_id)
-    except Exception:
-        raise HTTPException(status_code=400, detail="Invalid ObjectId")
-
-    result = collection.find_one({"_id": obj_id})
-    
-    if not result:
-        raise HTTPException(status_code=404, detail="News not found")
-
-    result["_id"] = str(result["_id"])
-    return JSONResponse(content={"data": result})
 
 
 @router.get("/api/news")
@@ -53,14 +39,14 @@ async def get_news(
 
     # 查詢 + 排序 + 分頁
     results = list(
-        collection.find(query)
+        collection.find(query, {"_id": 0, "news_id": 0, "summary": 0, "keyword":0})
         .sort("publishAt", -1)
         .skip(skip)
         .limit(limit)
     )
 
-    # 處理 ObjectId
     for r in results:
-        r["_id"] = str(r["_id"])
+        if r.get("content") is not None: 
+            r["content"] = r["content"][:30] # 截斷為30個字
 
     return JSONResponse(content={"nextPage":page + 1 if len(results) == limit else None,"page": page, "data": results})
