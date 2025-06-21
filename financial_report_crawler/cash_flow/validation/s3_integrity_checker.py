@@ -6,7 +6,9 @@ import argparse # 新增：導入 argparse 函式庫
 from dotenv import load_dotenv
 from collections import defaultdict
 from datetime import datetime
-
+"""
+檢查S3儲存桶裡面的物件是否齊全，與本地的股票list比對少了哪些股票,年份,季度
+"""
 # 載入 .env 檔案中的環境變數
 load_dotenv()
 
