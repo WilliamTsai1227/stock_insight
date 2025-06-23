@@ -9,7 +9,19 @@ router = APIRouter()
 # 使用連接池獲取 news collection
 collection = mongodb_pool.get_collection("news")
 
+@router.get("/api/news/{object_id}")
+async def get_single_news(object_id: str):
+    try:
+        obj_id = ObjectId(object_id)
+    except Exception:
+        raise HTTPException(status_code=400, detail="Invalid ObjectId")
 
+    result = collection.find_one({"_id": obj_id},{"url": 1, "_id": 0})
+    
+    if not result:
+        raise HTTPException(status_code=404, detail="News not found")
+
+    return JSONResponse(content={"data": result})
 
 @router.get("/api/news")
 async def get_news(
