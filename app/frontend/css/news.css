@@ -15,8 +15,11 @@ body {
     white-space: nowrap;
     border-bottom: 1px solid #f0f2f5;
     padding: 12px 40px;
-    position: relative; 
-    z-index: 100; /* 調整 Header 的 z-index，讓下拉選單可以蓋過它 */
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    z-index: 1000;
     background-color: #ffffff;
 }
 
@@ -140,17 +143,17 @@ body {
 /* Dropdown Nav 樣式 */
 .nav-dropdown {
     display: none; /* 預設隱藏 */
-    position: fixed; /* 重要：改為 fixed */
+    position: fixed;
     top: 0;
     left: 0;
-    width: 100%;
-    height: 100%; /* 佔滿整個視窗 */
+    width: 100vw;
+    height: 100vh;
+    z-index: 2000;
     background-color: #ffffff;
     border-top: 1px solid #f0f2f5;
     flex-direction: column;
 
     box-shadow: 0 8px 16px rgba(0,0,0,0.1);
-    z-index: 999; /* 比 header 高，比關閉按鈕低 */
     overflow-y: auto; /* 如果內容過多可以滾動 */
 }
 
@@ -191,11 +194,11 @@ body {
     flex-wrap: wrap;
     align-items: center;
     justify-content:center;
-    padding-left: 10%;
-    padding-right: 10%; 
+    /* padding-left: 10%;
+    padding-right: 10%;  */
     padding-top: 15px; 
-    padding-bottom: 15px; 
-    border: 1px solid #68696a38;
+    /* border: 1px solid #68696a38; */
+    /* width: 50vw; */
 }
 
 .start-time-div,
@@ -282,16 +285,37 @@ body {
     font-weight: 480;
     color: #0000008c;
 }
+.content-flex {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: flex-start;
+    padding-top: 50px;
+    width: 100%;
+    gap: 10px; /* 可選，讓兩區塊有間距 */
+}
 
-
-.container {
+.left-container {
     display: flex;
     flex-direction: column;
     align-items: center;
     padding-top: 20px;
     padding-bottom: 40px;
-    padding-left: 2%;
-    padding-right: 2%;
+    padding-left: 30px;
+    padding-right: 15px;
+    width: 50%;
+}
+.right-container {
+    width: 50%;
+    min-width: 320px;
+    padding-right: 50px;
+
+}
+.tradingview-widget-container {
+    padding-top: 30px;
+    width: 100%;
+    height: 1000px;
+    min-width: 320px;
 }
 .block {
     display: flex;
@@ -491,6 +515,7 @@ body {
     }
 
     .hamburger-menu {
+        margin-right: 30px;
         display: flex; 
         z-index: 1001; /* 確保漢堡選單在 Header 之上 */
     }
@@ -530,6 +555,8 @@ body {
         width: 170px;
     }
 
+
+
 }
 
 /* 針對更小的手機螢幕進行微調 */
@@ -547,3 +574,4 @@ body {
         width: 100%;
     }
 }
+

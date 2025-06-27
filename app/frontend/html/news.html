@@ -67,22 +67,41 @@
         </div>
 
         <div class="content-area">
-            <div class="search-block">
-                <div class="start-time-div">
-                    <div class="start-time-title">開始時間:</div>
-                    <input type="datetime-local" class="start-time-calendar">
+
+            <div class="content-flex">
+                <div class="left-container">
+                    <div class="search-block">
+                        <div class="start-time-div">
+                            <div class="start-time-title">開始時間:</div>
+                            <input type="datetime-local" class="start-time-calendar">
+                        </div>
+                        <div class="end-time-div">
+                            <div class="end-time-title">結束時間:</div>
+                            <input type="datetime-local" class="end-time-calendar">
+                        </div>
+                        <div class="search-bar-div">
+                            <div class="search-bar-title">關鍵字搜尋:</div>
+                            <input type="text" class="search-bar" placeholder="Search...">
+                            <div class="search_icon"></div>
+                        </div>
+                    </div>
                 </div>
-                <div class="end-time-div">
-                    <div class="end-time-title">結束時間:</div>
-                    <input type="datetime-local" class="end-time-calendar">
+                <div class="right-container">
+                    <div class="tradingview-widget-container">
+                        <div class="tradingview-widget-container__widget"></div>
+                        <div class="tradingview-widget-copyright"><a href="https://www.tradingview.com/" rel="noopener nofollow" target="_blank"><span class="blue-text">Track all markets on TradingView</span></a></div>
+                        <script type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-timeline.js" async>
+                        {
+                        "displayMode": "regular",
+                        "feedMode": "all_symbols",
+                        "colorTheme": "light",
+                        "isTransparent": false,
+                        "locale": "en"
+                        }
+                        </script>
+                    </div>
                 </div>
-                <div class="search-bar-div">
-                    <div class="search-bar-title">關鍵字搜尋:</div>
-                    <input type="text" class="search-bar" placeholder="Search...">
-                    <div class="search_icon"></div>
-                </div>
-            </div>
-            <div class="container">
+
             </div>
             <div id="loading-indicator">
                 <div class="spinner"></div> 
@@ -93,7 +112,7 @@
         <div class="footer">
             <div class="footer_text">COPYRIGHT © Stock Insight<br>
                 免責聲明：<br>
-                **網站內容僅供參考，不構成任何投資建議。
+                **本網站無任何營利行為。網站內容僅供參考，不構成任何投資建議。
                 所有數據和資訊僅供研究與學習使用。
                 投資有風險，任何依據本網站資訊進行的投資決策，風險由投資人自行承擔。
                 本站提供之分析資料、選股工具僅供參考，不暗示買賣建議，本站對資訊正確、更新延誤或傳輸中斷不負任何責任，依本站資訊交易發生損失需自行負責，請謹慎評估風險。
