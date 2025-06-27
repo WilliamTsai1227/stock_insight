@@ -69,7 +69,7 @@ async function loadAllNews(){
         }
         const dataList = result.data;
 
-        const container = document.querySelector(".left-container");
+        const container = document.querySelector(".right-container");
 
         dataList.forEach(item => {
             const block = document.createElement("div");
@@ -137,7 +137,7 @@ async function loadAllNews(){
         console.error("Error fetching AI news:", error);
         isLoading = false; // Data loading error, set isLoading to false
         if (loadingIndicator) loadingIndicator.style.display = "none"; // Hide the loading indicator
-        const container = document.querySelector(".left-container");
+        const container = document.querySelector(".right-container");
         const errorMessage = document.createElement("div");
         errorMessage.textContent = "Oops! 載入新聞時發生錯誤，請稍後再試。";
         errorMessage.className = "errorMessage";
@@ -161,7 +161,7 @@ function scrollingAddAIAnalysis(){
 
 async function performSearch() {
     let input = document.querySelector(".search-bar");
-    let container = document.querySelector(".left-container");
+    let container = document.querySelector(".right-container");
 
     endTime = Math.floor(Date.now() / 1000); // 確保每次搜尋都更新為當前時間
     const startDateInput = document.querySelector('.start-time-calendar');

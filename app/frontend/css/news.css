@@ -1,5 +1,6 @@
-*{
+*,*::before, *::after{
     margin: 0;
+    box-sizing: border-box;
 }
 body {
     font-family: "Work Sans", "Noto Sans", sans-serif;
@@ -285,35 +286,40 @@ body {
     font-weight: 480;
     color: #0000008c;
 }
+
 .content-flex {
-    display: flex;
+    display: block;
     flex-direction: row;
     justify-content: center;
-    align-items: flex-start;
+    align-items: center;
     padding-top: 50px;
-    width: 100%;
-    gap: 10px; /* 可選，讓兩區塊有間距 */
+    /* width: 100vw; */
+
 }
 
-.left-container {
+.right-container {
     display: flex;
     flex-direction: column;
     align-items: center;
     padding-top: 20px;
     padding-bottom: 40px;
-    padding-left: 30px;
-    padding-right: 15px;
-    width: 50%;
+    background-color: white;
+
+    /* padding-right: 15px; */
+
 }
-.right-container {
-    width: 50%;
-    min-width: 320px;
-    padding-right: 50px;
+.left-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background-color: white;
+
+
 
 }
 .tradingview-widget-container {
     padding-top: 30px;
-    width: 100%;
+    width: 60%;
     height: 1000px;
     min-width: 320px;
 }
