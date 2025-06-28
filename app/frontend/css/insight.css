@@ -1,0 +1,700 @@
+*{
+    margin: 0;
+    box-sizing: border-box;
+}
+body {
+    font-family: "Work Sans", "Noto Sans", sans-serif;
+    margin: 0;
+    background-color: #ffffff;
+    display: block;
+    align-items: center;
+}
+
+.layout-container {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+.content-area {
+    flex: 1;
+    padding: 20px;
+    background-color: #ffffff;
+}
+
+/* Header 樣式 */
+.main-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between; /* 讓左右元素有間距 */
+    white-space: nowrap;
+    border-bottom: 1px solid #f0f2f5;
+    padding: 12px 40px;
+    position: relative; 
+    z-index: 100; /* 調整 Header 的 z-index，讓下拉選單可以蓋過它 */
+    background-color: #ffffff;
+}
+
+.header-left-section {
+    display: flex;
+    align-items: center;
+    gap: 32px;
+}
+
+.logo-section {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    color: #111418;
+}
+
+.logo-icon {
+    width: 16px;
+    height: 16px;
+}
+
+.logo-title {
+    color: #111418;
+    font-size: 18px;
+    font-weight: 700;
+    line-height: 28px;
+    letter-spacing: -0.015em;
+}
+
+.nav-links {
+    display: flex;
+    align-items: center;
+    gap: 36px;
+}
+
+.nav-links a {
+    color: #111418;
+    font-size: 14px;
+    font-weight: 500;
+    line-height: 20px;
+    text-decoration: none;
+    padding: 5px 0; /* 增加點擊區域 */
+}
+
+.header-right-section {
+    display: flex;
+    flex: 1; 
+    justify-content: flex-end; /* 靠右對齊 */
+    align-items: center;
+}
+
+/* Profile Image 樣式 */
+.profile-image {
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+    aspect-ratio: 1 / 1;
+    border-radius: 9999px;
+    width: 40px;
+    height: 40px;
+}
+
+/* Hamburger Menu 樣式 */
+.hamburger-menu {
+    display: none; /* 預設隱藏 */
+    flex-direction: column;
+    cursor: pointer;
+    padding: 10px;
+    /* z-index 在手機版媒體查詢中設定 */
+}
+
+.hamburger-menu .bar {
+    width: 25px;
+    height: 3px;
+    background-color: #111418; /* 改為純黑色，與叉叉顏色一致 */
+    margin: 4px 0;
+    transition: 0.4s;
+}
+
+/* Hamburger Animation - 重新啟用 */
+.hamburger-menu.active .bar:nth-child(1) {
+    transform: translateY(7px) rotate(45deg);
+}
+
+.hamburger-menu.active .bar:nth-child(2) {
+    opacity: 0;
+}
+
+.hamburger-menu.active .bar:nth-child(3) {
+    transform: translateY(-7px) rotate(-45deg);
+}
+
+/* 新增：漢堡選單關閉按鈕樣式 */
+.hamburger-menu-close {
+    position: absolute;
+    top: 25px; /* 調整位置 */
+    right: 60px;;
+    width: 30px;
+    height: 30px;
+    cursor: pointer;
+    z-index: 1000; /* 確保在下拉選單的最上層 */
+    display: none; /* 預設隱藏，只在手機版顯示 */
+}
+
+.hamburger-menu-close::before,
+.hamburger-menu-close::after {
+    content: '';
+    position: absolute;
+    width: 25px;
+    height: 3px;
+    background-color: #111418;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%) rotate(45deg);
+}
+
+.hamburger-menu-close::after {
+    transform: translate(-50%, -50%) rotate(-45deg);
+}
+
+/* Dropdown Nav 樣式 */
+.nav-dropdown {
+    display: none; /* 預設隱藏 */
+    position: fixed; /* 重要：改為 fixed */
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%; /* 佔滿整個視窗 */
+    background-color: #ffffff;
+    border-top: 1px solid #f0f2f5;
+    flex-direction: column;
+
+    box-shadow: 0 8px 16px rgba(0,0,0,0.1);
+    z-index: 999; /* 比 header 高，比關閉按鈕低 */
+    overflow-y: auto; /* 如果內容過多可以滾動 */
+}
+
+.nav-dropdown.active {
+    display: flex; 
+}
+
+.nav-dropdown a {
+    padding: 15px 0; /* 增加點擊區域 */
+    height: 100px;
+    color: #111418;
+    text-decoration: none;
+    font-size: 20px;
+    border-bottom: 1px solid #f0f2f5;
+    cursor: pointer;
+    margin-bottom: 20px;
+    font-weight: 500;
+}
+/* 新增 hover 效果 */
+.nav-dropdown a:hover {
+    background-color: #f0f2f5; /* 淺灰色背景 */
+}
+
+/* 新增 active 效果 */
+.nav-dropdown a:active {
+    transform: scale(0.98); /* 點擊時縮小 */
+}
+
+
+.nav-dropdown a:last-child {
+    border-bottom: none;
+}
+/* SVG 樣式 */
+
+.search-icon-container svg,
+.notification-button svg {
+    width: 100%;
+    height: 100%;
+    display: block;
+}
+
+
+.search-block {
+    display: flex;
+    flex: none;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content:center;
+    padding-left: 10%;
+    padding-right: 10%; 
+    padding-top: 15px; 
+    padding-bottom: 15px; 
+    
+}
+.start-time-div,
+.end-time-div,
+.analysis-type-div,
+.search-bar-div{
+    display: flex;
+    align-items: center;
+}
+
+.search-bar-title{
+    font-size: 17px;
+    color: #0000008c;
+    font-weight: 480;
+    padding-left: 6px;
+    padding-right: 6px;
+}
+.search-bar {
+    display: flex;
+    align-items: center;
+    width: 150px;
+    height: 30px; /* !h-10 */
+    font-size: 15px;
+    font-weight: 500;
+    text-align: left;
+    box-sizing: border-box; 
+    padding: 0 10px; 
+    border: none; 
+    outline: none; 
+    border-radius: 5px 0 0 5px;
+}
+.search_icon {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 30px;
+    height: 30px;
+    background-color: #FFFFFF;
+    cursor: pointer;
+    border-radius: 0 5px 5px 0 ;
+    transition: background-color 0.3s ease;
+    font-size: 20px;
+    position: relative;
+}
+.search_icon::before {
+    content: "🔍";
+}
+.search_icon:hover {
+    transform: scale(1.05);
+}
+.search_icon:active {
+    transform: scale(1);
+    box-shadow: inset 0 0 10px 1px rgba(0, 0, 0, .2);
+}
+.start-time-title{
+    font-size: 17px;
+    color: #0000008c;
+    font-weight: 480;
+    text-align: left;
+    padding-left: 6px;
+
+}
+.end-time-title{
+    font-size: 17px;
+    color: #0000008c;
+    font-weight: 480;
+    text-align: left;
+    padding-left: 6px;
+
+}
+.start-time-calendar {
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    margin-left: 10px;
+    height: 30px;
+    font-size: 14px;
+    font-weight: 480;
+    color: #0000008c;
+    
+}
+.end-time-calendar {
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    margin-left: 10px;
+    height: 30px;
+    font-size: 14px;
+    font-weight: 480;
+    color: #0000008c;
+}
+.analysis-type-title{
+    font-size: 17px;
+    color: #0000008c;
+    font-weight: 480;
+    text-align: left;
+    padding-left: 6px;
+    padding-right: 6px;
+}
+.analysis-type-select{
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    margin-left: 4px;
+    height: 30px;
+    width: 100px;
+    font-size: 14px;
+    font-weight: 700;
+    text-align: center;
+    color: #0000008c;
+    
+}
+
+.container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 40px;
+    padding-bottom: 40px;
+    padding-left: 2%;
+    padding-right: 2%;
+}
+.block {
+    display: flex;
+    flex-direction: column; /* 垂直堆疊 */
+    gap: 20px; 
+  
+    width: 90%;
+}
+.block-content {
+    /* display: flex; */
+    gap: 10px;
+}
+.publishAtDiv{
+    font-size: 13px;
+    color: #110f0fad;
+    font-weight: 450;
+    background-color: white;
+    border-radius: 8px;
+    padding-left: 1px;
+    position: relative;
+    width:200px;
+    gap: 10px;
+    
+}
+.section {
+    background-color: white;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 15px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    position: relative;
+    width: 100%;
+}
+.list-section{
+    display: flex;
+    flex-direction: column;
+    width:100%;
+    gap: 10px;
+}
+.news-section {
+    display: flex;
+    flex-direction: column;
+    width:100%;
+    gap: 10px;
+}
+.potential-stocks{
+    width:100%;
+}
+.ai-summary{
+    width:100%;
+}
+.stock-list-item {
+    font-size: 15px;
+    color: #110f0fb5;
+    font-weight: 480;
+    background-color: #f0f0f0;
+    padding: 10px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.2s;
+    position: relative;
+}
+.stock-list-item:hover {
+    background-color: #e0e0e0;
+}
+.stock-tooltip {
+    display: none;
+    position: absolute;
+    top: 50%;          
+    left: 100%;        
+    transform: translateY(-50%) translateX(12px); 
+    width: 160px;
+    height: 30px;
+    background-color: rgba(6, 28, 168, 0.68); 
+    color: #eaeeee; 
+    font-size: 13px;
+    padding: 5px 10px;
+    border-radius: 4px;
+    z-index: 999;
+    white-space: nowrap;
+    text-align: center;
+    line-height: 20px;
+}
+.stock-tooltip::after {
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: -12px; /* The arrow appears to the left of the tooltip */
+    transform: translateY(-50%);
+    border-width: 6px;
+    border-style: solid;
+    border-color: transparent rgba(6, 28, 168, 0.68) transparent transparent;
+}
+
+
+.stock-list-item:hover .stock-tooltip {
+    display: block;
+}
+
+
+.stock-list-item-code {
+    display: none;
+}
+.industry-list-item {
+    font-size: 15px;
+    color: #110f0fb5;
+    font-weight: 480;
+    background-color: #f0f0f0;
+    padding: 10px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.2s;
+    position: relative;
+}
+.industry-list-item:hover {
+    background-color: #e0e0e0;
+}
+.news-item {
+    font-size: 15px;
+    color: #110f0fb5;
+    font-weight: 450;
+    background-color: #f0f0f0;
+    padding: 10px;
+    border-radius: 5px;
+    margin-bottom: 10px;
+    position: relative;
+    cursor: pointer;
+}
+.news-item:hover {
+    background-color: #e0e0e0;
+}
+.news-section {
+    overflow-y: auto;
+}
+
+
+/* Arrow Styles using SVG */
+.arrow-right {
+    position: absolute;
+    right: -20px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 20px;
+    height: 20px;
+}
+.arrow-left {
+    position: absolute;
+    left: -20px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 20px;
+    height: 20px;
+}
+
+.news-item span {
+    display: none;
+}
+
+
+
+
+.news-summary,
+.key-news,
+.sentiment-analysis{
+    flex: none;
+    font-size: 19px;
+    color: #386e7c;
+    font-weight: 600;
+    text-align: left;
+    margin-bottom: 10px;
+}
+.news-summary-content,
+.key-news-content,
+.sentiment-analysis-content{
+    flex: none;
+    font-size: 17px;
+    color: rgb(94, 93, 93);
+    font-weight: 450;
+    text-align: left;
+    margin-bottom: 10px;
+}
+
+
+.section-title{
+    flex: none;
+    font-size: 20px;
+    color: #0a0202d1;
+    font-weight: 600;
+    text-align: left;
+    margin-bottom: 10px;
+    margin-top: 10px;
+}
+
+.news-item-id{
+    display: none;
+}
+.potential-content{
+    flex: none;
+    font-size: 17px;
+    color: #110f0fb5;
+    font-weight: 450;
+    text-align: left;
+    margin-bottom: 10px;    
+}
+.errorMessage{
+    font-size: 20px;
+    font-weight: 700;
+    color: rgb(229, 6, 6);
+    text-align: center;
+    margin-top: 100px; 
+    margin-bottom: 100px;  
+}
+#loading-indicator {
+    display: flex; 
+    flex-direction: column; 
+    align-items: center; 
+    justify-content: center; 
+    height: 200px; 
+    width: 100vw;
+    display: none; /* Make sure it is hidden initially, JavaScript will control its display */
+    font-size: 18px; 
+    font-weight: 700;
+    color: rgba(221, 177, 44, 0.574);
+    margin-top: 50px; 
+    margin-bottom: 50px;
+}
+
+
+.spinner {
+    border: 8px solid rgba(255, 255, 255, 0.3); 
+    border-top: 8px solid rgba(221, 177, 44, 0.574); 
+    border-radius: 50%; 
+    width: 60px; 
+    height: 60px; 
+    animation: spin 1s linear infinite; 
+    margin-bottom: 15px; 
+}
+
+/* Rotation animation definition */
+@keyframes spin {
+    0% { transform: rotate(0deg); } /* Start at 0 degrees */
+    100% { transform: rotate(360deg); } /* Rotate 360 ​​degrees */
+}
+.footer{
+    border-top: 1px solid #e0e4e8; 
+    flex: none;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding-top: 40px;
+    padding-bottom: 40px;
+    width: 100%;
+    height: 110px;
+    background-color: #f0f2f5; 
+    box-sizing: border-box;
+    border-top: 1px solid #e0e4e8; 
+}
+.footer_text{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 800px;
+    height: 24px;
+    /* padding: 5px 0px 5px 0px; */
+    /* top: 5px; */
+    font-size: 14px;
+    line-height: 1.6;
+    text-align: center;
+    color: #60748a; 
+}
+
+/* 響應式調整 */
+@media (max-width: 820px) {
+    .main-header {
+        flex-direction: row; 
+        justify-content: space-between; 
+        align-items: center;
+        padding: 12px 20px;
+        flex-wrap: nowrap; 
+        z-index: 100; /* 確保在手機版時 Header 也在下拉選單之下 */
+    }
+
+    .header-left-section {
+        flex-direction: row; 
+        justify-content: flex-start; 
+        width: auto; 
+        margin-bottom: 0; 
+    }
+
+    .nav-links {
+        display: none; 
+    }
+
+    .header-right-section {
+        flex: none; 
+        width: auto; 
+        margin-top: 0; 
+        justify-content: flex-end; 
+        gap: 0; 
+    }
+
+    .profile-image {
+        display: none; 
+    }
+
+    .hamburger-menu {
+        display: flex; 
+        z-index: 1001; /* 確保漢堡選單在 Header 之上 */
+    }
+
+    .nav-dropdown {
+        display: none; 
+        flex-direction: column;
+        align-items: flex-start;
+        padding: 60px 20px 10px 20px; /* 增加頂部 padding 給關閉按鈕留空間 */
+    }
+    .nav-dropdown.active {
+        display: flex; 
+    }
+    .nav-dropdown a {
+        width: 100%; 
+        justify-content: flex-start;
+        padding: 15px 20px;
+    }
+
+    /* 手機版顯示關閉按鈕 */
+    .hamburger-menu-close {
+        display: block; 
+    }
+    .start-time-div,
+    .end-time-div,
+    .analysis-type-div,
+    .search-bar-div{
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        width: 100%;
+    }
+    .analysis-type-select {
+        width: 213px;
+    }
+    .search-bar{
+        width: 170px;
+    }
+
+}
+
+/* 針對更小的手機螢幕進行微調 */
+@media (max-width: 480px) {
+    .main-header {
+        padding: 10px 15px; 
+    }
+    .nav-dropdown {
+        padding: 50px 15px 5px 15px; /* 進一步調整 padding */
+    }
+    .start-time-div,
+    .end-time-div,
+    .analysis-type-div,
+    .search-bar-div{
+        width: 100%;
+    }
+}

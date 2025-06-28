@@ -6,7 +6,7 @@
     <meta name="description" content="AI股票新聞平台，透過即時爬蟲與AI分析提供重點摘要與股票建議。AI-powered stock news platform offering summaries and stock recommendations based on real-time financial news.">
     <meta name="keywords" content="AI股票新聞, 股票分析, 財經AI, 股票推薦, 產業分析, 新聞摘要, 市場情緒, 股票爬蟲, AI財經摘要, 潛力股票, AI stock news, stock analysis, financial AI, stock recommendation, industry analysis, news summary, market sentiment, web scraping, AI financial summary, potential stocks">
     <meta name="author" content="william tsai">
-    <title>News</title>
+    <title>Insight</title>
     <link rel="icon" type="image/x-icon" href="data:image/x-icon;base64," />
 
     <link rel="preconnect" href="https://fonts.gstatic.com/" crossorigin />
@@ -16,8 +16,8 @@
       onload="this.rel='stylesheet'"
       href="https://fonts.googleapis.com/css2?display=swap&family=Noto+Sans%3Awght%40400%3B500%3B700%3B900&family=Work+Sans%3Awght%40400%3B500%3B700%3B900"
     />
-    <link rel="stylesheet" href="/css/news.css">
-    <script src="/js/news.js" defer></script>
+    <link rel="stylesheet" href="/css/insight.css">
+    <script src="/js/insight.js" defer></script>
 </head>
 <body>
     <div class="layout-container">
@@ -67,43 +67,29 @@
         </div>
 
         <div class="content-area">
-
-            <div class="content-flex">
-                <div class="left-container">
-                    <div class="tradingview-widget-container">
-                        <div class="tradingview-widget-container__widget"></div>
-                        <div class="tradingview-widget-copyright"><a href="https://www.tradingview.com/" rel="noopener nofollow" target="_blank"><span class="blue-text">Track all markets on TradingView</span></a></div>
-                        <script type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-timeline.js" async>
-                        {
-                        "displayMode": "regular",
-                        "feedMode": "all_symbols",
-                        "colorTheme": "light",
-                        "isTransparent": false,
-                        "locale": "en"
-                        }
-                        </script>
-                    </div>
+            <div class="search-block">
+                <div class="start-time-div">
+                    <div class="start-time-title">開始時間:</div>
+                    <input type="datetime-local" class="start-time-calendar">
                 </div>
-                <div class="search-block">
-                    <div class="start-time-div">
-                        <div class="start-time-title">開始時間:</div>
-                        <input type="datetime-local" class="start-time-calendar">
-                    </div>
-                    <div class="end-time-div">
-                        <div class="end-time-title">結束時間:</div>
-                        <input type="datetime-local" class="end-time-calendar">
-                    </div>
-                    <div class="search-bar-div">
-                        <div class="search-bar-title">關鍵字搜尋:</div>
-                        <input type="text" class="search-bar" placeholder="Search...">
-                        <div class="search_icon"></div>
-                    </div>
+                <div class="end-time-div">
+                    <div class="end-time-title">結束時間:</div>
+                    <input type="datetime-local" class="end-time-calendar">
                 </div>
-                <div class="right-container">
-
+                <div class="analysis-type-div">
+                    <div class="analysis-type-title">分析類型:</div>
+                    <select class="analysis-type-select">
+                        <option value="false">逐條分析</option>
+                        <option value="true">統整分析</option>
+                    </select>
                 </div>
-
-
+                <div class="search-bar-div">
+                    <div class="search-bar-title">關鍵字搜尋:</div>
+                    <input type="text" class="search-bar" placeholder="Search...">
+                    <div class="search_icon"></div>
+                </div>
+            </div>
+            <div class="container">
             </div>
             <div id="loading-indicator">
                 <div class="spinner"></div> 
