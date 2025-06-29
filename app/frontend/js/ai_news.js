@@ -159,7 +159,7 @@ async function loadAllAIAnalysis(){
             potentialSection.className = "section potential-stocks";
 
             const potentialBigTitle = document.createElement("div");
-            potentialBigTitle.textContent = "股票＆產業分析";
+            potentialBigTitle.textContent = "產業分析";
             potentialBigTitle.className = "section-title";
             potentialSection.appendChild(potentialBigTitle);
 
