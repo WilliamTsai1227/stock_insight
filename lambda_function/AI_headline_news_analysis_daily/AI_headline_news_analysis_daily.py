@@ -120,14 +120,15 @@ def analyze_news(news_text: str) -> str:
     source = "AI_headline_news_analysis.py / analyze_news()"
     
     system_prompt = """
-    你是一位專業分析師，請閱讀以下新聞並完成七項任務，但避免使用「新聞」、「報導、「內容」、「資訊」、「文本」或任何需要結合「新聞」、「報導、「內容」、「資訊」、「文本」為字串的字眼。
+    你是一位專業分析師，請閱讀以下新聞並完成八項任務，但避免使用「新聞」、「報導、「內容」、「資訊」、「文本」或任何需要結合「新聞」、「報導、「內容」、「資訊」、「文本」為字串的字眼。
+    且應避免使用”建議關注“，”持續關注“，”值得關注“，等推薦關注字眼。
     請**僅以 JSON 物件格式回傳下方欄位內容**，不得輸出自然語言說明、換行或其他額外內容，JSON 必須為單一物件：
     範例：
     {
     "summary": "請填入第 1 項：當日情勢的精簡摘要。",
     "important_news": "請填入第 2 項：真正重要的重點分析（根據潛在意義與影響）。",
     "sentiment": "請填入第 3 項：整體情緒分析（正面／負面／中性）及理由。",
-    "potential_stocks_and_industries": "請填入第 4 項的完整文字描述（包含推薦個股與產業的原因說明）。",
+    "potential_stocks_and_industries": "請填入第 4 項的完整文字描述（包含正向個股與產業的原因說明）。",
     "stock_list": [
         ["tw", "2330", "台積電"],
         ["us", "AAPL", "APPLE"]
@@ -140,7 +141,8 @@ def analyze_news(news_text: str) -> str:
         {"title":"美港口對陸船收費 長榮彈性調配不受影響","_id":"680b6917c3c5d94c43190b98"},
         {"title":"關稅衝擊〉全面防堵「洗產地」！5/7起 MIT貨品出口至美國 須附原產地聲明書","_id":"680b6917c3c5d94c43190b99"},
         {"title":"對美中貿易協議樂觀期待 美債殖利率持穩","_id":"680b6917c3c5d94c43190b9a"},
-    ]
+    ],
+    "article_title": "請填入第 8 項：給這篇產出的分析文章給一個標題。"
     }
 
     ---
@@ -149,7 +151,7 @@ def analyze_news(news_text: str) -> str:
     1. summary : 提供當日**情勢的精簡摘要** Datatype:String。避免使用「新聞」、「報導、「內容」、「資訊」、「文本」或任何需要結合「新聞」、「報導、「內容」、「資訊」、「文本」為字串的字眼。
     2. important_news : 挑出真正**重要的重點分析**，請根據潛在意義與可能影響，不僅是出現次數。(如果要以條列方式撰寫，請以數字條列並在每個條列式結尾使用 **字串形式的 `\\n`**（即兩個反斜線加 n 字母），而不是實際的換行符號。避免變成一整段文字）。Datatype:String。避免使用「新聞」、「報導、「內容」、「資訊」、「文本」或任何需要結合「新聞」、「報導、「內容」、「資訊」、「文本」為字串的字眼。
     3. sentiment : 給出今日**情勢的情緒分析**（正面／負面／中性），並說明你的判斷依據。Datatype:String。避免使用「新聞」、「報導、「內容」、「資訊」、「文本」或任何需要結合「新聞」、「報導、「內容」、「資訊」、「文本」為字串的字眼。
-    4. potential_stocks_and_industries : 根據內容，推論出**值得高度關注的潛力個股與產業**，並解釋推薦原因（例如：政策利多、產業趨勢、事件驅動等）。(如果要以條列方式撰寫，請以數字條列並在每個條列式結尾使用 **字串形式的 `\\n`**（即兩個反斜線加 n 字母），而不是實際的換行符號。避免變成一整段文字）。Datatype:String。避免使用「新聞」、「報導、「內容」、「資訊」、「文本」或任何需要結合「新聞」、「報導、「內容」、「資訊」、「文本」為字串的字眼。
+    4. potential_stocks_and_industries : 根據內容，推論出**具備正面表現的產業**，並解釋原因（例如：政策利多、產業趨勢、事件驅動等）。(如果要以條列方式撰寫，請以數字條列並在每個條列式結尾使用 **字串形式的 `\\n`**（即兩個反斜線加 n 字母），而不是實際的換行符號。避免變成一整段文字）。Datatype:String。避免使用「新聞」、「報導、「內容」、「資訊」、「文本」或任何需要結合「新聞」、「報導、「內容」、「資訊」、「文本」為字串的字眼。且應避免使用”建議關注“，”持續關注“，”值得關注“，等推薦關注字眼。
     5. stock_list : 將第 4 點提到的個股，**以 list 格式放入 stock_list 欄位**，格式如下：
     - 台股用 ["tw", "股票代碼", "公司名稱"]
     - 美股用 ["us", "股票代碼", "公司名稱"]
@@ -164,12 +166,17 @@ def analyze_news(news_text: str) -> str:
         {"title": "新聞標題A", "_id": "680b6917c3c5d94c43190b98"},
         {"title": "新聞標題B", "_id": "680b6917c3c5d94c43190b99"}
     ]
+    8. article_title : 請將本次分析文章給出一個標題，範例如下：
+    - "科技巨頭投資英國 AI 領域，推動金融科技創新"
+    - 請像真實分析師一樣，將此篇分析做一個總結標題
+    - 注意：**不得和 source_news 內的title一樣**
 
     特別注意：
     - 請優先挑出「雖然只出現一次但具有潛在重大意涵」的議題。
-    - 在第 4 項中，若可提及具體公司名稱（如台積電、鴻海等）與產業（如半導體、AI、生技、綠能），並提供你的看法，效果更佳。
+    - 在第 4 項中，若可提及具體產業（如半導體、AI、生技、綠能），不要提及具體個股，並提供你的看法，效果更佳。
     - 所有欄位都必須填入對應的內容，並以 JSON 結構格式回傳（不要有自然語言或段落），請務必嚴格依照上述格式與內容回傳單一 JSON。
-    - **請務必在所有分析與產出中，避免使用「新聞」、「報導」、「資訊」、「文本」等任何可能指涉原始來源的字眼。**
+    - **請務必在所有分析與產出中，避免使用「根據新聞」、「根據報導」、「根據資訊來源」等字眼。**
+    - **請務必在所有分析與產出中，避免使用”建議關注“，”持續關注“，”值得關注“，等推薦關注字眼。**
     """
 
     # 假設每次最多處理 5 篇新聞
@@ -247,6 +254,7 @@ def analyze_news(news_text: str) -> str:
                 stock_list = parsed_result.get("stock_list", False)
                 industry_list = parsed_result.get("industry_list", False)
                 source_news = parsed_result.get("source_news", False)
+                article_title = parsed_result.get("article_title", False)
                 publishAt = int(time.time())
                 # 儲存每次批次結果到資料庫
                 ai_summary = {
@@ -260,7 +268,8 @@ def analyze_news(news_text: str) -> str:
                     "potential_stocks_and_industries":potential_stocks_and_industries,
                     "stock_list":stock_list,
                     "industry_list":industry_list,
-                    "source_news":source_news
+                    "source_news":source_news,
+                    "article_title":article_title
                     }
                 # Store each AI analysis summary in the database
                 
@@ -293,13 +302,14 @@ def analyze_news(news_text: str) -> str:
     final_system_prompt = """
         你將會看到多批次內容摘要的整理結果，請基於這些內容，再次做出更高層級的觀點與歸納。
         但避免使用「新聞」、「報導、「內容」、「資訊」、「文本」或任何需要結合「新聞」、「報導、「內容」、「資訊」、「文本」為字串的字眼。
-        請閱讀新聞並完成七項任務，並**以 JSON 格式回傳以下欄位的結果**：
+        且應避免使用”建議關注“，”持續關注“，”值得關注“，等推薦關注字眼。
+        請閱讀新聞並完成八項任務，並**以 JSON 格式回傳以下欄位的結果**：
 
         {
         "summary": "請填入第 1 項：當日情勢的精簡摘要。",
         "important_news": "請填入第 2 項：真正重要的重點分析（根據潛在意義與影響）。",
         "sentiment": "請填入第 3 項：整體情緒分析（正面／負面／中性）及理由。",
-        "potential_stocks_and_industries": "請填入第 4 項的完整文字描述（包含推薦個股與產業的原因說明）。",
+        "potential_stocks_and_industries": "請填入第 4 項的完整文字描述（包含正向個股與產業的原因說明）。",
         "stock_list": [
             ["tw", "2330", "台積電"],
             ["us", "AAPL", "APPLE"]
@@ -312,7 +322,8 @@ def analyze_news(news_text: str) -> str:
             {"title":"美港口對陸船收費 長榮彈性調配不受影響","_id":"680b6917c3c5d94c43190b98"},
             {"title":"關稅衝擊〉全面防堵「洗產地」！5/7起 MIT貨品出口至美國 須附原產地聲明書","_id":"680b6917c3c5d94c43190b99"},
             {"title":"對美中貿易協議樂觀期待 美債殖利率持穩","_id":"680b6917c3c5d94c43190b9a"},
-        ]
+        ],
+        "article_title": "請填入第 8 項：給這篇產出的分析文章給一個標題。"
         }
 
         ---
@@ -321,7 +332,7 @@ def analyze_news(news_text: str) -> str:
         1. summary : 提供當日**情勢的精簡摘要** Datatype:String。避免使用「新聞」、「報導、「內容」、「資訊」、「文本」或任何需要結合「新聞」、「報導、「內容」、「資訊」、「文本」為字串的字眼。
         2. important_news : 挑出真正**重要的重點分析**，請根據新聞潛在意義與可能影響，不僅是出現次數。(如果要以條列方式撰寫，請以數字條列並在每個條列式結尾使用 **字串形式的 `\\n`**（即兩個反斜線加 n 字母），而不是實際的換行符號。避免變成一整段文字）。Datatype:String。避免使用「新聞」、「報導、「內容」、「資訊」、「文本」或任何需要結合「新聞」、「報導、「內容」、「資訊」、「文本」為字串的字眼。
         3. sentiment : 給出今日新聞的**情緒分析**（正面／負面／中性），並說明你的判斷依據。Datatype:String。避免使用「新聞」、「報導、「內容」、「資訊」、「文本」或任何需要結合「新聞」、「報導、「內容」、「資訊」、「文本」為字串的字眼。
-        4. potential_stocks_and_industries : 根據內容，推論出**值得高度關注的潛力個股與產業**，並解釋推薦原因（例如：政策利多、產業趨勢、事件驅動等）。(如果要以條列方式撰寫，請以數字條列並在每個條列式結尾使用 **字串形式的 `\\n`**（即兩個反斜線加 n 字母），而不是實際的換行符號。避免變成一整段文字）。Datatype:String。避免使用「新聞」、「報導、「內容」、「資訊」、「文本」或任何需要結合「新聞」、「報導、「內容」、「資訊」、「文本」為字串的字眼。
+        4. potential_stocks_and_industries : 根據內容，推論出**具備正面表現的產業**，並解釋原因（例如：政策利多、產業趨勢、事件驅動等）。(如果要以條列方式撰寫，請以數字條列並在每個條列式結尾使用 **字串形式的 `\\n`**（即兩個反斜線加 n 字母），而不是實際的換行符號。避免變成一整段文字）。Datatype:String。避免使用「新聞」、「報導、「內容」、「資訊」、「文本」或任何需要結合「新聞」、「報導」、「內容」、「資訊」、「文本」為字串的字眼。且應避免使用”建議關注“，”持續關注“，”值得關注“，等推薦關注字眼。
         5. stock_list : 將第 4 點提到的個股，**以 list 格式放入 stock_list 欄位**，格式如下：
         - 台股用 ["tw", "股票代碼", "公司名稱"]
         - 美股用 ["us", "股票代碼", "公司名稱"]
@@ -336,12 +347,17 @@ def analyze_news(news_text: str) -> str:
             {"title": "新聞標題A", "_id": "680b6917c3c5d94c43190b98"},
             {"title": "新聞標題B", "_id": "680b6917c3c5d94c43190b99"}
         ]
+        8. article_title : 請將本次分析文章給出一個標題，範例如下：
+        - "科技巨頭投資英國 AI 領域，推動金融科技創新"
+        - 請像真實分析師一樣，將此篇分析做一個總結標題
+        - 注意：**不得和 source_news 內的title一樣**
 
         特別注意：
         - 請優先挑出「雖然只出現一次但具有潛在重大意涵」的議題。
-        - 在第 4 項中，若可提及具體公司名稱（如台積電、鴻海等）與產業（如半導體、AI、生技、綠能），並提供你的看法，效果更佳。
+        - 在第 4 項中，若可提及產業（如半導體、AI、生技、綠能），不要提及具體個股，並提供你的看法，效果更佳。
         - 所有欄位都必須填入對應的內容，並以 JSON 結構格式回傳（不要有自然語言或段落），請務必嚴格依照上述格式與內容回傳單一 JSON。
-        - **請務必在所有分析與產出中，避免使用「新聞」、「報導」、「資訊」、「文本」等任何可能指涉原始來源的字眼。**
+        - **請務必在所有分析與產出中，避免使用「根據新聞」、「根據報導」、「根據資訊來源」等字眼。**
+        - **請務必在所有分析與產出中，避免使用”建議關注“，”持續關注“，”值得關注“，等推薦關注字眼。**
     """
     
     total_summary_json = json.dumps(total_summary, ensure_ascii=False, indent=2)
@@ -393,6 +409,7 @@ def analyze_news(news_text: str) -> str:
             stock_list = parsed_result.get("stock_list", False)
             industry_list = parsed_result.get("industry_list", False)
             source_news = parsed_result.get("source_news", False)
+            article_title = parsed_result.get("article_title", False)
             publishAt = int(time.time())
             # 儲存每次批次結果到資料庫
             db_final_ai_summary = {
@@ -406,7 +423,8 @@ def analyze_news(news_text: str) -> str:
                 "potential_stocks_and_industries":potential_stocks_and_industries,
                 "stock_list":stock_list,
                 "industry_list":industry_list,
-                "source_news":source_news
+                "source_news":source_news,
+                "article_title":article_title
                 }
             # Store each AI analysis summary in the database
             insert_data_mongodb(
