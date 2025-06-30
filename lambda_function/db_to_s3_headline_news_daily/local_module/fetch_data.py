@@ -18,6 +18,7 @@ def get_news(start_time, end_time, db_name, collection_name):
             "$gte": start_time,
             "$lt": end_time
         },
-        "category": "headline"
+        "category": "headline",
+        "source":"anue"
     }
     return list(collection.find(query))
