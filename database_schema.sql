@@ -130,25 +130,23 @@ CREATE INDEX idx_income_statements_company_year_quarter ON Income_Statements (co
 CREATE TABLE Cash_Flow_Statements (
     cash_flow_id SERIAL PRIMARY KEY,
     company_id INTEGER REFERENCES Companies(company_id),
-    sector_id INTEGER REFERENCES Sectors(sector_id), -- 產業ID (外部鍵)
-    country_id INTEGER REFERENCES Countrys(country_id), -- 國家 (外鍵）
-    report_type VARCHAR(20) NOT NULL CHECK (report_type IN ('quarterly', 'annual')), -- 報告類型（季報/年報）
+    report_type VARCHAR(20) NOT NULL CHECK (report_type IN ('quarterly', 'accumulated')), -- 報告類型（單季/累積）
     year INTEGER NOT NULL, -- 年度
     quarter INTEGER CHECK (quarter IN (1, 2, 3, 4) OR quarter IS NULL), -- 季度
     original_currency VARCHAR(3) NOT NULL, -- 原始幣別
-    operating_cash_flow DECIMAL(20,2), -- 營業活動之現金流量
-    investing_cash_flow DECIMAL(20,2), -- 投資活動之現金流量
+    depreciation DECIMAL(20,2), -- 折舊
+    amortization DECIMAL(20,2), -- 攤銷
+    operating_cash_flow DECIMAL(20,2), -- 營業活動之現金流量 (營業現金流)
+    investing_cash_flow DECIMAL(20,2), -- 投資活動之現金流量 (投資現金流)
     capital_expenditures DECIMAL(20,2), -- 資本支出
-    financing_cash_flow DECIMAL(20,2), -- 籌資活動之現金流量
-    stock_issuance_repurchase DECIMAL(20,2), -- 股票發行/買回
-    debt_issuance_repayment DECIMAL(20,2), -- 債務發行/償還
-    dividends_paid DECIMAL(20,2), -- 股利發放
+    financing_cash_flow DECIMAL(20,2), -- 籌資活動之現金流量 (融資現金流)
+    dividends_paid DECIMAL(20,2), -- 股利發放 (現金股利發放)
     free_cash_flow DECIMAL(20,2), -- 自由現金流量
-    net_change_in_cash DECIMAL(20,2), -- 現金及約當現金淨變動
-    report_date DATE NOT NULL, -- 報告日期
-    CONSTRAINT uq_cash_flow_company_year_quarter UNIQUE (company_id, year, quarter) 
+    net_change_in_cash DECIMAL(20,2), -- 現金及約當現金淨變動 (淨現金流)
+    
+    CONSTRAINT uq_cash_flow_company_year_quarter_type UNIQUE (company_id, year, quarter, report_type) 
 );
-CREATE INDEX idx_cash_flow_statements_sector_country_year_quarter ON Cash_Flow_Statements (sector_id, country_id, year, quarter);
+
 
 
 CREATE TABLE Stock_Analysis (
