@@ -308,15 +308,6 @@ body {
     /* padding-right: 15px; */
 
 }
-.left-container {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    background-color: white;
-
-
-
-}
 .tradingview-widget-container {
     padding-top: 30px;
     width: 60%;
