@@ -87,8 +87,6 @@ CREATE INDEX idx_balance_sheets_secto_country_year_quarter ON Balance_Sheets (se
 CREATE TABLE Income_Statements (
     income_id SERIAL PRIMARY KEY, -- 損益表ID (主鍵)
     company_id INTEGER REFERENCES Companies(company_id), -- 公司ID (外部鍵)
-    sector_id INTEGER REFERENCES Sectors(sector_id), -- 產業ID (外部鍵)
-    country_id INTEGER REFERENCES Countrys(country_id), -- 國家ID (外部鍵)
     report_type VARCHAR(20) NOT NULL CHECK (report_type IN ('quarterly', 'accumulated')), -- 報告類型：'quarterly' (單季) 或 'accumulated' (累積)
     year INTEGER NOT NULL, -- 年度
     quarter INTEGER CHECK (quarter IN (1, 2, 3, 4) OR quarter IS NULL), -- 季度：1, 2, 3, 4 (季度報告) 或 NULL (年度報告，如果適用，但通常累積報告會使用 quarter=4)
@@ -118,11 +116,8 @@ CREATE TABLE Income_Statements (
     net_income_attributable_to_parent DECIMAL(20,2), -- 母公司業主淨利 (Net Income Attributable to Parent Company Shareholders)
     net_income_attributable_to_parent_pct DECIMAL(5,2), -- 母公司業主淨利佔營收百分比
     basic_eps DECIMAL(10,4), -- 基本每股盈餘 (Basic Earnings Per Share)
-    diluted_eps DECIMAL(10,4), -- 稀釋每股盈餘 (Diluted Earnings Per Share)
-
-    report_date DATE NOT NULL -- 報告日期
-
-    -- 唯一約束 uq_income_company_year_quarter 已移除，因為同一季度可能同時有單季和累積資料
+    diluted_eps DECIMAL(10,4) -- 稀釋每股盈餘 (Diluted Earnings Per Share)
+    
 );
 
 -- 索引：提高按產業、國家、年度和季度查詢的效率
