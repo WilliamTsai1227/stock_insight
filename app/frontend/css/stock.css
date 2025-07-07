@@ -197,6 +197,10 @@ body {
     flex: 1;
     padding: 20px;
     background-color: #f8f9fa;
+    display: flex; /* 將 content-area 設為 Flex 容器 */
+    justify-content: center; /* 主軸（橫向）置中 */
+    align-items: center; /* 交叉軸（縱向）置中 */
+    flex-direction: column; /* 如果是單個區塊，且希望垂直堆疊 */
 }
 
 /* Search Block 樣式 */
@@ -206,6 +210,7 @@ body {
     border-radius: 8px;
     box-shadow: 0 2px 4px rgba(0,0,0,0.1);
     margin-bottom: 20px;
+
 }
 
 .search-bar-div {
@@ -281,14 +286,7 @@ body {
     margin: 0;
 }
 
-/* Stock Chart 樣式 */
-#stock-chart {
-    margin-bottom: 20px;
-    min-height: 400px;
-    background-color: #ffffff;
-    border: 1px solid #e0e0e0;
-    border-radius: 4px;
-}
+
 
 /* Stock Info 樣式 */
 #stock-info {
@@ -352,6 +350,141 @@ body {
     text-align: center;
     color: #60748a;
     padding: 0 20px;
+}
+
+.stock-financial-report-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+#financial-report-title {
+    font-size: 30px;
+    font-weight: 700;
+    color: #0056b3;
+    text-align: center;
+}
+#tableTitle{
+    font-size: 18px;
+    font-weight: 700;
+    color: #0056b3;
+    text-align: center; 
+}
+.controls {
+    margin-bottom: 20px;
+    display: flex;
+    gap: 15px;
+    align-items: center;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+.controls label {
+    font-weight: bold;
+}
+.controls select, .controls input[type="text"], .controls button {
+    padding: 8px 12px;
+    border-radius: 4px;
+    border: 1px solid #ddd;
+    font-size: 16px;
+}
+.controls button {
+    background-color: #007bff;
+    color: white;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+.controls button:hover {
+    background-color: #0056b3;
+}
+.chart-options {
+    margin-top: 20px;
+    margin-bottom: 20px;
+    padding: 15px;
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    background-color: #f9f9f9;
+    text-align: center;
+}
+.chart-options h3 {
+    margin-top: 0;
+    color: #0056b3;
+}
+.checkbox-group {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 10px 20px; /* row-gap column-gap */
+}
+.checkbox-group label {
+    display: flex;
+    align-items: center;
+    font-weight: normal; /* 取消粗體 */
+    cursor: pointer;
+}
+.checkbox-group input[type="checkbox"] {
+    margin-right: 5px;
+    transform: scale(1.2); /* 讓勾選框大一點 */
+}
+.chart-container {
+    position: relative;
+    height: 500px;
+    width: 100%;
+    margin-bottom: 30px;
+}
+#loading {
+    text-align: center;
+    margin-top: 20px;
+    font-size: 1.1em;
+    color: #666;
+    display: none; /* 預設隱藏 */
+}
+#error {
+    text-align: center;
+    margin-top: 20px;
+    font-size: 1.1em;
+    color: #dc3545;
+    display: none; /* 預設隱藏 */
+}
+.data-table-container {
+    margin-top: 30px;
+    overflow-x: auto; /* 允許表格橫向滾動 */
+}
+.table-header {
+    text-align: center;
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 10px;
+}
+table, th, td {
+    border: 1px solid #ddd;
+}
+th, td {
+    padding: 10px;
+    text-align: right;
+    white-space: nowrap; /* 防止單元格內容換行 */
+}
+th {
+    background-color: #f2f2f2;
+    font-weight: bold;
+    text-align: center;
+}
+/* 讓第一列 (指標名稱) 固定靠左 */
+td:first-child, th:first-child {
+    text-align: left;
+    position: sticky;
+    left: 0;
+    background-color: #f2f2f2; /* 與標題列背景色一致 */
+    z-index: 1; /* 確保在滾動時置頂 */
+}
+/* 對固定列的背景色進行調整，使其在滾動時不會被內容覆蓋 */
+.data-table-container table {
+    position: relative;
 }
 
 /* RWD 樣式 */

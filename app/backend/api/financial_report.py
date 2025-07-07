@@ -78,10 +78,9 @@ async def get_financial_report(
             if not formatted_results:
                 return JSONResponse(status_code=404, content={"message": "未找到相關財報資料"})
 
-            return JSONResponse(content={"data":formatted_results})
+            return JSONResponse(status_code=200,content={"data":formatted_results,"status":"ok"})
 
     except HTTPException as e:
-        # 捕捉 HTTP 錯誤並重新拋出
         raise e
     except Exception as e:
         # 捕捉其他未預期的資料庫錯誤

@@ -15,6 +15,7 @@
       href="https://fonts.googleapis.com/css2?display=swap&family=Noto+Sans%3Awght%40400%3B500%3B700%3B900&family=Work+Sans%3Awght%40400%3B500%3B700%3B900"
     />
     <link rel="stylesheet" href="/css/stock.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="/js/stock.js" defer></script>
 </head>
 <body>
@@ -79,8 +80,44 @@
                     <p>載入中...</p>
                 </div>
                 <div id="stock-header"></div>
-                <div id="stock-chart"></div>
                 <div id="stock-info"></div>
+                <div class="stock-financial-report-container">
+                    <div id = financial-report-title>財報資訊</div>
+            
+                    <div class="controls">
+                        <label for="reportType">選擇財報類型:</label>
+                        <select id="reportType" onchange="handleReportTypeChange()">
+                            <option value="cash_flow" selected>現金流量表</option>
+                            <option value="income_statements">損益表</option>
+                            <option value="balance_sheets">資產負債表</option>
+                        </select>
+            
+                        <label for="reportPeriod">選擇財報期間:</label>
+                        <select id="reportPeriod" onchange="fetchAndDrawChartAndTable()">
+                            <option value="accumulated" selected>累計</option>
+                            <option value="quarterly">季報</option>
+                        </select>
+                    </div>
+            
+                    <div class="chart-options">
+                        <h3>選擇圖表顯示指標:</h3>
+                        <div id="checkboxContainer" class="checkbox-group">
+                            </div>
+                        <button onclick="drawChartBasedOnSelection()">更新圖表</button>
+                    </div>
+            
+                    <div id="loading">載入中，請稍候...</div>
+                    <div id="error"></div>
+                    
+                    <div class="chart-container">
+                        <canvas id="financialChart"></canvas>
+                    </div>
+            
+                    <div class="data-table-container">
+                        <div id="tableTitle"></div>
+                        <div id="financialDataTable"></div>
+                    </div>
+                </div>
             </div>
         </div>
 
