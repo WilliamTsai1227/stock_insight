@@ -35,27 +35,16 @@ async def get_stock_info(
         raise e
 
     try:
-        # 使用上下文管理器獲取資料庫連接
-        with postgresql_pool.get_connection() as conn:
-            with conn.cursor() as cursor:
-                # 執行查詢
-                cursor.execute(Stock.get_stock_info_query(), (stock_symbol, country_name))
-                result = cursor.fetchone()
-
-                if not result:
-                    raise HTTPException(
-                        status_code=404,
-                        detail=f"找不到股票代碼 {stock_symbol} 在 {country_name} 的資料"
-                    )
-
-                # 獲取欄位名稱
-                columns = [desc[0] for desc in cursor.description]
-                
-                # 格式化資料
-                stock_info = Stock.format_stock_data(result, columns)
-
-                return JSONResponse(content={"data": stock_info})
-
+        async with postgresql_pool.get_connection() as conn:
+            query = Stock.get_stock_info_query()
+            result_record = await conn.fetchrow(query, stock_symbol, country_name)
+            if not result_record:
+                raise HTTPException(
+                    status_code=404,
+                    detail=f"找不到股票代碼 {stock_symbol} 在 {country_name} 的資料"
+                )
+            stock_info = Stock.format_stock_data(result_record)
+            return JSONResponse(content={"data": stock_info})
     except HTTPException as e:
         raise e
     except Exception as e:

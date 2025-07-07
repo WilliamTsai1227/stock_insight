@@ -48,13 +48,16 @@ class Stock:
         return Stock.COUNTRY_CODE_MAP[country_code]
 
     @staticmethod
-    def format_stock_data(result: tuple, columns: list) -> Dict[str, Any]:
+    def format_stock_data(record_or_dict: Dict[str, Any]) -> Dict[str, Any]:
         """
         格式化股票資料
-        處理各種資料類型並轉換為字典
+        處理各種資料類型並轉換為字典。
+        直接接收 asyncpg.Record 物件（已轉換為字典）或普通的字典。
         """
-        # 將結果轉換為字典
-        stock_info = dict(zip(columns, result))
+        # 如果傳入的是 asyncpg.Record 物件，先轉換成字典。
+        # 我們已經將其轉換為 dict(result_record) 再傳入，
+        # 所以這裡直接假定輸入是字典。
+        stock_info = dict(record_or_dict) # 複製一份，避免修改原始輸入
 
         # 移除不需要的欄位
         fields_to_remove = ['company_id', 'country_id', 'sector_id']
@@ -85,13 +88,14 @@ class Stock:
         boolean_fields = ['is_verified']
         for field in boolean_fields:
             if stock_info.get(field) is not None:
+                # asyncpg 從資料庫讀取 bool 會是 bool 類型
                 stock_info[field] = bool(stock_info[field])
             else:
                 stock_info[field] = False  # 如果資料庫中是空值，設為 False
 
-        # 處理空值
+        # 處理空值 (通常 asyncpg 不會返回空字串，而是 None)
         for field, value in stock_info.items():
-            if value is None or value == '':
+            if value is None or (isinstance(value, str) and value == ''):
                 stock_info[field] = None
 
         return stock_info
@@ -100,6 +104,7 @@ class Stock:
     def get_stock_info_query() -> str:
         """
         獲取股票基本資訊查詢 SQL
+        使用 asyncpg 兼容的 $N 佔位符
         """
         return """
             SELECT 
@@ -109,5 +114,5 @@ class Stock:
             FROM Companies AS c
             LEFT JOIN Sectors AS s ON c.sector_id = s.sector_id
             LEFT JOIN Countrys AS co ON c.country_id = co.country_id
-            WHERE c.stock_symbol = %s AND co.country_name = %s
+            WHERE c.stock_symbol = $1 AND co.country_name = $2
         """ 

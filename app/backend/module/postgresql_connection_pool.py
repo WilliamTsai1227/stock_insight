@@ -1,84 +1,68 @@
-import psycopg2
-from psycopg2 import pool
+import asyncpg
 import os
 from dotenv import load_dotenv
-import time
-from contextlib import contextmanager
+import asyncio # For asynchronous operations
+from contextlib import asynccontextmanager
 
 load_dotenv()
 
-class PostgreSQLConnectionPool:
+class AsyncPostgreSQLConnectionPool:
     _instance = None
     _pool = None
-    _max_retries = 3
-    _retry_delay = 1  # 秒
 
     def __new__(cls):
+        # 實作單例模式，確保只有一個連線池實例
         if cls._instance is None:
-            cls._instance = super(PostgreSQLConnectionPool, cls).__new__(cls)
-            cls._instance._initialize_pool()
+            cls._instance = super(AsyncPostgreSQLConnectionPool, cls).__new__(cls)
         return cls._instance
 
-    def _initialize_pool(self):
+    async def initialize_pool(self):
+        # 惰性初始化連線池，確保只在第一次需要時建立
         if self._pool is None:
             try:
-                self._pool = pool.SimpleConnectionPool(
-                    minconn=5,  # 增加最小連接數
-                    maxconn=50,  # 增加最大連接數
+                self._pool = await asyncpg.create_pool(
                     host=os.getenv('PostgreSQL_DB_HOST', 'localhost'),
                     database=os.getenv('PostgreSQL_DB_NAME', 'stock_insight'),
                     user=os.getenv('PostgreSQL_DB_USER'),
                     password=os.getenv('PostgreSQL_DB_PASSWORD'),
                     port=os.getenv('PostgreSQL_DB_PORT', '5432'),
-                    connect_timeout=10  # 添加連接超時時間
+                    min_size=5,  # 最小連線數
+                    max_size=50, # 最大連線數
+                    timeout=10,  # 獲取連線的超時時間（秒）
+                    command_timeout=60 # 單一命令的超時時間（秒）
                 )
             except Exception as e:
-                print(f"Error creating connection pool: {e}")
+                print(f"Error creating async connection pool: {e}")
                 raise
+    @asynccontextmanager
+    async def get_connection(self):
+        """
+        提供 async context manager 取得/釋放連線
+        用法: async with postgresql_pool.connection() as conn:
+        """
+        if self._pool is None:
+            await self.initialize_pool()
+        conn = await self._pool.acquire()
+        try:
+            yield conn
+        finally:
+            await self._pool.release(conn)
 
-    @contextmanager
-    def get_connection(self):
-        """
-        從連接池獲取一個連接，使用上下文管理器確保連接被正確釋放
-        """
-        conn = None
-        retries = 0
-        while retries < self._max_retries:
-            try:
-                if self._pool is None:
-                    self._initialize_pool()
-                conn = self._pool.getconn()
-                try:
-                    yield conn
-                finally:
-                    if conn is not None:
-                        self.release_connection(conn)
-                break
-            except pool.PoolError as e:
-                retries += 1
-                if retries == self._max_retries:
-                    raise Exception(f"Connection pool exhausted after {self._max_retries} retries: {str(e)}")
-                time.sleep(self._retry_delay)
 
-    def release_connection(self, conn):
+    async def close_all(self):
         """
-        釋放連接回連接池
+        異步關閉所有連接
         """
         if self._pool is not None:
             try:
-                self._pool.putconn(conn)
+                await self._pool.close()
             except Exception as e:
-                print(f"Error releasing connection: {e}")
+                print(f"Error closing all async connections: {e}")
+            finally:
+                self._pool = None # 清除池實例
 
-    def close_all(self):
-        """
-        關閉所有連接
-        """
-        if self._pool is not None:
-            try:
-                self._pool.closeall()
-            except Exception as e:
-                print(f"Error closing all connections: {e}")
 
-# 創建一個全局的連接池實例
-postgresql_pool = PostgreSQLConnectionPool() 
+
+# 創建一個全局的連線池實例 (但此時尚未初始化)
+# 初始化會在第一次 get_connection() 時執行
+postgresql_pool = AsyncPostgreSQLConnectionPool()
