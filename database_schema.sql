@@ -54,32 +54,27 @@ CREATE INDEX idx_companies_stock_symbol ON Companies (stock_symbol);
 CREATE TABLE Balance_Sheets (
     balance_id SERIAL PRIMARY KEY,
     company_id INTEGER REFERENCES Companies(company_id),
-    sector_id INTEGER REFERENCES Sectors(sector_id), -- 產業ID (外部鍵)
-    country_id INTEGER REFERENCES Countrys(country_id), -- 國家 (外鍵）
-    report_type VARCHAR(20) NOT NULL CHECK (report_type IN ('quarterly', 'annual')), -- 報告類型（季報/年報）
+    report_type VARCHAR(20) NOT NULL CHECK (report_type IN ('quarterly', 'accumulated')),  -- 報告類型：'quarterly' (單季) 或 'accumulated' (累積)
     year INTEGER NOT NULL, -- 年度
     quarter INTEGER CHECK (quarter IN (1, 2, 3, 4) OR quarter IS NULL), -- 季度
     original_currency VARCHAR(3) NOT NULL, -- 原始幣別
-    current_assets DECIMAL(20,2), -- 流動資產
+    
+    -- 資產負債表主要欄位 (根據您的要求)
     cash_and_equivalents DECIMAL(20,2), -- 現金及約當現金
-    accounts_receivable DECIMAL(20,2), -- 應收帳款
+    short_term_investments DECIMAL(20,2), -- 短期投資
+    accounts_receivable_and_notes DECIMAL(20,2), -- 應收帳款及票據
     inventory DECIMAL(20,2), -- 存貨
-    total_assets DECIMAL(20,2), -- 資產總計
-    property_plant_equipment DECIMAL(20,2), -- 不動產、廠房及設備
-    intangible_assets DECIMAL(20,2), -- 無形資產
-    long_term_investments DECIMAL(20,2), -- 長期投資
-    current_liabilities DECIMAL(20,2), -- 流動負債
-    accounts_payable DECIMAL(20,2), -- 應付帳款
-    short_term_debt DECIMAL(20,2), -- 短期借款
-    total_liabilities DECIMAL(20,2), -- 負債總計
-    long_term_debt DECIMAL(20,2), -- 長期借款
-    shareholders_equity DECIMAL(20,2), -- 股東權益
-    common_stock DECIMAL(20,2), -- 普通股股本
-    retained_earnings DECIMAL(20,2), -- 保留盈餘
-    report_date DATE NOT NULL, -- 報告日期
-    CONSTRAINT uq_balance_company_year_quarter UNIQUE (company_id, year, quarter) 
+    other_current_assets DECIMAL(20,2), -- 其餘流動資產
+    current_assets DECIMAL(20,2), -- 流動資產 (總計)
+    total_long_term_investments DECIMAL(20,2), -- 長期投資
+    fixed_assets_total DECIMAL(20,2), -- 固定資產 (包含不動產、廠房及設備、投資性不動產淨額等)
+    other_non_current_assets DECIMAL(20,2), -- 其餘資產 (主要指其他非流動資產)
+    total_assets DECIMAL(20,2) -- 總資產
 );
-CREATE INDEX idx_balance_sheets_secto_country_year_quarter ON Balance_Sheets (sector_id, country_id, year, quarter);
+
+-- Creating index for efficient querying
+-- 索引已更新為包含 company_id, year, quarter，以提高查詢效率
+CREATE INDEX idx_balance_sheets_company_year_quarter ON Balance_Sheets (company_id, year, quarter);
 
 
 
