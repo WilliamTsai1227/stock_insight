@@ -3,6 +3,75 @@ let loadingIndicator = document.getElementById("loading-indicator");
 let stockSymbol = "";
 let country = "tw";
 
+// 定義財報欄位的中文名稱、顯示順序和固定顏色
+const REPORT_FIELD_MAP = {
+    cash_flow: {
+        title: '現金流量表',
+        fields: [
+            { key: 'operating_cash_flow', label: '營業活動之現金流量 (營業現金流)', color: '#4CAF50' }, // Green
+            { key: 'investing_cash_flow', label: '投資活動之現金流量 (投資現金流)', color: '#FFC107' }, // Amber
+            { key: 'financing_cash_flow', label: '籌資活動之現金流量 (融資現金流)', color: '#2196F3' }, // Blue
+            { key: 'free_cash_flow', label: '自由現金流量', color: '#9C27B0' }, // Purple
+            { key: 'net_change_in_cash', label: '現金及約當現金淨變動 (淨現金流)', color: '#FF5722' }, // Deep Orange
+            { key: 'depreciation', label: '折舊', color: '#607D8B' }, // Blue Grey
+            { key: 'amortization', label: '攤銷', color: '#795548' }, // Brown
+            { key: 'capital_expenditures', label: '資本支出', color: '#F44336' }, // Red
+            { key: 'dividends_paid', label: '股利發放 (現金股利發放)', color: '#E91E63' }  // Pink
+        ]
+    },
+    income_statements: {
+        title: '損益表',
+        fields: [
+            { key: 'revenue', label: '營業收入', color: '#4CAF50' },
+            { key: 'gross_profit', label: '營業毛利', color: '#FFC107' },
+            { key: 'operating_income', label: '營業利益', color: '#2196F3' },
+            { key: 'pre_tax_income', label: '稅前淨利', color: '#9C27B0' },
+            { key: 'net_income', label: '稅後淨利', color: '#FF5722' },
+            { key: 'net_income_attributable_to_parent', label: '母公司業主淨利', color: '#607D8B' },
+            { key: 'basic_eps', label: '基本每股盈餘 (EPS)', color: '#795548' },
+            { key: 'diluted_eps', label: '稀釋每股盈餘', color: '#F44336' },
+            { key: 'revenue_pct', label: '營業收入佔營收百分比', color: '#8BC34A' }, // Light Green
+            { key: 'cost_of_revenue', label: '營業成本', color: '#FFEB3B' }, // Yellow
+            { key: 'cost_of_revenue_pct', label: '營業成本佔營收百分比', color: '#BBF0F3' }, // Cyan Light
+            { key: 'gross_profit_pct', label: '營業毛利佔營收百分比', color: '#E1BEE7' }, // Purple Light
+            { key: 'sales_expenses', label: '銷售費用', color: '#FFCDD2' }, // Red Light
+            { key: 'sales_expenses_pct', label: '銷售費用佔營收百分比', color: '#F8BBD0' }, // Pink Light
+            { key: 'administrative_expenses', label: '管理費用', color: '#B2DFDB' }, // Teal Light
+            { key: 'administrative_expenses_pct', label: '管理費用佔營收百分比', color: '#D1C4E9' }, // Deep Purple Light
+            { key: 'research_and_development_expenses', label: '研發費用', color: '#C5CAE9' }, // Indigo Light
+            { key: 'research_and_development_expenses_pct', label: '研發費用佔營收百分比', color: '#BBDEFB' }, // Blue Light
+            { key: 'operating_expenses', label: '營業費用', color: '#B3E5FC' }, // Light Blue Light
+            { key: 'operating_expenses_pct', label: '營業費用佔營收百分比', color: '#C8E6C9' }, // Green Light
+            { key: 'operating_income_pct', label: '營業利益佔營收百分比', color: '#FFF9C4' }, // Yellow Light
+            { key: 'pre_tax_income_pct', label: '稅前淨利佔營收百分比', color: '#FCE4EC' }, // Pink Light
+            { key: 'net_income_pct', label: '稅後淨利佔營收百分比', color: '#FFECB3' }, // Amber Light
+            { key: 'net_income_attributable_to_parent_pct', label: '母公司業主淨利佔營收百分比', color: '#CFD8DC' } // Blue Grey Light
+        ]
+    },
+    balance_sheets: {
+        title: '資產負債表',
+        fields: [
+            { key: 'total_assets', label: '資產總計', color: '#4CAF50' },
+            { key: 'current_assets', label: '流動資產', color: '#FFC107' },
+            { key: 'cash_and_equivalents', label: '現金及約當現金', color: '#2196F3' },
+            { key: 'accounts_receivable', label: '應收帳款', color: '#9C27B0' },
+            { key: 'inventory', label: '存貨', color: '#FF5722' },
+            { key: 'property_plant_equipment', label: '不動產、廠房及設備', color: '#607D8B' },
+            { key: 'intangible_assets', label: '無形資產', color: '#795548' },
+            { key: 'long_term_investments', label: '長期投資', color: '#F44336' },
+            { key: 'total_liabilities', label: '負債總計', color: '#E91E63' },
+            { key: 'current_liabilities', label: '流動負債', color: '#00BCD4' }, // Cyan
+            { key: 'accounts_payable', label: '應付帳款', color: '#CDDC39' }, // Lime
+            { key: 'short_term_debt', label: '短期借款', color: '#FF9800' }, // Orange
+            { key: 'long_term_debt', label: '長期借款', color: '#673AB7' }, // Deep Purple
+            { key: 'shareholders_equity', label: '股東權益', color: '#009688' }, // Teal
+            { key: 'common_stock', label: '普通股股本', color: '#A1887F' }, // Brown Light
+            { key: 'retained_earnings', label: '保留盈餘', color: '#81C784' }, // Green Light
+            { key: 'report_date', label: '報告日期', color: '#B0BEC5' } // Blue Grey Light
+        ]
+    }
+};
+
 // 初始化搜尋參數
 function initSearchParamsFromURL() {
     const pathParts = window.location.pathname.split('/');
@@ -174,7 +243,7 @@ function displayError(message) {
 
 // 包裝財報查詢/繪圖為 function
 async function loadFinancialReport(stockSymbol, country) {
-    const API_BASE_URL = "http://127.0.0.1:8000/api/financial_report";
+    const API_BASE_URL = "http://localhost:8000/api/financial_report";
     let currentFinancialData = [];
     let currentOriginalCurrency = '';
 
@@ -184,6 +253,167 @@ async function loadFinancialReport(stockSymbol, country) {
     }
     function getReportPeriod() {
         return document.getElementById('reportPeriod').value;
+    }
+
+
+
+    // 內部 function: 畫圖
+    function drawChartBasedOnSelection() {
+        if (currentFinancialData.length === 0) {
+            if (myChart) {
+                myChart.destroy();
+                myChart = null;
+            }
+            return;
+        }
+
+        const reportType = document.getElementById('reportType').value;
+        const labels = currentFinancialData.map(d => `${d.year} Q${d.quarter}`);
+        const allFields = REPORT_FIELD_MAP[reportType].fields;
+
+        // 取得所有被勾選的指標鍵值
+        const selectedMetricKeys = Array.from(document.querySelectorAll('input[name="chartMetric"]:checked'))
+                                        .map(checkbox => checkbox.value);
+
+        // 構建 Chart.js 的 datasets，只包含被勾選的項目
+        const datasets = allFields.filter(field => {
+            const isChartable = !field.key.includes('_pct') && field.key !== 'report_date';
+            const isSelected = selectedMetricKeys.includes(field.key);
+            return isChartable && isSelected;
+        }).map(field => {
+            return {
+                label: field.label,
+                data: currentFinancialData.map(d => d[field.key] !== null ? d[field.key] : NaN),
+                borderColor: field.color,
+                backgroundColor: field.color.replace('rgb', 'rgba').replace(')', ', 0.2)'),
+                fill: false,
+                tension: 0.1
+            };
+        });
+
+        // 獲取所有「可繪製圖表」的指標，用於圖例顯示 (無論是否勾選)
+        const legendDatasets = allFields.filter(field => {
+            return !field.key.includes('_pct') && field.key !== 'report_date';
+        }).map(field => ({
+            key: field.key, // 新增 key 屬性以便在 onClick 中查找
+            label: field.label,
+            borderColor: field.color,
+            backgroundColor: field.color.replace('rgb', 'rgba').replace(')', ', 0.2)')
+        }));
+
+        const ctx = document.getElementById('financialChart').getContext('2d');
+
+        // 定義圖例的點擊事件處理器
+        const legendOnClickHandler = function(e, legendItem, legend) {
+            const datasetLabel = legendItem.text;
+            const fieldKey = legendDatasets.find(d => d.label === datasetLabel)?.key;
+
+            if (fieldKey) {
+                const checkbox = document.querySelector(`input[name="chartMetric"][value="${fieldKey}"]`);
+                if (checkbox) {
+                    checkbox.checked = !checkbox.checked; // 反轉勾選狀態
+                    // 觸發 change 事件，確保勾選框視覺更新並重新繪圖
+                    checkbox.dispatchEvent(new Event('change')); 
+                }
+            }
+        };
+
+        // 定義圖例標籤的生成器
+        const legendGenerateLabels = function(chart) {
+            return legendDatasets.map((dataset, i) => {
+                const hidden = !selectedMetricKeys.includes(dataset.key);
+                
+                return {
+                    text: dataset.label,
+                    fillStyle: dataset.backgroundColor,
+                    strokeStyle: dataset.borderColor,
+                    lineWidth: 1,
+                    hidden: hidden,
+                    datasetIndex: i
+                };
+            });
+        };
+
+        if (myChart) {
+            // 如果圖表已存在，更新其數據和選項
+            myChart.data.labels = labels;
+            myChart.data.datasets = datasets; // 直接替換數據集為選中的
+            myChart.options.plugins.title.text = `${REPORT_FIELD_MAP[reportType].title} - 指標趨勢 (${currentOriginalCurrency} 千元)`;
+            myChart.options.animation.duration = 1000;
+            // **核心修正：每次更新時，確保重新設定 generateLabels 函式**
+            myChart.options.plugins.legend.labels.generateLabels = legendGenerateLabels;
+            myChart.options.plugins.legend.labels.onClick = legendOnClickHandler; // 確保點擊處理器也更新
+            myChart.update();
+        } else {
+            // 否則，創建一個新的圖表實例
+            myChart = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: labels,
+                    datasets: datasets
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    animation: {
+                        duration: 1000 // 1 秒動畫
+                    },
+                    scales: {
+                        x: {
+                            title: {
+                                display: true,
+                                text: '時間 (年/季度)'
+                            }
+                        },
+                        y: {
+                            title: {
+                                display: true,
+                                text: `金額 (${currentOriginalCurrency} 千元)`
+                            },
+                            beginAtZero: false // 根據數據調整起始點
+                        }
+                    },
+                    plugins: {
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    let label = context.dataset.label || '';
+                                    if (label) {
+                                        label += ': ';
+                                    }
+                                    if (context.parsed.y !== null && !isNaN(context.parsed.y)) {
+                                        // 這裡假設後端提供的百分比數據就是 50 代表 50%
+                                        if (context.dataset.label.includes('百分比')) { // 簡單判斷是否為百分比
+                                            label += `${context.parsed.y.toFixed(2)}%`;
+                                        } else {
+                                            label += new Intl.NumberFormat('zh-TW', { style: 'decimal', minimumFractionDigits: 0, maximumFractionDigits: 0 }).format(context.parsed.y);
+                                        }
+                                    } else {
+                                        label += 'N/A';
+                                    }
+                                    return label;
+                                }
+                            }
+                        },
+                        title: {
+                            display: true,
+                            text: `${REPORT_FIELD_MAP[reportType].title} - 指標趨勢 (${currentOriginalCurrency} 千元)`,
+                            font: {
+                                size: 18
+                            }
+                        },
+                        legend: {
+                            display: true,
+                            position: 'top',
+                            labels: {
+                                generateLabels: legendGenerateLabels, // 使用定義好的生成器
+                                onClick: legendOnClickHandler // 使用定義好的點擊處理器
+                            }
+                        }
+                    }
+                }
+            });
+        }
     }
 
     // 內部 function: 更新勾選框
@@ -197,105 +427,22 @@ async function loadFinancialReport(stockSymbol, country) {
         const chartableFields = fields.filter(field => {
             return !field.key.includes('_pct') && field.key !== 'report_date';
         });
+        
+        // 每次更新選項時，重新生成勾選框並綁定事件
         chartableFields.forEach(field => {
             const label = document.createElement('label');
             const checkbox = document.createElement('input');
             checkbox.type = 'checkbox';
             checkbox.value = field.key;
-            checkbox.checked = true;
+            checkbox.checked = true; // 預設全部勾選
             checkbox.name = 'chartMetric';
-            checkbox.onchange = drawChartBasedOnSelection;
+            // 點擊勾選框時直接更新圖表
+            checkbox.onchange = drawChartBasedOnSelection; 
+            
             label.appendChild(checkbox);
             label.appendChild(document.createTextNode(field.label));
             checkboxContainer.appendChild(label);
         });
-    }
-
-    // 內部 function: 畫圖
-    function drawChartBasedOnSelection() {
-        if (currentFinancialData.length === 0) {
-            if (myChart) {
-                myChart.destroy();
-                myChart = null;
-            }
-            return;
-        }
-        const reportType = document.getElementById('reportType').value;
-        const labels = currentFinancialData.map(d => `${d.year} Q${d.quarter}`);
-        const allFields = REPORT_FIELD_MAP[reportType].fields;
-        const chartableFields = allFields.filter(field => !field.key.includes('_pct') && field.key !== 'report_date');
-        const datasets = chartableFields.map(field => ({
-            label: field.label,
-            data: currentFinancialData.map(d => d[field.key] !== null ? d[field.key] : NaN),
-            borderColor: field.color,
-            backgroundColor: field.color.replace('rgb', 'rgba').replace(')', ', 0.2)'),
-            fill: false,
-            tension: 0.1
-        }));
-        const ctx = document.getElementById('financialChart').getContext('2d');
-        if (!myChart) {
-            myChart = new Chart(ctx, {
-                type: 'line',
-                data: { labels, datasets },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    animation: {
-                        duration: 1000 // 1 秒動畫
-                    },
-                    scales: {
-                        x: { title: { display: true, text: '時間 (年/季度)' } },
-                        y: { title: { display: true, text: `金額 (${currentOriginalCurrency} 千元)` }, beginAtZero: false }
-                    },
-                    plugins: {
-                        tooltip: {
-                            callbacks: {
-                                label: function(context) {
-                                    let label = context.dataset.label || '';
-                                    if (label) label += ': ';
-                                    if (context.parsed.y !== null && !isNaN(context.parsed.y)) {
-                                        label += new Intl.NumberFormat('zh-TW', { style: 'decimal', minimumFractionDigits: 0, maximumFractionDigits: 0 }).format(context.parsed.y);
-                                    } else {
-                                        label += 'N/A';
-                                    }
-                                    return label;
-                                }
-                            }
-                        },
-                        title: {
-                            display: true,
-                            text: `${REPORT_FIELD_MAP[reportType].title} - 指標趨勢 (${currentOriginalCurrency} 千元)`,
-                            font: { size: 18 }
-                        },
-                        legend: {
-                            display: true,
-                            position: 'top',
-                        }
-                    }
-                }
-            });
-        } else {
-            // 只更新資料，不 destroy
-            myChart.data.labels = labels;
-            myChart.data.datasets.forEach((ds, idx) => {
-                ds.data = datasets[idx].data;
-            });
-            myChart.options.plugins.title.text = `${REPORT_FIELD_MAP[reportType].title} - 指標趨勢 (${currentOriginalCurrency} 千元)`;
-            myChart.options.animation.duration = 1000; // 保證更新時也有動畫
-            myChart.update();
-        }
-        // 勾選框控制 visibility
-        const checkboxes = document.querySelectorAll('input[name="chartMetric"]');
-        checkboxes.forEach((checkbox, idx) => {
-            checkbox.onchange = function() {
-                const visible = myChart.isDatasetVisible(idx);
-                myChart.setDatasetVisibility(idx, !visible);
-                myChart.update();
-            };
-            // 初始化 visibility
-            myChart.setDatasetVisibility(idx, checkbox.checked);
-        });
-        myChart.update();
     }
 
     // 內部 function: 建表
@@ -326,12 +473,17 @@ async function loadFinancialReport(stockSymbol, country) {
                 if (value === null || value === undefined) {
                     cell.textContent = '-';
                 } else if (field.key.includes('_pct')) {
-                    cell.textContent = `${(value).toFixed(2)}%`;
+                    // 百分比欄位：直接顯示後端傳來的數值並加上 '%'
+                    // 假設後端已經是實際百分比數值 (例如 50 代表 50%)
+                    cell.textContent = `${value.toFixed(2)}%`; 
                 } else if (field.key.includes('eps')) {
+                    // EPS 欄位，保留小數點後兩位
                     cell.textContent = value.toFixed(2);
                 } else if (field.key === 'report_date') {
-                    cell.textContent = new Date(value).toLocaleDateString();
+                    // 報告日期欄位，顯示為日期格式
+                    cell.textContent = new Date(value).toLocaleDateString('zh-TW'); // 確保日期格式化
                 } else {
+                    // 其他數值欄位，格式化為千位分隔，不帶小數
                     cell.textContent = new Intl.NumberFormat('zh-TW', { style: 'decimal', minimumFractionDigits: 0, maximumFractionDigits: 0 }).format(value);
                 }
                 row.appendChild(cell);
@@ -350,22 +502,24 @@ async function loadFinancialReport(stockSymbol, country) {
     }
 
     // 內部 function: 處理 reportType 變更
+    // 這個函式會處理下拉選單的 disabled 狀態，並觸發數據載入和圖表更新
     function handleReportTypeChange() {
         const reportType = getReportType();
         const reportPeriodSelect = document.getElementById('reportPeriod');
         if (reportType === 'cash_flow') {
-            reportPeriodSelect.value = 'accumulated';
-            reportPeriodSelect.options[0].disabled = false;
-            reportPeriodSelect.options[1].disabled = true;
+            reportPeriodSelect.value = 'accumulated'; // 強制設為累計
+            reportPeriodSelect.options[0].disabled = false; // 累計可選
+            reportPeriodSelect.options[1].disabled = true;  // 季報禁用
         } else {
             reportPeriodSelect.options[0].disabled = false;
             reportPeriodSelect.options[1].disabled = false;
         }
-        updateChartOptions();
-        fetchAndDrawChartAndTable();
+        updateChartOptions(); // 更新勾選框，因財報類型不同指標也不同
+        fetchAndDrawChartAndTable(); // 重新獲取數據並繪圖/表
     }
 
     // 內部 function: 查詢並畫圖/表
+    // 這個函式負責向後端請求數據，並在獲取後調用繪圖和建表函式
     async function fetchAndDrawChartAndTable() {
         const reportType = getReportType();
         const reportPeriod = getReportPeriod();
@@ -373,6 +527,7 @@ async function loadFinancialReport(stockSymbol, country) {
         const errorDiv = document.getElementById('error');
         const financialDataTableDiv = document.getElementById('financialDataTable');
         const tableTitle = document.getElementById('tableTitle');
+
         loadingDiv.style.display = 'block';
         errorDiv.style.display = 'none';
         errorDiv.textContent = '';
@@ -380,6 +535,7 @@ async function loadFinancialReport(stockSymbol, country) {
             financialDataTableDiv.removeChild(financialDataTableDiv.firstChild);
         }
         tableTitle.textContent = '';
+
         try {
             const response = await fetch(`${API_BASE_URL}?stock_symbol=${stockSymbol}&country=${country}&report_type=${reportType}&report_period=${reportPeriod}`);
             if (!response.ok) {
@@ -387,6 +543,7 @@ async function loadFinancialReport(stockSymbol, country) {
                 throw new Error(errorData.detail || `HTTP 錯誤：${response.status}`);
             }
             const data = await response.json();
+
             if (data.data && data.data.length > 0) {
                 data.data.sort((a, b) => {
                     if (a.year !== b.year) return a.year - b.year;
@@ -394,7 +551,9 @@ async function loadFinancialReport(stockSymbol, country) {
                 });
                 currentFinancialData = data.data;
                 currentOriginalCurrency = data.data[0].original_currency;
-                drawChartBasedOnSelection();
+                
+                // 在數據載入成功後，才根據勾選狀態繪製圖表和建立表格
+                drawChartBasedOnSelection(); 
                 createTable(data.data, reportType, currentOriginalCurrency);
             } else {
                 errorDiv.textContent = '未找到相關財報資料。';
@@ -421,26 +580,13 @@ async function loadFinancialReport(stockSymbol, country) {
         }
     }
 
-    // 初始化時根據 reportType 設定 reportPeriod disabled 狀態
-    function handleReportTypeChangeInit() {
-        const reportType = document.getElementById('reportType').value;
-        const reportPeriodSelect = document.getElementById('reportPeriod');
-        if (reportType === 'cash_flow') {
-            reportPeriodSelect.value = 'accumulated';
-            reportPeriodSelect.options[0].disabled = false;
-            reportPeriodSelect.options[1].disabled = true;
-        } else {
-            reportPeriodSelect.options[0].disabled = false;
-            reportPeriodSelect.options[1].disabled = false;
-        }
-    }
-    handleReportTypeChangeInit();
+    // 首次載入財報區塊時，先初始化下拉選單狀態
+    handleReportTypeChange(); // 這會觸發 updateChartOptions 和 fetchAndDrawChartAndTable
 
-    // 綁定事件
-    document.getElementById('reportType').onchange = handleReportTypeChange;
-    document.getElementById('reportPeriod').onchange = fetchAndDrawChartAndTable;
-    updateChartOptions();
-    await fetchAndDrawChartAndTable();
+    // 將內部函數暴露為全域以便 HTML 中呼叫
+    window.handleReportTypeChange = handleReportTypeChange;
+    window.fetchAndDrawChartAndTable = fetchAndDrawChartAndTable;
+    window.drawChartBasedOnSelection = drawChartBasedOnSelection;
 }
 
 // 修改 performSearch 讓搜尋時同時查詢財報
@@ -451,6 +597,7 @@ async function performSearch() {
     if (stockSymbol) {
         updateURLParams();
         await loadStockInfo();
+        // 每次重新搜尋股票時，都要重新載入財報圖表和數據
         await loadFinancialReport(stockSymbol, country);
     }
 }
@@ -509,77 +656,8 @@ function initializeHamburgerMenu() {
     });
 }
 
-// 定義財報欄位的中文名稱、顯示順序和固定顏色
-const REPORT_FIELD_MAP = {
-    cash_flow: {
-        title: '現金流量表',
-        fields: [
-            { key: 'operating_cash_flow', label: '營業活動之現金流量 (營業現金流)', color: '#4CAF50' }, // Green
-            { key: 'investing_cash_flow', label: '投資活動之現金流量 (投資現金流)', color: '#FFC107' }, // Amber
-            { key: 'financing_cash_flow', label: '籌資活動之現金流量 (融資現金流)', color: '#2196F3' }, // Blue
-            { key: 'free_cash_flow', label: '自由現金流量', color: '#9C27B0' }, // Purple
-            { key: 'net_change_in_cash', label: '現金及約當現金淨變動 (淨現金流)', color: '#FF5722' }, // Deep Orange
-            { key: 'depreciation', label: '折舊', color: '#607D8B' }, // Blue Grey
-            { key: 'amortization', label: '攤銷', color: '#795548' }, // Brown
-            { key: 'capital_expenditures', label: '資本支出', color: '#F44336' }, // Red
-            { key: 'dividends_paid', label: '股利發放 (現金股利發放)', color: '#E91E63' }  // Pink
-        ]
-    },
-    income_statements: {
-        title: '損益表',
-        fields: [
-            { key: 'revenue', label: '營業收入', color: '#4CAF50' },
-            { key: 'gross_profit', label: '營業毛利', color: '#FFC107' },
-            { key: 'operating_income', label: '營業利益', color: '#2196F3' },
-            { key: 'pre_tax_income', label: '稅前淨利', color: '#9C27B0' },
-            { key: 'net_income', label: '稅後淨利', color: '#FF5722' },
-            { key: 'net_income_attributable_to_parent', label: '母公司業主淨利', color: '#607D8B' },
-            { key: 'basic_eps', label: '基本每股盈餘 (EPS)', color: '#795548' },
-            { key: 'diluted_eps', label: '稀釋每股盈餘', color: '#F44336' },
-            { key: 'revenue_pct', label: '營業收入佔營收百分比', color: '#8BC34A' }, // Light Green
-            { key: 'cost_of_revenue', label: '營業成本', color: '#FFEB3B' }, // Yellow
-            { key: 'cost_of_revenue_pct', label: '營業成本佔營收百分比', color: '#BBF0F3' }, // Cyan Light
-            { key: 'gross_profit_pct', label: '營業毛利佔營收百分比', color: '#E1BEE7' }, // Purple Light
-            { key: 'sales_expenses', label: '銷售費用', color: '#FFCDD2' }, // Red Light
-            { key: 'sales_expenses_pct', label: '銷售費用佔營收百分比', color: '#F8BBD0' }, // Pink Light
-            { key: 'administrative_expenses', label: '管理費用', color: '#B2DFDB' }, // Teal Light
-            { key: 'administrative_expenses_pct', label: '管理費用佔營收百分比', color: '#D1C4E9' }, // Deep Purple Light
-            { key: 'research_and_development_expenses', label: '研發費用', color: '#C5CAE9' }, // Indigo Light
-            { key: 'research_and_development_expenses_pct', label: '研發費用佔營收百分比', color: '#BBDEFB' }, // Blue Light
-            { key: 'operating_expenses', label: '營業費用', color: '#B3E5FC' }, // Light Blue Light
-            { key: 'operating_expenses_pct', label: '營業費用佔營收百分比', color: '#C8E6C9' }, // Green Light
-            { key: 'operating_income_pct', label: '營業利益佔營收百分比', color: '#FFF9C4' }, // Yellow Light
-            { key: 'pre_tax_income_pct', label: '稅前淨利佔營收百分比', color: '#FCE4EC' }, // Pink Light
-            { key: 'net_income_pct', label: '稅後淨利佔營收百分比', color: '#FFECB3' }, // Amber Light
-            { key: 'net_income_attributable_to_parent_pct', label: '母公司業主淨利佔營收百分比', color: '#CFD8DC' } // Blue Grey Light
-        ]
-    },
-    balance_sheets: {
-        title: '資產負債表',
-        fields: [
-            { key: 'total_assets', label: '資產總計', color: '#4CAF50' },
-            { key: 'current_assets', label: '流動資產', color: '#FFC107' },
-            { key: 'cash_and_equivalents', label: '現金及約當現金', color: '#2196F3' },
-            { key: 'accounts_receivable', label: '應收帳款', color: '#9C27B0' },
-            { key: 'inventory', label: '存貨', color: '#FF5722' },
-            { key: 'property_plant_equipment', label: '不動產、廠房及設備', color: '#607D8B' },
-            { key: 'intangible_assets', label: '無形資產', color: '#795548' },
-            { key: 'long_term_investments', label: '長期投資', color: '#F44336' },
-            { key: 'total_liabilities', label: '負債總計', color: '#E91E63' },
-            { key: 'current_liabilities', label: '流動負債', color: '#00BCD4' }, // Cyan
-            { key: 'accounts_payable', label: '應付帳款', color: '#CDDC39' }, // Lime
-            { key: 'short_term_debt', label: '短期借款', color: '#FF9800' }, // Orange
-            { key: 'long_term_debt', label: '長期借款', color: '#673AB7' }, // Deep Purple
-            { key: 'shareholders_equity', label: '股東權益', color: '#009688' }, // Teal
-            { key: 'common_stock', label: '普通股股本', color: '#A1887F' }, // Brown Light
-            { key: 'retained_earnings', label: '保留盈餘', color: '#81C784' }, // Green Light
-            { key: 'report_date', label: '報告日期', color: '#B0BEC5' } // Blue Grey Light
-        ]
-    }
-};
-
-// 修改 execute 讓頁面載入時同時查詢財報
-async function execute() {
+// 頁面載入時執行初始化
+document.addEventListener('DOMContentLoaded', async () => {
     initSearchParamsFromURL();
     setSearchBarValue();
     initializeHamburgerMenu();
@@ -588,7 +666,4 @@ async function execute() {
         await loadStockInfo();
         await loadFinancialReport(stockSymbol, country);
     }
-}
-
-// 頁面載入時執行初始化
-document.addEventListener('DOMContentLoaded', execute); 
+});
