@@ -24,51 +24,51 @@ const REPORT_FIELD_MAP = {
         fields: [
             { key: 'revenue', label: '營業收入', color: '#4CAF50' },
             { key: 'gross_profit', label: '營業毛利', color: '#FFC107' },
+            { key: 'sales_expenses', label: '銷售費用', color: '#FFCDD2' }, // Red Light
+            { key: 'administrative_expenses', label: '管理費用', color: '#B2DFDB' }, // Teal Light
+            { key: 'research_and_development_expenses', label: '研發費用', color: '#C5CAE9' }, // Indigo Light
+            { key: 'operating_expenses', label: '營業費用', color: '#B3E5FC' }, // Light Blue Light
             { key: 'operating_income', label: '營業利益', color: '#2196F3' },
             { key: 'pre_tax_income', label: '稅前淨利', color: '#9C27B0' },
             { key: 'net_income', label: '稅後淨利', color: '#FF5722' },
             { key: 'net_income_attributable_to_parent', label: '母公司業主淨利', color: '#607D8B' },
+            { key: 'cost_of_revenue', label: '營業成本', color: '#FFEB3B' }, // Yellow
             { key: 'basic_eps', label: '基本每股盈餘 (EPS)', color: '#795548' },
             { key: 'diluted_eps', label: '稀釋每股盈餘', color: '#F44336' },
             { key: 'revenue_pct', label: '營業收入佔營收百分比', color: '#8BC34A' }, // Light Green
-            { key: 'cost_of_revenue', label: '營業成本', color: '#FFEB3B' }, // Yellow
-            { key: 'cost_of_revenue_pct', label: '營業成本佔營收百分比', color: '#BBF0F3' }, // Cyan Light
             { key: 'gross_profit_pct', label: '營業毛利佔營收百分比', color: '#E1BEE7' }, // Purple Light
-            { key: 'sales_expenses', label: '銷售費用', color: '#FFCDD2' }, // Red Light
             { key: 'sales_expenses_pct', label: '銷售費用佔營收百分比', color: '#F8BBD0' }, // Pink Light
-            { key: 'administrative_expenses', label: '管理費用', color: '#B2DFDB' }, // Teal Light
             { key: 'administrative_expenses_pct', label: '管理費用佔營收百分比', color: '#D1C4E9' }, // Deep Purple Light
-            { key: 'research_and_development_expenses', label: '研發費用', color: '#C5CAE9' }, // Indigo Light
             { key: 'research_and_development_expenses_pct', label: '研發費用佔營收百分比', color: '#BBDEFB' }, // Blue Light
-            { key: 'operating_expenses', label: '營業費用', color: '#B3E5FC' }, // Light Blue Light
             { key: 'operating_expenses_pct', label: '營業費用佔營收百分比', color: '#C8E6C9' }, // Green Light
             { key: 'operating_income_pct', label: '營業利益佔營收百分比', color: '#FFF9C4' }, // Yellow Light
             { key: 'pre_tax_income_pct', label: '稅前淨利佔營收百分比', color: '#FCE4EC' }, // Pink Light
             { key: 'net_income_pct', label: '稅後淨利佔營收百分比', color: '#FFECB3' }, // Amber Light
-            { key: 'net_income_attributable_to_parent_pct', label: '母公司業主淨利佔營收百分比', color: '#CFD8DC' } // Blue Grey Light
+            { key: 'net_income_attributable_to_parent_pct', label: '母公司業主淨利佔營收百分比', color: '#CFD8DC' }, // Blue Grey Light
+            { key: 'cost_of_revenue_pct', label: '營業成本佔營收百分比', color: '#BBF0F3' } // Cyan Light
         ]
     },
     balance_sheets: {
         title: '資產負債表',
         fields: [
-            { key: 'total_assets', label: '總資產', color: '#E91E63' }, // Pink
-            { key: 'total_assets_pct', label: '總資產佔總資產百分比', color: '#BBDEFB' }, // Blue Light
             { key: 'cash_and_equivalents', label: '現金及約當現金', color: '#4CAF50' },
-            { key: 'cash_and_equivalents_pct', label: '現金及約當現金佔總資產百分比', color: '#FFC107' },
             { key: 'short_term_investments', label: '短期投資', color: '#2196F3' },
-            { key: 'short_term_investments_pct', label: '短期投資佔總資產百分比', color: '#9C27B0' },
             { key: 'accounts_receivable_and_notes', label: ' 應收帳款及票據', color: '#FF5722' },
-            { key: 'accounts_receivable_and_notes_pct', label: '應收帳款及票據佔總資產百分比', color: '#607D8B' },
             { key: 'inventory', label: '存貨', color: '#795548' },
-            { key: 'inventory_pct', label: '存貨佔總資產百分比', color: '#F44336' },
             { key: 'other_current_assets', label: '其餘流動資產', color: '#8BC34A' }, // Light Green
-            { key: 'other_current_assets_pct', label: '其餘流動資產佔總資產百分比', color: '#FFEB3B' }, // Yellow
             { key: 'current_assets', label: '流動資產', color: '#BBF0F3' }, // Cyan Light
-            { key: 'current_assets_pct', label: '流動資產佔總資產百分比', color: '#E1BEE7' }, // Purple Light
             { key: 'fixed_assets_total', label: '固定資產', color: '#FFCDD2' }, // Red Light
+            { key: 'other_non_current_assets', label: '其餘資產', color: '#B2DFDB' }, // Teal Light
+            { key: 'total_assets', label: '總資產', color: '#E91E63' }, // Pink
+            { key: 'cash_and_equivalents_pct', label: '現金及約當現金佔總資產百分比', color: '#FFC107' },
+            { key: 'short_term_investments_pct', label: '短期投資佔總資產百分比', color: '#9C27B0' },
+            { key: 'accounts_receivable_and_notes_pct', label: '應收帳款及票據佔總資產百分比', color: '#607D8B' },
+            { key: 'inventory_pct', label: '存貨佔總資產百分比', color: '#F44336' },
+            { key: 'other_current_assets_pct', label: '其餘流動資產佔總資產百分比', color: '#FFEB3B' }, // Yellow
+            { key: 'current_assets_pct', label: '流動資產佔總資產百分比', color: '#E1BEE7' }, // Purple Light
             { key: 'fixed_assets_total_pct', label: '固定資產佔總資產百分比', color: '#F8BBD0' }, // Pink Light
-            { key: 'other_non_current_assets', label: '其餘資產 (主要指其他非流動資產)', color: '#B2DFDB' }, // Teal Light
-            { key: 'other_non_current_assets_pct', label: '其餘資產 (主要指其他非流動資產)佔總資產百分比', color: '#D1C4E9' } // Deep Purple Light
+            { key: 'other_non_current_assets_pct', label: '其餘資產 (主要指其他非流動資產)佔總資產百分比', color: '#D1C4E9' }, // Deep Purple Light
+            { key: 'total_assets_pct', label: '總資產佔總資產百分比', color: '#BBDEFB' } // Blue Light
         ]
     }
 };

@@ -356,9 +356,9 @@ body {
     max-width: 1200px;
     margin: 0 auto;
     background-color: #fff;
-    padding: 20px;
+    
     border-radius: 8px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    
 }
 #financial-report-title {
     font-size: 30px;
@@ -431,7 +431,6 @@ body {
     position: relative;
     height: 500px;
     width: 100%;
-    margin-bottom: 30px;
 }
 #loading {
     text-align: center;
@@ -481,10 +480,17 @@ td:first-child, th:first-child {
     left: 0;
     background-color: #f2f2f2; /* 與標題列背景色一致 */
     z-index: 1; /* 確保在滾動時置頂 */
+    left: -2px;
 }
 /* 對固定列的背景色進行調整，使其在滾動時不會被內容覆蓋 */
 .data-table-container table {
     position: relative;
+}
+.data-source{
+    color: #60748a;
+    padding-top: 10px;
+    text-align: right;
+    
 }
 
 /* RWD 樣式 */
