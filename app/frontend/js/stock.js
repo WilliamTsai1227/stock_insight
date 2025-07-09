@@ -51,23 +51,24 @@ const REPORT_FIELD_MAP = {
     balance_sheets: {
         title: '資產負債表',
         fields: [
-            { key: 'total_assets', label: '資產總計', color: '#4CAF50' },
-            { key: 'current_assets', label: '流動資產', color: '#FFC107' },
-            { key: 'cash_and_equivalents', label: '現金及約當現金', color: '#2196F3' },
-            { key: 'accounts_receivable', label: '應收帳款', color: '#9C27B0' },
-            { key: 'inventory', label: '存貨', color: '#FF5722' },
-            { key: 'property_plant_equipment', label: '不動產、廠房及設備', color: '#607D8B' },
-            { key: 'intangible_assets', label: '無形資產', color: '#795548' },
-            { key: 'long_term_investments', label: '長期投資', color: '#F44336' },
-            { key: 'total_liabilities', label: '負債總計', color: '#E91E63' },
-            { key: 'current_liabilities', label: '流動負債', color: '#00BCD4' }, // Cyan
-            { key: 'accounts_payable', label: '應付帳款', color: '#CDDC39' }, // Lime
-            { key: 'short_term_debt', label: '短期借款', color: '#FF9800' }, // Orange
-            { key: 'long_term_debt', label: '長期借款', color: '#673AB7' }, // Deep Purple
-            { key: 'shareholders_equity', label: '股東權益', color: '#009688' }, // Teal
-            { key: 'common_stock', label: '普通股股本', color: '#A1887F' }, // Brown Light
-            { key: 'retained_earnings', label: '保留盈餘', color: '#81C784' }, // Green Light
-            { key: 'report_date', label: '報告日期', color: '#B0BEC5' } // Blue Grey Light
+            { key: 'total_assets', label: '總資產', color: '#E91E63' }, // Pink
+            { key: 'total_assets_pct', label: '總資產佔總資產百分比', color: '#BBDEFB' }, // Blue Light
+            { key: 'cash_and_equivalents', label: '現金及約當現金', color: '#4CAF50' },
+            { key: 'cash_and_equivalents_pct', label: '現金及約當現金佔總資產百分比', color: '#FFC107' },
+            { key: 'short_term_investments', label: '短期投資', color: '#2196F3' },
+            { key: 'short_term_investments_pct', label: '短期投資佔總資產百分比', color: '#9C27B0' },
+            { key: 'accounts_receivable_and_notes', label: ' 應收帳款及票據', color: '#FF5722' },
+            { key: 'accounts_receivable_and_notes_pct', label: '應收帳款及票據佔總資產百分比', color: '#607D8B' },
+            { key: 'inventory', label: '存貨', color: '#795548' },
+            { key: 'inventory_pct', label: '存貨佔總資產百分比', color: '#F44336' },
+            { key: 'other_current_assets', label: '其餘流動資產', color: '#8BC34A' }, // Light Green
+            { key: 'other_current_assets_pct', label: '其餘流動資產佔總資產百分比', color: '#FFEB3B' }, // Yellow
+            { key: 'current_assets', label: '流動資產', color: '#BBF0F3' }, // Cyan Light
+            { key: 'current_assets_pct', label: '流動資產佔總資產百分比', color: '#E1BEE7' }, // Purple Light
+            { key: 'fixed_assets_total', label: '固定資產', color: '#FFCDD2' }, // Red Light
+            { key: 'fixed_assets_total_pct', label: '固定資產佔總資產百分比', color: '#F8BBD0' }, // Pink Light
+            { key: 'other_non_current_assets', label: '其餘資產 (主要指其他非流動資產)', color: '#B2DFDB' }, // Teal Light
+            { key: 'other_non_current_assets_pct', label: '其餘資產 (主要指其他非流動資產)佔總資產百分比', color: '#D1C4E9' } // Deep Purple Light
         ]
     }
 };
@@ -510,7 +511,13 @@ async function loadFinancialReport(stockSymbol, country) {
             reportPeriodSelect.value = 'accumulated'; // 強制設為累計
             reportPeriodSelect.options[0].disabled = false; // 累計可選
             reportPeriodSelect.options[1].disabled = true;  // 季報禁用
-        } else {
+        }
+        else if (reportType === 'balance_sheets'){
+            reportPeriodSelect.value = 'quarterly'; // 強制設為累計
+            reportPeriodSelect.options[0].disabled = true; // 累計禁用
+            reportPeriodSelect.options[1].disabled = false;  // 季報可選
+        }
+         else {
             reportPeriodSelect.options[0].disabled = false;
             reportPeriodSelect.options[1].disabled = false;
         }

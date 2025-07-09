@@ -61,15 +61,25 @@ CREATE TABLE Balance_Sheets (
     
     -- 資產負債表主要欄位 (根據您的要求)
     cash_and_equivalents DECIMAL(20,2), -- 現金及約當現金
+    cash_and_equivalents_pct DECIMAL(5,2), -- 現金及約當現金佔總資產百分比
     short_term_investments DECIMAL(20,2), -- 短期投資
+    short_term_investments_pct DECIMAL(5,2), -- 短期投資佔總資產百分比
     accounts_receivable_and_notes DECIMAL(20,2), -- 應收帳款及票據
+    accounts_receivable_and_notes_pct DECIMAL(5,2), -- 應收帳款及票據佔總資產百分比
     inventory DECIMAL(20,2), -- 存貨
+    inventory_pct DECIMAL(5,2), -- 存貨佔總資產百分比
     other_current_assets DECIMAL(20,2), -- 其餘流動資產
+    other_current_assets_pct DECIMAL(5,2), -- 其餘流動資產佔總資產百分比
     current_assets DECIMAL(20,2), -- 流動資產 (總計)
+    current_assets_pct DECIMAL(5,2), -- 流動資產 (總計)佔總資產百分比
     total_long_term_investments DECIMAL(20,2), -- 長期投資
+    total_long_term_investments_pct DECIMAL(5,2), -- 長期投資佔總資產百分比
     fixed_assets_total DECIMAL(20,2), -- 固定資產 (包含不動產、廠房及設備、投資性不動產淨額等)
+    fixed_assets_total_pct DECIMAL(5,2), -- 固定資產佔總資產百分比
     other_non_current_assets DECIMAL(20,2), -- 其餘資產 (主要指其他非流動資產)
-    total_assets DECIMAL(20,2) -- 總資產
+    other_non_current_assets_pct DECIMAL(5,2), -- 其餘資產 (主要指其他非流動資產)佔總資產百分比
+    total_assets DECIMAL(20,2), -- 總資產
+    total_assets_pct DECIMAL(5,2) -- 總資產佔總資產百分比
 );
 
 -- Creating index for efficient querying
