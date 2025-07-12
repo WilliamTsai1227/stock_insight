@@ -99,36 +99,38 @@ CREATE TABLE Income_Statements (
 
     -- 損益表主要欄位
     revenue DECIMAL(20,2), -- 營業收入 (Sales Revenue)
-    revenue_pct DECIMAL(5,2), -- 營業收入佔營收百分比
+    revenue_pct DECIMAL(10,2), -- 營業收入佔營收百分比
     cost_of_revenue DECIMAL(20,2), -- 營業成本 (Cost of Revenue / Cost of Goods Sold)
-    cost_of_revenue_pct DECIMAL(5,2), -- 營業成本佔營收百分比
+    cost_of_revenue_pct DECIMAL(10,2), -- 營業成本佔營收百分比
     gross_profit DECIMAL(20,2), -- 營業毛利 (Gross Profit)
-    gross_profit_pct DECIMAL(5,2), -- 營業毛利佔營收百分比
+    gross_profit_pct DECIMAL(10,2), -- 營業毛利佔營收百分比
     sales_expenses DECIMAL(20,2), -- 銷售費用 (Selling Expenses)
-    sales_expenses_pct DECIMAL(5,2), -- 銷售費用佔營收百分比
+    sales_expenses_pct DECIMAL(10,2), -- 銷售費用佔營收百分比
     administrative_expenses DECIMAL(20,2), -- 管理費用 (Administrative Expenses)
-    administrative_expenses_pct DECIMAL(5,2), -- 管理費用佔營收百分比
+    administrative_expenses_pct DECIMAL(10,2), -- 管理費用佔營收百分比
     research_and_development_expenses DECIMAL(20,2), -- 研發費用 (Research and Development Expenses)
-    research_and_development_expenses_pct DECIMAL(5,2), -- 研發費用佔營收百分比
+    research_and_development_expenses_pct DECIMAL(10,2), -- 研發費用佔營收百分比
     operating_expenses DECIMAL(20,2), -- 營業費用 (Operating Expenses) - 通常為銷售、管理、研發費用之和
-    operating_expenses_pct DECIMAL(5,2), -- 營業費用佔營收百分比
+    operating_expenses_pct DECIMAL(10,2), -- 營業費用佔營收百分比
     operating_income DECIMAL(20,2), -- 營業利益 (Operating Income / EBIT)
-    operating_income_pct DECIMAL(5,2), -- 營業利益佔營收百分比
+    operating_income_pct DECIMAL(10,2), -- 營業利益佔營收百分比
     pre_tax_income DECIMAL(20,2), -- 稅前淨利 (Pre-tax Income / EBT)
-    pre_tax_income_pct DECIMAL(5,2), -- 稅前淨利佔營收百分比
+    pre_tax_income_pct DECIMAL(10,2), -- 稅前淨利佔營收百分比
     net_income DECIMAL(20,2), -- 稅後淨利 (Net Income)
-    net_income_pct DECIMAL(5,2), -- 稅後淨利佔營收百分比
+    net_income_pct DECIMAL(10,2), -- 稅後淨利佔營收百分比
     net_income_attributable_to_parent DECIMAL(20,2), -- 母公司業主淨利 (Net Income Attributable to Parent Company Shareholders)
-    net_income_attributable_to_parent_pct DECIMAL(5,2), -- 母公司業主淨利佔營收百分比
+    net_income_attributable_to_parent_pct DECIMAL(10,2), -- 母公司業主淨利佔營收百分比
     basic_eps DECIMAL(10,4), -- 基本每股盈餘 (Basic Earnings Per Share)
     diluted_eps DECIMAL(10,4) -- 稀釋每股盈餘 (Diluted Earnings Per Share)
-    
+    CONSTRAINT unique_income_statement_period UNIQUE (company_id, year, quarter, report_type)
 );
 
 -- 索引：提高按產業、國家、年度和季度查詢的效率
 CREATE INDEX idx_income_statements_sector_country_year_quarter ON Income_Statements (sector_id, country_id, year, quarter);
 -- 索引：提高 某家公司所有年度的某季查詢 以及 某家公司特定年度的特定季度查詢
 CREATE INDEX idx_income_statements_company_year_quarter ON Income_Statements (company_id, year, quarter);
+
+
 
 
 -- Creating Cash_Flow_Statements table 現金流量表
