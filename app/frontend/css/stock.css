@@ -493,6 +493,64 @@ td:first-child, th:first-child {
     
 }
 
+/* 報表分頁切換樣式 */
+.report-tab-bar {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 10px;
+}
+.report-tab-btn {
+    padding: 12px 34px;
+    font-size: 16px;
+    border: none;
+    background: #fff;           /* 預設白底 */
+    color: #0056b3;             /* 預設藍色字 */
+    font-weight: 500;
+    border-radius: 6px 6px 0 0;
+    cursor: pointer;
+    outline: none;
+    transition: background 0.2s, color 0.2s;
+    border-bottom: 1px solid #a8bace; /* 預設有藍色底線 */
+}
+.report-tab-btn.active {
+    background: #e0e4e8;        /* 選中時灰色底 */
+    color: #333;                /* 選中時深色字 */
+    border-bottom: 2px solid transparent; /* 選中時無底線 */
+    font-weight: 700;
+}
+#report-explain-section {
+    background: #fff;
+    border-radius: 0 0 8px 8px;
+    padding: 24px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.04);
+}
+.explain-block {
+    margin-bottom: 24px;
+    border: 1.5px solid #e0e4e8;   /* 灰色邊框 */
+    border-radius: 8px;
+    padding: 16px 20px;
+    background: #fff;
+}
+.explain-block h3 {
+    font-size: 18px;
+    color: #0056b3;
+    margin-bottom: 6px;
+}
+.explain-block-desc {
+    padding-top: 12px;
+    padding-bottom: 12px;
+    font-size: 17px;
+    font-weight: 600;
+    color: #333;
+    margin-bottom: 4px;
+}
+.explain-more {
+    color: #4e5e70;
+    font-weight: 400;
+    font-size: 16px;
+    margin-top: 2px;
+}
+
 /* RWD 樣式 */
 @media (max-width: 768px) {
     .main-header {

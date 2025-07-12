@@ -97,6 +97,7 @@
                         <select id="reportPeriod" onchange="fetchAndDrawChartAndTable()">
                             <option value="accumulated" selected>累計</option>
                             <option value="quarterly">季報</option>
+                            <option value="annual">年報</option>
                         </select>
                     </div>
             
@@ -115,12 +116,17 @@
                     </div>
                     <div class="data-source">數據來源：公開資訊觀測站</div>
             
-                    
-                    <div id="tableTitle"></div>
-                    <div class="data-table-container">
-                        <div id="financialDataTable"></div>
+                    <div class="report-tab-bar">
+                        <button class="report-tab-btn active" id="tab-detail" type="button" onclick="switchReportTab('detail')">詳細數據</button>
+                        <button class="report-tab-btn" id="tab-explain" type="button" onclick="switchReportTab('explain')">指標解釋</button>
                     </div>
-                    <div class="data-source">數據來源：公開資訊觀測站</div>
+                    <div id="report-detail-section">
+                        <div id="tableTitle"></div>
+                        <div class="data-table-container">
+                            <div id="financialDataTable"></div>
+                        </div>
+                    </div>
+                    <div id="report-explain-section" style="display:none;"></div>
                 </div>
             </div>
         </div>

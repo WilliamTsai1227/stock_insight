@@ -73,6 +73,116 @@ const REPORT_FIELD_MAP = {
     }
 };
 
+const REPORT_EXPLAIN_MAP = {
+    income_statements: [
+        { title: "營業收入", desc: "公司主要來自本業的收入。", more: "反映公司商品或服務的銷售規模，是營運成長與市占率的關鍵指標。" },
+        { title: "營業毛利", desc: "營業收入扣除營業成本後的獲利。", more: "毛利可衡量產品或服務的基礎獲利能力，毛利越高代表價格與成本控制良好。" },
+        { title: "銷售費用", desc: "推廣產品與服務所花費的成本。", more: "包含廣告、推廣、運費、業務人員薪資等，用於吸引與維持客戶。" },
+        { title: "管理費用", desc: "企業日常行政與營運支出。", more: "如管理人員薪資、租金、水電等，反映經營效率與規模。" },
+        { title: "研發費用", desc: "投入於技術與產品創新的成本。", more: "高研發費用通常出現在科技、製藥等創新導向產業。" },
+        { title: "營業費用", desc: "營運間接成本的總和。", more: "包含銷售、管理、研發費用，是營運成本控管的綜合指標。" },
+        { title: "營業利益", desc: "公司本業獲利能力的指標。", more: "等於營業毛利減營業費用，反映主營業務是否真正賺錢。" },
+        { title: "稅前淨利", desc: "公司在繳稅前的總體獲利。", more: "包含本業與業外收入支出，是公司整體經營成果的初步反映。" },
+        { title: "稅後淨利", desc: "公司最終可分配盈餘。", more: "為稅前淨利扣除所得稅後的淨收入，是投資人最關注的指標之一。" },
+        { title: "母公司業主淨利", desc: "歸屬於母公司股東的稅後淨利。", more: "若公司擁有子公司，須扣除少數股東權益後才是母公司真正的盈餘。" },
+        { title: "營業成本", desc: "公司為提供產品或服務所發生的直接成本。", more: "包含原料、人工、製造費用等，成本越低代表效率越高。" },
+        { title: "基本每股盈餘 (EPS)", desc: "每一股可分配的稅後盈餘。", more: "EPS 是衡量股東每股獲利的重要指標，也是估值的常用參數。" },
+        { title: "稀釋每股盈餘", desc: "考慮潛在股數後的 EPS。", more: "包含可轉債、認股權等會稀釋股數的項目，更保守評估獲利。" },
+        { title: "營業收入佔營收百分比", desc: "營業收入占總營收的比例。", more: "通常為100%，作為其他比例指標的基礎。" },
+        { title: "營業毛利佔營收百分比", desc: "營業毛利占營業收入的比率。", more: "毛利率越高，代表產品或服務獲利空間越大。" },
+        { title: "銷售費用佔營收百分比", desc: "銷售費用占營業收入的比率。", more: "可衡量行銷與銷售的投入強度與效率。" },
+        { title: "管理費用佔營收百分比", desc: "管理費用占營業收入的比率。", more: "可看出企業管理規模與控管能力。" },
+        { title: "研發費用佔營收百分比", desc: "研發費用占營業收入的比率。", more: "高比率代表重視創新，常見於技術驅動產業。" },
+        { title: "營業費用佔營收百分比", desc: "總營業費用占營業收入的比率。", more: "可評估企業間接費用的總負擔，過高可能侵蝕獲利空間。" },
+        { title: "營業利益佔營收百分比", desc: "營業利益占營業收入的比率。", more: "營業利益率越高，代表本業賺錢效率越好。" },
+        { title: "稅前淨利佔營收百分比", desc: "稅前淨利占營業收入的比率。", more: "可評估公司整體經營成果與業外損益狀況。" },
+        { title: "稅後淨利佔營收百分比", desc: "稅後淨利占營業收入的比率。", more: "稅後淨利率越高，代表公司最終獲利能力越強。" },
+        { title: "母公司業主淨利佔營收百分比", desc: "母公司業主淨利占營業收入的比率。", more: "可反映股東真正能分配的盈餘佔比。" },
+        { title: "營業成本佔營收百分比", desc: "營業成本占營業收入的比率。", more: "成本率越低代表成本控管越有效，有助提高毛利率。" }
+      ],
+      
+      balance_sheets: [
+        { title: "現金及約當現金", desc: "可隨時動用的資金與高流動資產。", more: "如銀行存款、短期票券等，代表企業即時支付能力。" },
+        { title: "短期投資", desc: "一年內可變現的投資項目。", more: "如短期債券、股票等，反映資金調度與閒置資金配置。" },
+        { title: "應收帳款及票據", desc: "尚未收回的客戶貨款。", more: "比率高需注意收款風險與現金流壓力。" },
+        { title: "存貨", desc: "公司持有的商品、原物料與在製品。", more: "過高代表銷售壓力或庫存積壓風險。" },
+        { title: "其餘流動資產", desc: "其他一年內可變現的資產。", more: "如預付款項、待收款、應退稅等。" },
+        { title: "流動資產", desc: "總計一年內可用或變現的資產。", more: "高流動資產代表公司短期償債能力佳。" },
+        { title: "固定資產", desc: "長期營運使用的實體資產。", more: "如廠房、機器、建築物，反映企業生產基礎與產能。" },
+        { title: "其餘資產", desc: "非流動與非固定資產項目。", more: "如無形資產、長期投資等，屬未來潛力資源。" },
+        { title: "總資產", desc: "企業在某一時間點擁有的全部資產。", more: "總資產規模常用於衡量公司體量與成長性。" },
+        { title: "現金及約當現金佔總資產百分比", desc: "現金占總資產的比率。", more: "比率高代表資金調度靈活；太高可能代表資金未妥善運用。" },
+        { title: "短期投資佔總資產百分比", desc: "短期投資占總資產的比率。", more: "可反映資金運用的彈性與配置效率。" },
+        { title: "應收帳款及票據佔總資產百分比", desc: "應收帳款占總資產的比率。", more: "比率過高需注意逾期風險與資金周轉。" },
+        { title: "存貨佔總資產百分比", desc: "存貨占總資產的比率。", more: "高存貨可能造成資金壓力與減值風險。" },
+        { title: "其餘流動資產佔總資產百分比", desc: "其他流動資產占總資產的比率。", more: "幫助了解流動資產中的其他成分比例。" },
+        { title: "流動資產佔總資產百分比", desc: "流動資產占總資產的比率。", more: "比例越高，代表公司短期償債與營運安全性越高。" },
+        { title: "固定資產佔總資產百分比", desc: "固定資產占總資產的比率。", more: "比率高通常見於重資本產業，代表資產密集程度。" },
+        { title: "其餘資產佔總資產百分比", desc: "其他非流動資產占總資產的比率。", more: "觀察長期投資與無形資產配置是否合理。" },
+        { title: "總資產佔總資產百分比", desc: "總資產占比基準。", more: "固定為100%，作為各項目占比的參考基礎。" }
+      ],
+      
+      cash_flow: [
+        {title: "現金流量表",desc:"",more:" 1.了解這家公司的獲利品質是否良好 \n2.獲利品質好的公司，可以從營業活動是否能產生穩定的現金流入看出來。\n3.對於獲利品質好的公司，可以從自由現金流量進而預測其股利的穩定性，甚至成長性。\n4.對於獲利品質好的公司，投資人可考慮是否要加碼。反之，投資人可考慮不是減碼，就是設定較低的本益比。"},
+        {title: "營業活動之現金流量 (營業現金流)",desc: "反映公司本業帶來的現金流入與流出。",more: "營業活動其實就是「賺錢活動」，分析營業活動其實就在分析，企業從賺錢活動中「賺得多少現金」。\n獲利品質好的公司，可以從營業活動是否能產生穩定的現金流入看出來。\n為正代表本業有穩定現金收入；為負可能表示營運出現問題或資金壓力。"},
+        {title: "投資活動之現金流量 (投資現金流)",desc: "顯示公司在資本支出或資產處分上的現金流動。",more: "投資活動是指公司取得或處分不動產、廠房與設備，策略性投資，或理財性投資等活動的現金流入及流出。\n如購買設備、投資資產等，通常為負；若為正，可能是出售資產所得。"},
+        {title: "籌資活動之現金流量 (融資現金流)",desc: "代表公司資金來源與還款的現金流動情況。",more: "籌資活動是指企業向股東拿錢、還股東錢以及舉借或償還借款的活動。\n向股東拿錢就是現金增資，還股東錢包括現金增資、買回自家股票（即庫藏股）及支付股息給股東。\n舉債或償還借款主要包括向金融機構借錢、還錢，發行或贖回公司債以及相關的利息支付。"},
+        {title: "自由現金流量",desc: "公司扣除資本支出後，可自由運用的現金。",more: "自由現金流 = 營業現金流 − 資本支出，反映企業實際可投資或發放股利的能力。\n對於獲利品質好的公司，可以從自由現金流量進而預測其股利的穩定性，甚至成長性。"},
+        {title: "現金及約當現金淨變動 (淨現金流)",desc: "期末與期初現金差額，總體現金流的結果。",more: "若為正，表示公司整體現金增加；為負則表示現金淨流出。"},
+        {title: "折舊",desc: "固定資產因使用而逐年攤提的成本。",more: "如廠房、設備，雖不影響現金，但會影響盈餘與稅賦。"},
+        {title: "攤銷",desc: "無形資產的成本分年攤提至損益表。",more: "如商譽、專利等，也屬非現金項目，影響會計利潤。"},
+        {title: "資本支出",desc: "公司投資於固定資產所花費的金額。",more: "如購買廠房、機器等，是企業成長與擴張的指標。"},
+        {title: "股利發放 (現金股利發放)",desc: "公司以現金形式回饋股東的盈餘分配。",more: "顯示公司獲利與對股東報酬的態度，過高可能影響現金留存。"}
+      ]
+};
+
+function renderReportExplain(reportType) {
+  const explainList = REPORT_EXPLAIN_MAP[reportType] || [];
+  const container = document.getElementById('report-explain-section');
+  container.textContent = '';
+  explainList.forEach(item => {
+    const block = document.createElement('div');
+    block.className = 'explain-block';
+
+    const h3 = document.createElement('h3');
+    h3.textContent = item.title;
+    block.appendChild(h3);
+
+    // 處理 desc 換行
+    const descDiv = document.createElement('div');
+    descDiv.className = 'explain-block-desc';
+    const descLines = (item.desc || '').split('\n');
+    descLines.forEach((line, idx) => {
+      descDiv.appendChild(document.createTextNode(line));
+      if (idx !== descLines.length - 1) {
+        descDiv.appendChild(document.createElement('br'));
+      }
+    });
+    block.appendChild(descDiv);
+
+    if (item.more) {
+      const moreDiv = document.createElement('div');
+      moreDiv.className = 'explain-more';
+      const moreLines = (item.more || '').split('\n');
+      moreLines.forEach((line, idx) => {
+        moreDiv.appendChild(document.createTextNode(line));
+        if (idx !== moreLines.length - 1) {
+          moreDiv.appendChild(document.createElement('br'));
+        }
+      });
+      block.appendChild(moreDiv);
+    }
+    container.appendChild(block);
+  });
+}
+
+function switchReportTab(tab) {
+  document.getElementById('tab-detail').classList.toggle('active', tab === 'detail');
+  document.getElementById('tab-explain').classList.toggle('active', tab === 'explain');
+  document.getElementById('report-detail-section').style.display = (tab === 'detail') ? '' : 'none';
+  document.getElementById('report-explain-section').style.display = (tab === 'explain') ? '' : 'none';
+}
+
 // 初始化搜尋參數
 function initSearchParamsFromURL() {
     const pathParts = window.location.pathname.split('/');
@@ -269,7 +379,16 @@ async function loadFinancialReport(stockSymbol, country) {
         }
 
         const reportType = document.getElementById('reportType').value;
-        const labels = currentFinancialData.map(d => `${d.year} Q${d.quarter}`);
+        const reportPeriod = getReportPeriod();
+        
+        // 根據選擇的期間調整標籤
+        let labels;
+        if (reportPeriod === 'annual') {
+            labels = currentFinancialData.map(d => `${d.year}`);
+        } else {
+            labels = currentFinancialData.map(d => `${d.year} Q${d.quarter}`);
+        }
+        
         const allFields = REPORT_FIELD_MAP[reportType].fields;
 
         // 取得所有被勾選的指標鍵值
@@ -398,7 +517,7 @@ async function loadFinancialReport(stockSymbol, country) {
                         },
                         title: {
                             display: true,
-                            text: `${REPORT_FIELD_MAP[reportType].title} - 指標趨勢 (${currentOriginalCurrency} 千元)`,
+                            text: `${REPORT_FIELD_MAP[reportType].title}${reportPeriod === 'annual' ? ' - 年報' : ' - 指標趨勢'} (${currentOriginalCurrency} 千元)`,
                             font: {
                                 size: 18
                             }
@@ -451,7 +570,20 @@ async function loadFinancialReport(stockSymbol, country) {
         const tableContainer = document.getElementById('financialDataTable');
         const tableTitle = document.getElementById('tableTitle');
         const reportInfo = REPORT_FIELD_MAP[reportType];
-        tableTitle.textContent = `${reportInfo.title} | 原始幣別: ${originalCurrency} (單位: 千元)`;
+        const reportPeriod = getReportPeriod();
+        
+        // 根據選擇的期間調整標題
+        let periodText = '';
+        if (reportPeriod === 'annual') {
+            periodText = ' | 年報 (第四季累計)';
+        } else if (reportPeriod === 'accumulated') {
+            periodText = ' | 累計';
+        } else if (reportPeriod === 'quarterly') {
+            periodText = ' | 單季';
+        }
+        
+        tableTitle.textContent = `${reportInfo.title}${periodText} | 原始幣別: ${originalCurrency} (單位: 千元)`;
+        
         while (tableContainer.firstChild) {
             tableContainer.removeChild(tableContainer.firstChild);
         }
@@ -461,7 +593,12 @@ async function loadFinancialReport(stockSymbol, country) {
         const headerRow = document.createElement('tr');
         headerRow.appendChild(createTextElement('th', '科目 / 時間'));
         financialData.forEach(data => {
-            headerRow.appendChild(createTextElement('th', `${data.year} Q${data.quarter}`));
+            // 年報選項：只顯示年份，不顯示季度
+            if (reportPeriod === 'annual') {
+                headerRow.appendChild(createTextElement('th', `${data.year}`));
+            } else {
+                headerRow.appendChild(createTextElement('th', `${data.year} Q${data.quarter}`));
+            }
         });
         thead.appendChild(headerRow);
         table.appendChild(thead);
@@ -507,22 +644,33 @@ async function loadFinancialReport(stockSymbol, country) {
     function handleReportTypeChange() {
         const reportType = getReportType();
         const reportPeriodSelect = document.getElementById('reportPeriod');
+        
+        // 重置所有選項的 disabled 狀態
+        reportPeriodSelect.options[0].disabled = false; // 累計
+        reportPeriodSelect.options[1].disabled = false;  // 季報
+        reportPeriodSelect.options[2].disabled = false;  // 年報
+        
         if (reportType === 'cash_flow') {
             reportPeriodSelect.value = 'accumulated'; // 強制設為累計
-            reportPeriodSelect.options[0].disabled = false; // 累計可選
             reportPeriodSelect.options[1].disabled = true;  // 季報禁用
+            reportPeriodSelect.options[2].disabled = false;  // 年報可用
         }
         else if (reportType === 'balance_sheets'){
-            reportPeriodSelect.value = 'quarterly'; // 強制設為累計
+            reportPeriodSelect.value = 'quarterly'; // 強制設為季報
             reportPeriodSelect.options[0].disabled = true; // 累計禁用
-            reportPeriodSelect.options[1].disabled = false;  // 季報可選
+            reportPeriodSelect.options[2].disabled = true; // 年報禁用
         }
-         else {
+        else {
+            // 損益表：所有選項都可用
             reportPeriodSelect.options[0].disabled = false;
             reportPeriodSelect.options[1].disabled = false;
+            reportPeriodSelect.options[2].disabled = false;
         }
         updateChartOptions(); // 更新勾選框，因財報類型不同指標也不同
         fetchAndDrawChartAndTable(); // 重新獲取數據並繪圖/表
+        // 新增：切回詳細數據分頁並載入解釋
+        switchReportTab('detail');
+        renderReportExplain(reportType);
     }
 
     // 內部 function: 查詢並畫圖/表
@@ -544,7 +692,10 @@ async function loadFinancialReport(stockSymbol, country) {
         tableTitle.textContent = '';
 
         try {
-            const response = await fetch(`${API_BASE_URL}?stock_symbol=${stockSymbol}&country=${country}&report_type=${reportType}&report_period=${reportPeriod}`);
+            // 年報選項：實際查詢累計資料，但只顯示第四季
+            const actualReportPeriod = reportPeriod === 'annual' ? 'accumulated' : reportPeriod;
+            
+            const response = await fetch(`${API_BASE_URL}?stock_symbol=${stockSymbol}&country=${country}&report_type=${reportType}&report_period=${actualReportPeriod}`);
             if (!response.ok) {
                 const errorData = await response.json();
                 throw new Error(errorData.detail || `HTTP 錯誤：${response.status}`);
@@ -556,12 +707,19 @@ async function loadFinancialReport(stockSymbol, country) {
                     if (a.year !== b.year) return a.year - b.year;
                     return a.quarter - b.quarter;
                 });
-                currentFinancialData = data.data;
-                currentOriginalCurrency = data.data[0].original_currency;
+                
+                // 如果是年報選項，只保留第四季的資料
+                let filteredData = data.data;
+                if (reportPeriod === 'annual') {
+                    filteredData = data.data.filter(item => item.quarter === 4);
+                }
+                
+                currentFinancialData = filteredData;
+                currentOriginalCurrency = filteredData[0].original_currency;
                 
                 // 在數據載入成功後，才根據勾選狀態繪製圖表和建立表格
                 drawChartBasedOnSelection(); 
-                createTable(data.data, reportType, currentOriginalCurrency);
+                createTable(filteredData, reportType, currentOriginalCurrency);
             } else {
                 errorDiv.textContent = '未找到相關財報資料。';
                 errorDiv.style.display = 'block';
@@ -673,4 +831,6 @@ document.addEventListener('DOMContentLoaded', async () => {
         await loadStockInfo();
         await loadFinancialReport(stockSymbol, country);
     }
+    // 頁面載入時預設載入損益表解釋
+    renderReportExplain(getReportType());
 });
