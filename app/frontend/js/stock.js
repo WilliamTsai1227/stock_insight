@@ -105,11 +105,11 @@ const REPORT_EXPLAIN_MAP = {
       balance_sheets: [
         { title: "資產負債表",desc:"",more:""},
         { title: "現金及約當現金", desc: "可隨時動用的資金與高流動資產。", more: "如銀行存款、短期票券等，代表企業即時支付能力。" },
-        { title: "短期投資", desc: "一年內可變現的投資項目。", more: "如短期債券、股票等，反映資金調度與閒置資金配置。" },
+        { title: "短期投資", desc: "一年內可變現的投資項目。\n計算方式：（透過損益按公允價值衡量之金融資產－流動） ＋（備供出售金融資產－流動淨額）", more: "如短期債券、股票等，反映資金調度與閒置資金配置。" },
         { title: "應收帳款及票據", desc: "尚未收回的客戶貨款。", more: "比率高需注意收款風險與現金流壓力。" },
         { title: "存貨", desc: "公司持有的商品、原物料與在製品。", more: "過高代表銷售壓力或庫存積壓風險。" },
         { title: "其餘流動資產", desc: "其他一年內可變現的資產。", more: "如預付款項、待收款、應退稅等。" },
-        { title: "流動資產", desc: "可以在一年或一個營業週期內，變換為現金的資產。", more: "高流動資產代表公司短期償債能力佳。" },
+        { title: "流動資產", desc: "可以在一年或一個營業週期內，變換為現金的資產。\n原始財報項目：流動資產合計。", more: "高流動資產代表公司短期償債能力佳。" },
         { title: "固定資產", desc: "長期營運使用的實體資產。", more: "如廠房、機器、建築物，反映企業生產基礎與產能。" },
         { title: "其餘資產", desc: "非流動與非固定資產項目。", more: "如無形資產、長期投資等。" },
         { title: "總資產", desc: "企業在某一時間點擁有的全部資產。", more: "總資產規模常用於衡量公司體量與成長性。" },
@@ -648,26 +648,23 @@ async function loadFinancialReport(stockSymbol, country) {
         const reportPeriodSelect = document.getElementById('reportPeriod');
         
         // 重置所有選項的 disabled 狀態
-        reportPeriodSelect.options[0].disabled = false; // 累計
-        reportPeriodSelect.options[1].disabled = false;  // 季報
-        reportPeriodSelect.options[2].disabled = false;  // 年報
+        reportPeriodSelect.options[0].disabled = false; // 累計可用
+        reportPeriodSelect.options[1].disabled = false;  // 季報可用
+        reportPeriodSelect.options[2].disabled = false;  // 年報可用
         
         if (reportType === 'cash_flow') {
-            reportPeriodSelect.value = 'accumulated'; // 強制設為累計
+            reportPeriodSelect.value = 'annual'; // 強制設為累計
             reportPeriodSelect.options[1].disabled = true;  // 季報禁用
-            reportPeriodSelect.options[2].disabled = false;  // 年報可用
         }
         else if (reportType === 'balance_sheets'){
             reportPeriodSelect.value = 'quarterly'; // 強制設為季報
             reportPeriodSelect.options[0].disabled = true; // 累計禁用
             reportPeriodSelect.options[2].disabled = true; // 年報禁用
         }
-        else {
-            // 損益表：所有選項都可用
-            reportPeriodSelect.options[0].disabled = false;
-            reportPeriodSelect.options[1].disabled = false;
-            reportPeriodSelect.options[2].disabled = false;
+        else if (reportType === 'income_statements'){
+            reportPeriodSelect.value = 'annual'; // 強制設為季報
         }
+
         updateChartOptions(); // 更新勾選框，因財報類型不同指標也不同
         fetchAndDrawChartAndTable(); // 重新獲取數據並繪圖/表
         // 新增：切回詳細數據分頁並載入解釋
