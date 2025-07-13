@@ -836,3 +836,4 @@ document.addEventListener('DOMContentLoaded', async () => {
     // 頁面載入時預設載入損益表解釋
     renderReportExplain(getReportType());
 });
+
