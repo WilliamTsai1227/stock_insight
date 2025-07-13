@@ -57,6 +57,10 @@ async def stock_page(request: Request, symbol: str, country: str):
 async def home(request: Request):
     return FileResponse(HTML_DIR / "insight.html", media_type="text/html")
 
+@app.get("/advanced_search", include_in_schema=False)
+async def advanced_search_page(request: Request):
+    return FileResponse(HTML_DIR / "advanced_search.html", media_type="text/html")
+
 # 加入 API router
 app.include_router(log.router)
 app.include_router(ai_news.router)

@@ -4,22 +4,16 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="robots" content="noindex, nofollow">
-    <title>個股資訊</title>
+    <title>進階財報排行榜搜尋</title>
     <link rel="icon" type="image/x-icon" href="data:image/x-icon;base64," />
-
     <link rel="preconnect" href="https://fonts.gstatic.com/" crossorigin />
-    <link
-      rel="stylesheet"
-      as="style"
-      onload="this.rel='stylesheet'"
-      href="https://fonts.googleapis.com/css2?display=swap&family=Noto+Sans%3Awght%40400%3B500%3B700%3B900&family=Work+Sans%3Awght%40400%3B500%3B700%3B900"
-    />
-    <link rel="stylesheet" href="/css/stock.css">
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <script src="/js/stock.js" defer></script>
+    <link rel="stylesheet" as="style" onload="this.rel='stylesheet'" href="https://fonts.googleapis.com/css2?display=swap&family=Noto+Sans%3Awght%40400%3B500%3B700%3B900&family=Work+Sans%3Awght%40400%3B500%3B700%3B900" />
+    <link rel="stylesheet" href="/css/advanced_search.css">
+    <script src="/js/advanced_search.js" defer></script>
 </head>
 <body>
     <div class="layout-container">
+        <!-- header -->
         <header class="main-header">
             <div class="header-left-section">
                 <div class="logo-section">
@@ -54,7 +48,6 @@
                 </div>
             </div>
         </header>
-
         <div class="nav-dropdown">
             <div class="hamburger-menu-close"></div> 
             <a href="/home">首頁</a>
@@ -64,73 +57,76 @@
             <a href="/stock/2330/tw">股票</a>
             <a href="#">使用者頁面</a> 
         </div>
-
         <div class="content-area">
-            <div class="search-block">
-                <div class="search-bar-div">
-                    <div class="search-bar-title">股票代碼搜尋:</div>
-                    <input type="text" class="search-bar" placeholder="請輸入股票代碼...">
-                    <div class="search_icon"></div>
-                </div>
-            </div>
-
             <div class="container">
-                <div id="loading-indicator">
-                    <div class="spinner"></div>
-                    <p>載入中...</p>
-                </div>
-                <div id="stock-header"></div>
-                <div id="stock-info"></div>
-                <div class="data-source">資料來源：公開資訊觀測站</div>
-                <div class="stock-financial-report-container">
-                    <div id = financial-report-title>財報資訊</div>
-            
+                <!-- 現金流量表 block -->
+                <div class="ranking-block" id="cash-flow-block">
+                    <h2>現金流量表</h2>
                     <div class="controls">
-                        <label for="reportType">選擇財報類型:</label>
-                        <select id="reportType" onchange="handleReportTypeChange()">
-                            <option value="cash_flow" selected>現金流量表</option>
-                            <option value="income_statements">損益表</option>
-                            <option value="balance_sheets">資產負債表</option>
-                        </select>
-            
-                        <label for="reportPeriod">選擇財報期間:</label>
-                        <select id="reportPeriod" onchange="fetchAndDrawChartAndTable()">
-                            <option value="accumulated" >累計</option>
-                            <option value="quarterly">季報</option>
-                            <option value="annual"selected>年報</option>
-                        </select>
+                        <label>財報選項:
+                            <select id="cash-flow-metric-select"></select>
+                        </label>
+                        <label>年份:
+                            <select id="cash-flow-year-select"></select>
+                        </label>
+                        <label>產業:
+                            <select id="cash-flow-sector-select"></select>
+                        </label>
+                        <button id="cash-flow-search-btn">查詢</button>
                     </div>
-            
-                    <div class="chart-options">
-                        <h3>選擇圖表顯示指標:</h3>
-                        <div id="checkboxContainer" class="checkbox-group">
-                            </div>
-                        <button onclick="drawChartBasedOnSelection()">更新圖表</button>
+                    <div id="cash-flow-result-list" class="result-list"></div>
+                    <button id="cash-flow-next-page" style="display:none;">下一頁</button>
+                </div>
+                <!-- 損益表 block -->
+                <div class="ranking-block" id="income-statement-block">
+                    <h2>損益表</h2>
+                    <div class="controls">
+                        <label>財報選項:
+                            <select id="income-metric-select"></select>
+                        </label>
+                        <label>年份:
+                            <select id="income-year-select"></select>
+                        </label>
+                        <label>類型:
+                            <select id="income-type-select"></select>
+                        </label>
+                        <label>季:
+                            <select id="income-quarter-select"></select>
+                        </label>
+                        <label>產業:
+                            <select id="income-sector-select"></select>
+                        </label>
+                        <button id="income-search-btn">查詢</button>
                     </div>
-            
-                    <div id="loading">載入中，請稍候...</div>
-                    <div id="error"></div>
-                    
-                    <div class="chart-container">
-                        <canvas id="financialChart"></canvas>
+                    <div id="income-result-list" class="result-list"></div>
+                    <button id="income-next-page" style="display:none;">下一頁</button>
+                </div>
+                <!-- 資產負債表 block -->
+                <div class="ranking-block" id="balance-sheet-block">
+                    <h2>資產負債表</h2>
+                    <div class="controls">
+                        <label>財報選項:
+                            <select id="balance-metric-select"></select>
+                        </label>
+                        <label>年份:
+                            <select id="balance-year-select"></select>
+                        </label>
+                        <label>類型:
+                            <select id="balance-type-select"></select>
+                        </label>
+                        <label>季:
+                            <select id="balance-quarter-select"></select>
+                        </label>
+                        <label>產業:
+                            <select id="balance-sector-select"></select>
+                        </label>
+                        <button id="balance-search-btn">查詢</button>
                     </div>
-                    <div class="data-source">數據來源：公開資訊觀測站</div>
-            
-                    <div class="report-tab-bar">
-                        <button class="report-tab-btn active" id="tab-detail" type="button" onclick="switchReportTab('detail')">詳細數據</button>
-                        <button class="report-tab-btn" id="tab-explain" type="button" onclick="switchReportTab('explain')">指標解釋</button>
-                    </div>
-                    <div id="report-detail-section">
-                        <div id="tableTitle"></div>
-                        <div class="data-table-container">
-                            <div id="financialDataTable"></div>
-                        </div>
-                    </div>
-                    <div id="report-explain-section" style="display:none;"></div>
+                    <div id="balance-result-list" class="result-list"></div>
+                    <button id="balance-next-page" style="display:none;">下一頁</button>
                 </div>
             </div>
         </div>
-
         <div class="footer">
             <div class="footer_text">COPYRIGHT © Stock Insight<br>
                 免責聲明：<br>
@@ -142,4 +138,4 @@
         </div>
     </div>
 </body>
-</html>
+</html> 

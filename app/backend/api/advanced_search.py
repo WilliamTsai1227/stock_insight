@@ -490,12 +490,32 @@ async def get_financial_ranking(
 @router.get("/api/advanced_search/supported_rankings")
 async def get_supported_rankings():
     """
-    獲取支援的排行榜類型列表
+    獲取支援的排行榜類型列表，依照三種財報表分類
     """
+    # 分類 mapping
+    table_to_statement_type = {
+        'Cash_Flow_Statements': 'cash_flow',
+        'Income_Statements': 'income_statement',
+        'Balance_Sheets': 'balance_sheet'
+    }
+    result = {
+        'cash_flow': [],
+        'income_statement': [],
+        'balance_sheet': []
+    }
+    for key, value in AdvancedSearch.SUPPORTED_RANKINGS.items():
+        stype = table_to_statement_type.get(value['table'])
+        if stype:
+            result[stype].append({
+                'key': key,
+                'description': value['description'],
+                'field': value['field'],
+                'table': value['table']
+            })
     return JSONResponse(
         status_code=200,
         content={
-            "data": AdvancedSearch.SUPPORTED_RANKINGS,
+            "data": result,
             "status": "ok"
         }
     )
@@ -504,26 +524,25 @@ async def get_supported_rankings():
 @router.get("/api/advanced_search/report_type_rules")
 async def get_report_type_rules():
     """
-    獲取財報類型與期間的對應規則
+    獲取財報類型與期間的對應規則，依照 statement_type 分類
     """
     rules = {
-        'Cash_Flow_Statements': {
+        'cash_flow': {
             'supported_periods': ['annual'],
             'quarter_rule': '自動使用第4季',
             'description': '現金流量表只支援年度財報'
         },
-        'Income_Statements': {
+        'income_statement': {
             'supported_periods': ['quarterly', 'annual'],
             'quarter_rule': 'quarterly需指定季度(1-4), annual自動使用第4季',
             'description': '損益表支援單季和年度財報'
         },
-        'Balance_Sheets': {
+        'balance_sheet': {
             'supported_periods': ['quarterly'],
             'quarter_rule': '必須指定季度(1-4)',
             'description': '資產負債表只支援單季財報'
         }
     }
-    
     return JSONResponse(
         status_code=200,
         content={
@@ -887,5 +906,19 @@ async def get_stock_ranking(
         print(f"查詢股票排名時發生錯誤: {e}")
         raise HTTPException(status_code=500, detail="內部伺服器錯誤")
 
+
+@router.get("/api/sector/list")
+async def get_sector_list():
+    """
+    取得所有產業名稱清單，供前端下拉選單使用
+    """
+    try:
+        async with postgresql_pool.get_connection() as conn:
+            rows = await conn.fetch("SELECT sector_name FROM Sectors ORDER BY sector_name ASC;")
+            sector_list = [row['sector_name'] for row in rows]
+            return JSONResponse(status_code=200, content={"data": sector_list, "status": "ok"})
+    except Exception as e:
+        print(f"查詢產業清單時發生錯誤: {e}")
+        raise HTTPException(status_code=500, detail="取得產業清單失敗")
 
  
