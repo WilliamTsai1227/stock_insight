@@ -15,156 +15,156 @@ class AdvancedSearch:
         'operating_cash_flow': {
             'table': 'Cash_Flow_Statements',
             'field': 'operating_cash_flow',
-            'description': '營業活動之現金流量排行榜'
+            'description': '營業活動之現金流量(營業現金流)'
         },
         'free_cash_flow': {
             'table': 'Cash_Flow_Statements',
             'field': 'free_cash_flow',
-            'description': '自由現金流量排行榜'
+            'description': '自由現金流量'
         },
         'net_change_in_cash': {
             'table': 'Cash_Flow_Statements',
             'field': 'net_change_in_cash',
-            'description': '現金及約當現金淨變動排行榜'
+            'description': '現金及約當現金淨變動(淨現金流)'
         },
         
         # 損益表
         'revenue': {
             'table': 'Income_Statements',
             'field': 'revenue',
-            'description': '營收排行榜'
+            'description': '營業收入'
         },
         'gross_profit': {
             'table': 'Income_Statements',
             'field': 'gross_profit',
-            'description': '營業毛利排行榜'
+            'description': '營業毛利'
         },
         'operating_expenses': {
             'table': 'Income_Statements',
             'field': 'operating_expenses',
-            'description': '營業費用排行榜'
+            'description': '營業費用'
         },
         'operating_income': {
             'table': 'Income_Statements',
             'field': 'operating_income',
-            'description': '營業利益排行榜'
+            'description': '營業利益'
         },
         'net_income': {
             'table': 'Income_Statements',
             'field': 'net_income',
-            'description': '稅後淨利排行榜'
+            'description': '稅後淨利'
         },
         'gross_profit_pct': {
             'table': 'Income_Statements',
             'field': 'gross_profit_pct',
-            'description': '營業毛利佔營收百分比排行榜'
+            'description': '營業毛利佔營業收入百分比'
         },
         'sales_expenses_pct': {
             'table': 'Income_Statements',
             'field': 'sales_expenses_pct',
-            'description': '銷售費用佔營收百分比排行榜'
+            'description': '銷售費用佔營業收入百分比'
         },
         'administrative_expenses_pct': {
             'table': 'Income_Statements',
             'field': 'administrative_expenses_pct',
-            'description': '管理費用佔營收百分比排行榜'
+            'description': '管理費用佔營業收入百分比'
         },
         'research_and_development_expenses_pct': {
             'table': 'Income_Statements',
             'field': 'research_and_development_expenses_pct',
-            'description': '研發費用佔營收百分比排行榜'
+            'description': '研發費用佔營業收入百分比'
         },
         'operating_expenses_pct': {
             'table': 'Income_Statements',
             'field': 'operating_expenses_pct',
-            'description': '營業費用佔營收百分比排行榜'
+            'description': '營業費用佔營業收入百分比'
         },
         'operating_income_pct': {
             'table': 'Income_Statements',
             'field': 'operating_income_pct',
-            'description': '營業利益佔營收百分比排行榜'
+            'description': '營業利益佔營業收入百分比'
         },
         'net_income_pct': {
             'table': 'Income_Statements',
             'field': 'net_income_pct',
-            'description': '稅後淨利佔營收百分比排行榜'
+            'description': '稅後淨利佔營業收入百分比'
         },
         'cost_of_revenue_pct': {
             'table': 'Income_Statements',
             'field': 'cost_of_revenue_pct',
-            'description': '營業成本佔營收百分比排行榜'
+            'description': '營業成本佔營業收入百分比'
         },
         
         # 資產負債表
         'cash_and_equivalents': {
             'table': 'Balance_Sheets',
             'field': 'cash_and_equivalents',
-            'description': '現金及約當現金排行榜'
+            'description': '現金及約當現金'
         },
         'short_term_investments': {
             'table': 'Balance_Sheets',
             'field': 'short_term_investments',
-            'description': '短期投資排行榜'
+            'description': '短期投資'
         },
         'accounts_receivable_and_notes': {
             'table': 'Balance_Sheets',
             'field': 'accounts_receivable_and_notes',
-            'description': '應收帳款及票據排行榜'
+            'description': '應收帳款及票據'
         },
         'inventory': {
             'table': 'Balance_Sheets',
             'field': 'inventory',
-            'description': '存貨排行榜'
+            'description': '存貨'
         },
         'current_assets': {
             'table': 'Balance_Sheets',
             'field': 'current_assets',
-            'description': '流動資產排行榜'
+            'description': '流動資產'
         },
         'fixed_assets_total': {
             'table': 'Balance_Sheets',
             'field': 'fixed_assets_total',
-            'description': '固定資產排行榜'
+            'description': '固定資產'
         },
         'total_assets': {
             'table': 'Balance_Sheets',
             'field': 'total_assets',
-            'description': '總資產排行榜'
+            'description': '總資產'
         },
         'cash_and_equivalents_pct': {
             'table': 'Balance_Sheets',
             'field': 'cash_and_equivalents_pct',
-            'description': '現金及約當現金佔總資產百分比排行榜'
+            'description': '現金及約當現金佔總資產百分比'
         },
         'short_term_investments_pct': {
             'table': 'Balance_Sheets',
             'field': 'short_term_investments_pct',
-            'description': '短期投資佔總資產百分比排行榜'
+            'description': '短期投資佔總資產百分比'
         },
         'accounts_receivable_and_notes_pct': {
             'table': 'Balance_Sheets',
             'field': 'accounts_receivable_and_notes_pct',
-            'description': '應收帳款及票據佔總資產百分比排行榜'
+            'description': '應收帳款及票據佔總資產百分比'
         },
         'inventory_pct': {
             'table': 'Balance_Sheets',
             'field': 'inventory_pct',
-            'description': '存貨佔總資產百分比排行榜'
+            'description': '存貨佔總資產百分比'
         },
         'current_assets_pct': {
             'table': 'Balance_Sheets',
             'field': 'current_assets_pct',
-            'description': '流動資產佔總資產百分比排行榜'
+            'description': '流動資產佔總資產百分比'
         },
         'fixed_assets_total_pct': {
             'table': 'Balance_Sheets',
             'field': 'fixed_assets_total_pct',
-            'description': '固定資產佔總資產百分比排行榜'
+            'description': '固定資產佔總資產百分比'
         },
         'other_non_current_assets_pct': {
             'table': 'Balance_Sheets',
             'field': 'other_non_current_assets_pct',
-            'description': '其餘資產佔總資產百分比排行榜'
+            'description': '其餘資產佔總資產百分比'
         }
     }
 
@@ -700,7 +700,7 @@ async def get_ranking_count(
 async def get_stock_ranking(
     stock_symbol: str = Query(..., description="股票代碼", min_length=3),
     year: int = Query(..., description="年份"),
-    report_type: str = Query(..., description="財報期間 (quarterly, annual)"),
+    report_type: str = Query(..., description="財報期間 (quarterly, annual, accumulated)"),
     quarter: Optional[int] = Query(None, description="季度 (1-4, 可選)"),
     statement_type: str = Query(..., description="財報表類型 (cash_flow, income_statement, balance_sheet)")
 ):
@@ -711,9 +711,9 @@ async def get_stock_ranking(
     1. 根據股票代碼查詢該股票所在的國家和產業
     2. 根據 statement_type 僅查詢該表的指標
     3. 根據財報類型規則驗證參數：
-       - cash_flow: 只支援 report_type=annual (accumulated, quarter=4)
-       - income_statement: 支援 quarterly 和 annual
-       - balance_sheet: 只支援 quarterly
+       - cash_flow: 支援 report_type=annual (quarter=4) 及 accumulated (quarter=1,2,3，2025只能1)
+       - income_statement: 支援 report_type=annual (quarter=4)、accumulated (quarter=1,2,3，2025只能1)、quarterly (quarter=1,2,3,4，2025只能1)
+       - balance_sheet: 只支援 quarterly (quarter=1,2,3,4，2025只能1)
     4. 查詢該股票在相同國家、產業、年份、季度下的所有指標排名
     5. 回傳包含排名資訊的完整結果
     """
@@ -737,50 +737,97 @@ async def get_stock_ranking(
             detail=f"statement_type 必須為 {valid_statement_types} 之一"
         )
     # 驗證 report_type
-    if not AdvancedSearch.validate_report_period(report_type):
+    valid_report_types = ["annual", "accumulated", "quarterly"]
+    if report_type not in valid_report_types:
         raise HTTPException(
             status_code=400,
-            detail="不支援的財報期間，必須是 'quarterly' 或 'annual'"
+            detail="不支援的財報期間，必須是 'annual'、'accumulated' 或 'quarterly'"
         )
     db_report_type = AdvancedSearch.convert_report_period(report_type)
     # 根據 statement_type 檢查 report_type/quarter 規則
     if statement_type == "cash_flow":
-        if db_report_type != "accumulated":
-            raise HTTPException(
-                status_code=400,
-                detail="現金流量表只支援年報 (annual) 查詢"
-            )
-        quarter = 4
-    elif statement_type == "income_statement":
-        if db_report_type == "accumulated":
+        if report_type == "annual":
+            db_report_type = "accumulated"
             quarter = 4
-        elif db_report_type == "quarterly":
-            if quarter is None:
-                raise HTTPException(
-                    status_code=400,
-                    detail="損益表季報查詢必須指定季度 (1-4)"
-                )
-            if not AdvancedSearch.validate_quarter(quarter):
-                raise HTTPException(
-                    status_code=400,
-                    detail="季度格式不正確，必須是 1-4"
-                )
+        elif report_type == "accumulated":
+            db_report_type = "accumulated"
+            if year == 2025:
+                if quarter != 1:
+                    raise HTTPException(
+                        status_code=400,
+                        detail="2025 年現金流量表累計只支援第一季 (quarter=1)"
+                    )
+                quarter = 1
+            else:
+                if quarter not in [1, 2, 3]:
+                    raise HTTPException(
+                        status_code=400,
+                        detail="現金流量表累計只支援第一~三季 (quarter=1,2,3)"
+                    )
+        else:
+            raise HTTPException(
+                status_code=400,
+                detail="現金流量表只支援年報(annual)或累計(accumulated)"
+            )
+    elif statement_type == "income_statement":
+        if report_type == "annual":
+            db_report_type = "accumulated"
+            quarter = 4
+        elif report_type == "accumulated":
+            db_report_type = "accumulated"
+            if year == 2025:
+                if quarter != 1:
+                    raise HTTPException(
+                        status_code=400,
+                        detail="2025 年損益表累計只支援第一季 (quarter=1)"
+                    )
+                quarter = 1
+            else:
+                if quarter not in [1, 2, 3]:
+                    raise HTTPException(
+                        status_code=400,
+                        detail="損益表累計只支援第一~三季 (quarter=1,2,3)"
+                    )
+        elif report_type == "quarterly":
+            db_report_type = "quarterly"
+            if year == 2025:
+                if quarter != 1:
+                    raise HTTPException(
+                        status_code=400,
+                        detail="2025 年損益表季報只支援第一季 (quarter=1)"
+                    )
+                quarter = 1
+            else:
+                if quarter not in [1, 2, 3, 4]:
+                    raise HTTPException(
+                        status_code=400,
+                        detail="損益表季報只支援第一~四季 (quarter=1,2,3,4)"
+                    )
+        else:
+            raise HTTPException(
+                status_code=400,
+                detail="損益表只支援年報(annual)、累計(accumulated)或季報(quarterly)"
+            )
     elif statement_type == "balance_sheet":
-        if db_report_type != "quarterly":
+        if report_type != "quarterly":
             raise HTTPException(
                 status_code=400,
-                detail="資產負債表只支援季報 (quarterly) 查詢"
+                detail="資產負債表只支援季報(quarterly)"
             )
-        if quarter is None:
-            raise HTTPException(
-                status_code=400,
-                detail="資產負債表季報查詢必須指定季度 (1-4)"
-            )
-        if not AdvancedSearch.validate_quarter(quarter):
-            raise HTTPException(
-                status_code=400,
-                detail="季度格式不正確，必須是 1-4"
-            )
+        db_report_type = "quarterly"
+        if year == 2025:
+            if quarter != 1:
+                raise HTTPException(
+                    status_code=400,
+                    detail="2025 年資產負債表只支援第一季 (quarter=1)"
+                )
+            quarter = 1
+        else:
+            if quarter not in [1, 2, 3, 4]:
+                raise HTTPException(
+                    status_code=400,
+                    detail="資產負債表只支援第一~四季 (quarter=1,2,3,4)"
+                )
     try:
         async with postgresql_pool.get_connection() as conn:
             stock_info_query = """
@@ -890,7 +937,7 @@ async def get_stock_ranking(
                 'summary': {
                     'total_metrics': len(results),
                     'metrics_with_rank': len([r for r in results.values() if r['rank'] is not None]),
-                    'metrics_without_data': len([r for r in results.values() if r['rank'] is None])
+                    'metrics_without_data': len([r for r in results.values() if r['rank' ] is None])
                 }
             }
             return JSONResponse(

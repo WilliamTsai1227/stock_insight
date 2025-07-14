@@ -858,35 +858,43 @@ async function loadStockRankingSection() {
     const rankingBlocks = [
         {
             key: 'cash_flow',
-            title: '現金流量表(年報數據排名)',
-            reportType: 'annual',
-            statementType: 'cash_flow',
-            yearRange: [2016, 2024],
+            title: '現金流量表',
+            reportTypes: [
+                { value: 'annual', label: '年報' },
+                { value: 'accumulated', label: '累計' }
+            ],
+            defaultReportType: 'annual',
+            yearRange: [2016, 2025],
             defaultYear: 2024,
-            showQuarter: false,
-            quarters: [4],
+            quarters: [1, 2, 3, 4],
             defaultQuarter: 4
         },
         {
             key: 'income_statement',
             title: '損益表',
-            reportType: 'annual', // 可切換
-            statementType: 'income_statement',
+            reportTypes: [
+                { value: 'annual', label: '年報' },
+                { value: 'quarterly', label: '季報' },
+                { value: 'accumulated', label: '累計' }
+            ],
+            defaultReportType: 'annual',
             yearRange: [2015, 2025],
             defaultYear: 2024,
-            showQuarter: true,
-            quarters: [1,2,3,4],
+            quarters: [1, 2, 3, 4],
             defaultQuarter: 4
         },
         {
             key: 'balance_sheet',
             title: '資產負債表',
-            reportType: 'quarterly',
-            statementType: 'balance_sheet',
+            reportTypes: [
+                { value: 'annual', label: '年報', disabled: true },
+                { value: 'quarterly', label: '季報', disabled: false },
+                { value: 'accumulated', label: '累計', disabled: true }
+            ],
+            defaultReportType: 'quarterly',
             yearRange: [2015, 2025],
             defaultYear: 2024,
-            showQuarter: true,
-            quarters: [1,2,3,4],
+            quarters: [1, 2, 3, 4],
             defaultQuarter: 4
         }
     ];
@@ -897,7 +905,7 @@ async function loadStockRankingSection() {
         // 標題
         const title = document.createElement('h2');
         title.className = 'ranking-block-title';
-        title.textContent = '財報排名';
+        title.textContent = '財報項目排名';
         blockDiv.appendChild(title);
         // 小標題
         const subtitle = document.createElement('div');
@@ -908,40 +916,27 @@ async function loadStockRankingSection() {
         const controls = document.createElement('div');
         controls.className = 'ranking-controls';
         // 財報類型下拉
-        if (block.key === 'income_statement') {
-            const reportTypeLabel = document.createElement('label');
-            reportTypeLabel.textContent = '財報類型：';
-            controls.appendChild(reportTypeLabel);
-            const reportTypeSelect = document.createElement('select');
-            reportTypeSelect.className = 'ranking-report-type-select';
-            const annualOpt = document.createElement('option');
-            annualOpt.value = 'annual';
-            annualOpt.textContent = '年報';
-            reportTypeSelect.appendChild(annualOpt);
-            const quarterlyOpt = document.createElement('option');
-            quarterlyOpt.value = 'quarterly';
-            quarterlyOpt.textContent = '季報';
-            reportTypeSelect.appendChild(quarterlyOpt);
-            reportTypeSelect.value = block.reportType;
-            controls.appendChild(reportTypeSelect);
-        } else {
-            // 固定顯示
-            const reportTypeLabel = document.createElement('label');
-            reportTypeLabel.textContent = '財報類型：';
-            controls.appendChild(reportTypeLabel);
-            const reportTypeText = document.createElement('span');
-            reportTypeText.textContent = block.reportType === 'annual' ? '年報' : '季報';
-            controls.appendChild(reportTypeText);
+        const reportTypeLabel = document.createElement('label');
+        reportTypeLabel.textContent = '財報類型：';
+        controls.appendChild(reportTypeLabel);
+        const reportTypeSelect = document.createElement('select');
+        reportTypeSelect.className = 'ranking-report-type-select';
+        for (const rt of block.reportTypes) {
+            const opt = document.createElement('option');
+            opt.value = rt.value;
+            opt.textContent = rt.label;
+            if (rt.disabled) opt.disabled = true;
+            reportTypeSelect.appendChild(opt);
         }
-        // 年份下拉
+        reportTypeSelect.value = block.defaultReportType;
+        controls.appendChild(reportTypeSelect);
+        // 年份下拉（大到小）
         const yearLabel = document.createElement('label');
         yearLabel.textContent = '年份：';
         controls.appendChild(yearLabel);
         const yearSelect = document.createElement('select');
         yearSelect.className = 'ranking-year-select';
-        for (let y = block.yearRange[0]; y <= block.yearRange[1]; y++) {
-            // income_statement: 年報不能有2025
-            if (block.key === 'income_statement' && controls.querySelector('select')?.value === 'annual' && y === 2025) continue;
+        for (let y = block.yearRange[1]; y >= block.yearRange[0]; y--) {
             const opt = document.createElement('option');
             opt.value = y;
             opt.textContent = y;
@@ -950,21 +945,19 @@ async function loadStockRankingSection() {
         yearSelect.value = block.defaultYear;
         controls.appendChild(yearSelect);
         // 季別下拉
-        if (block.showQuarter) {
-            const quarterLabel = document.createElement('label');
-            quarterLabel.textContent = '季別：';
-            controls.appendChild(quarterLabel);
-            const quarterSelect = document.createElement('select');
-            quarterSelect.className = 'ranking-quarter-select';
-            for (const q of block.quarters) {
-                const opt = document.createElement('option');
-                opt.value = q;
-                opt.textContent = ['第一季','第二季','第三季','第四季'][q-1];
-                quarterSelect.appendChild(opt);
-            }
-            quarterSelect.value = block.defaultQuarter;
-            controls.appendChild(quarterSelect);
+        const quarterLabel = document.createElement('label');
+        quarterLabel.textContent = '季別：';
+        controls.appendChild(quarterLabel);
+        const quarterSelect = document.createElement('select');
+        quarterSelect.className = 'ranking-quarter-select';
+        for (const q of block.quarters) {
+            const opt = document.createElement('option');
+            opt.value = q;
+            opt.textContent = ['第一季','第二季','第三季','第四季'][q-1];
+            quarterSelect.appendChild(opt);
         }
+        quarterSelect.value = block.defaultQuarter;
+        controls.appendChild(quarterSelect);
         blockDiv.appendChild(controls);
         // 資料區
         const infoDiv = document.createElement('div');
@@ -974,97 +967,162 @@ async function loadStockRankingSection() {
         section.appendChild(blockDiv);
         // 綁定互動
         const updateBlock = async () => {
-            let reportType = block.reportType;
-            let year = block.defaultYear;
-            let quarter = block.defaultQuarter;
-            if (block.key === 'income_statement') {
-                reportType = controls.querySelector('.ranking-report-type-select').value;
-                year = parseInt(controls.querySelector('.ranking-year-select').value);
-                quarter = controls.querySelector('.ranking-quarter-select').value ? parseInt(controls.querySelector('.ranking-quarter-select').value) : 4;
-                // 年報時季別固定4且反灰
+            let reportType = reportTypeSelect.value;
+            let year = parseInt(yearSelect.value);
+            // 先根據規則修正季別選單的值
+            if (block.key === 'cash_flow') {
                 if (reportType === 'annual') {
-                    controls.querySelector('.ranking-quarter-select').disabled = true;
-                    controls.querySelector('.ranking-quarter-select').value = 4;
-                } else {
-                    controls.querySelector('.ranking-quarter-select').disabled = false;
-                    // 2025只能選第一季
-                    if (year === 2025) {
-                        controls.querySelectorAll('.ranking-quarter-select option').forEach(opt => {
+                    quarterSelect.value = '4';
+                    quarterSelect.disabled = true;
+                } else if (reportType === 'accumulated') {
+                    quarterSelect.disabled = false;
+                    quarterSelect.querySelectorAll('option').forEach(opt => {
+                        if (year === 2025) {
                             if (opt.value !== '1') opt.disabled = true;
                             else opt.disabled = false;
-                        });
-                        controls.querySelector('.ranking-quarter-select').value = 1;
-                    } else {
-                        controls.querySelectorAll('.ranking-quarter-select option').forEach(opt => { opt.disabled = false; });
-                    }
+                        } else {
+                            if (['1','2','3'].includes(opt.value)) opt.disabled = false;
+                            else opt.disabled = true;
+                        }
+                    });
+                    if (year === 2025) quarterSelect.value = '1';
+                    else if (!['1','2','3'].includes(quarterSelect.value)) quarterSelect.value = '1';
                 }
-                // 年報時年份不能有2025
-                controls.querySelectorAll('.ranking-year-select option').forEach(opt => {
-                    if (reportType === 'annual' && opt.value === '2025') opt.style.display = 'none';
-                    else opt.style.display = '';
+            } else if (block.key === 'income_statement') {
+                yearSelect.querySelectorAll('option').forEach(opt => {
+                    if (reportType === 'annual' && opt.value === '2025') opt.disabled = true;
+                    else opt.disabled = false;
                 });
+                if (reportType === 'annual') {
+                    quarterSelect.value = '4';
+                    quarterSelect.disabled = true;
+                } else if (reportType === 'accumulated') {
+                    quarterSelect.disabled = false;
+                    quarterSelect.querySelectorAll('option').forEach(opt => {
+                        if (year === 2025) {
+                            if (opt.value !== '1') opt.disabled = true;
+                            else opt.disabled = false;
+                        } else {
+                            if (['1','2','3'].includes(opt.value)) opt.disabled = false;
+                            else opt.disabled = true;
+                        }
+                    });
+                    if (year === 2025) quarterSelect.value = '1';
+                    else if (!['1','2','3'].includes(quarterSelect.value)) quarterSelect.value = '1';
+                } else if (reportType === 'quarterly') {
+                    quarterSelect.disabled = false;
+                    quarterSelect.querySelectorAll('option').forEach(opt => {
+                        if (year === 2025) {
+                            if (opt.value !== '1') opt.disabled = true;
+                            else opt.disabled = false;
+                        } else {
+                            opt.disabled = false;
+                        }
+                    });
+                    if (year === 2025) quarterSelect.value = '1';
+                    else if (!['1','2','3','4'].includes(quarterSelect.value)) quarterSelect.value = '1';
+                }
             } else if (block.key === 'balance_sheet') {
-                year = parseInt(controls.querySelector('.ranking-year-select').value);
-                quarter = controls.querySelector('.ranking-quarter-select').value ? parseInt(controls.querySelector('.ranking-quarter-select').value) : 4;
-                // 2025只能選第一季
-                if (year === 2025) {
-                    controls.querySelectorAll('.ranking-quarter-select option').forEach(opt => {
+                reportTypeSelect.querySelectorAll('option').forEach(opt => {
+                    if (opt.value === 'quarterly') opt.disabled = false;
+                    else opt.disabled = true;
+                });
+                reportTypeSelect.value = 'quarterly';
+                reportTypeSelect.disabled = false;
+                quarterSelect.disabled = false;
+                quarterSelect.querySelectorAll('option').forEach(opt => {
+                    if (year === 2025) {
                         if (opt.value !== '1') opt.disabled = true;
                         else opt.disabled = false;
-                    });
-                    controls.querySelector('.ranking-quarter-select').value = 1;
-                } else {
-                    controls.querySelectorAll('.ranking-quarter-select option').forEach(opt => { opt.disabled = false; });
-                }
-            } else {
-                year = parseInt(controls.querySelector('.ranking-year-select').value);
+                    } else {
+                        opt.disabled = false;
+                    }
+                });
+                if (year === 2025) quarterSelect.value = '1';
+                else if (!['1','2','3','4'].includes(quarterSelect.value)) quarterSelect.value = '1';
             }
-            // 產業名稱、指標
-            let statementType = block.statementType;
-            let apiReportType = reportType;
-            let apiQuarter = quarter;
-            if (statementType === 'cash_flow') {
-                apiReportType = 'annual';
-                apiQuarter = 4;
-            } else if (statementType === 'balance_sheet') {
-                apiReportType = 'quarterly';
-            }
-            // 取得排名資料
+            // 取得正確的 quarter 值
+            let quarter = parseInt(quarterSelect.value);
+            // 查詢 API
             infoDiv.textContent = '載入中...';
             try {
-                // 先查單股排名
-                const rankingRes = await fetch(`http://localhost:8000/api/advanced_search/stock_ranking?stock_symbol=${stockSymbol}&year=${year}&report_type=${apiReportType}&quarter=${apiQuarter}&statement_type=${statementType}`);
+                const statementType = block.key === 'income_statement' ? 'income_statement' : (block.key === 'cash_flow' ? 'cash_flow' : 'balance_sheet');
+                const rankingRes = await fetch(`http://localhost:8000/api/advanced_search/stock_ranking?stock_symbol=${stockSymbol}&year=${year}&report_type=${reportType}&quarter=${quarter}&statement_type=${statementType}`);
                 if (!rankingRes.ok) throw new Error('取得排名失敗');
                 const rankingData = await rankingRes.json();
                 const sectorName = rankingData.data?.stock_info?.sector || '-';
                 // 再查產業總數
-                const countRes = await fetch(`http://localhost:8000/api/advanced_search/count?ranking_type=${Object.keys(rankingData.data.rankings)[0]}&year=${year}&report_type=${apiReportType}&sector_name=${encodeURIComponent(sectorName)}&quarter=${apiQuarter}`);
+                const countRes = await fetch(`http://localhost:8000/api/advanced_search/count?ranking_type=${Object.keys(rankingData.data.rankings)[0]}&year=${year}&report_type=${reportType}&sector_name=${encodeURIComponent(sectorName)}&quarter=${quarter}`);
                 let totalCount = '-';
                 if (countRes.ok) {
                     const countData = await countRes.json();
                     totalCount = countData.data?.total_count || '-';
                 }
                 // 條列渲染
-                let html = `<div class="ranking-sector">產業名稱：<span>${sectorName}</span></div>`;
-                html += '<ul class="ranking-list">';
+                infoDiv.textContent = '';
+                // 產業名稱 + 幣別
+                const sectorDiv = document.createElement('div');
+                sectorDiv.className = 'ranking-sector';
+                sectorDiv.appendChild(document.createTextNode('產業名稱：'));
+                const sectorSpan = document.createElement('span');
+                sectorSpan.textContent = sectorName;
+                sectorDiv.appendChild(sectorSpan);
+                const currencySpan = document.createElement('span');
+                currencySpan.className = 'ranking-currency';
+                currencySpan.textContent = ' TWD (單位: 千元)';
+                sectorDiv.appendChild(currencySpan);
+                // 新增「個股排名」
+                const stockRankLabel = document.createElement('span');
+                stockRankLabel.className = 'ranking-label';
+                stockRankLabel.textContent = '個股排名';
+                sectorDiv.appendChild(stockRankLabel);
+                // 新增「產業公司總計」
+                const industryTotalLabel = document.createElement('span');
+                industryTotalLabel.className = 'ranking-label';
+                industryTotalLabel.textContent = '產業公司總計';
+                sectorDiv.appendChild(industryTotalLabel);
+                infoDiv.appendChild(sectorDiv);
+                // 條列資訊
+                const ul = document.createElement('ul');
+                ul.className = 'ranking-list';
                 for (const [key, val] of Object.entries(rankingData.data.rankings)) {
-                    html += `<li class="ranking-item">
-                        <span class="ranking-metric">${val.description}</span>
-                        <span class="ranking-value">${val.value !== null ? val.value.toLocaleString() : '-'}</span>
-                        <span class="ranking-rank">排名：${val.rank !== null ? val.rank : '-'}</span>
-                        <span class="ranking-total">總共：${val.total_count || totalCount} 家</span>
-                    </li>`;
+                    const li = document.createElement('li');
+                    li.className = 'ranking-item';
+                    const metric = document.createElement('span');
+                    metric.className = 'ranking-metric';
+                    metric.textContent = val.description;
+                    li.appendChild(metric);
+                    const value = document.createElement('span');
+                    value.className = 'ranking-value';
+                    if (val.value !== null) {
+                        let v = val.value.toLocaleString();
+                        if (val.description && val.description.includes('百分比')) {
+                            v += '%';
+                        }
+                        value.textContent = v;
+                    } else {
+                        value.textContent = '-';
+                    }
+                    li.appendChild(value);
+                    const rank = document.createElement('span');
+                    rank.className = 'ranking-rank';
+                    rank.textContent = `排名：${val.rank !== null ? val.rank : '-'}`;
+                    li.appendChild(rank);
+                    const total = document.createElement('span');
+                    total.className = 'ranking-total';
+                    total.textContent = `總共：${val.total_count || totalCount} 家`;
+                    li.appendChild(total);
+                    ul.appendChild(li);
                 }
-                html += '</ul>';
-                infoDiv.innerHTML = html;
+                infoDiv.appendChild(ul);
             } catch (e) {
                 infoDiv.textContent = '查詢失敗或無資料';
             }
         };
         // 綁定事件
-        controls.querySelectorAll('select').forEach(sel => {
-            sel.addEventListener('change', updateBlock);
-        });
+        reportTypeSelect.addEventListener('change', updateBlock);
+        yearSelect.addEventListener('change', updateBlock);
+        quarterSelect.addEventListener('change', updateBlock);
         // 初始渲染
         updateBlock();
     }
