@@ -194,12 +194,12 @@ GET /api/advanced_search/ranking
 |------|------|------|------|------|
 | `ranking_type` | string | 是 | 排行榜類型 | "revenue"、"operating_income" 等 |
 | `year` | integer | 是 | 年份 (1900-2025) | 2023 |
-| `report_type` | string | 是 | 財報期間 | "quarterly" 或 "annual" |
+| `report_type` | string | 是 | 財報期間 | "quarterly"、"annual"、"accumulated" |
 | `quarter` | integer | 條件性 | 季度 (1-4) | 1, 2, 3, 4 |
 | `sector_name` | string | 否 | 產業名稱 | "半導體業" |
 | `page` | integer | 否 | 頁碼 (從1開始) | 1 |
 
-> 備註：每頁固定回傳 30 筆資料，`page` 預設為 1。
+> 備註：每頁固定回傳 15 筆資料，`page` 預設為 1。
 
 ### 參數說明
 
@@ -208,15 +208,24 @@ GET /api/advanced_search/ranking
 - **report_type**: 
   - `quarterly`: 季度財報
   - `annual`: 年度財報（自動查詢第4季，資料庫查詢為 accumulated）
-- **quarter**: 僅在 `report_type=quarterly` 時必填，值為 1-4
+  - `accumulated`: 累計財報（僅部分表與季度支援，詳見下方規則）
+- **quarter**: 僅在 `report_type=quarterly` 或 `accumulated` 時必填，值為 1-4
 - **sector_name**: 可選，指定產業名稱
 - **page**: 分頁頁碼，預設 1
 
 ## 財報類型規則
 
-- **現金流量表 (Cash_Flow_Statements)**: 只支援 `report_type=annual`，自動查詢第4季
-- **損益表 (Income_Statements)**: 支援 `report_type=quarterly`（需指定 quarter）和 `report_type=annual`（自動查詢第4季）
-- **資產負債表 (Balance_Sheets)**: 只支援 `report_type=quarterly`（需指定 quarter）
+- **現金流量表 (cash_flow)**:
+  - 支援 `report_type=annual`（自動查詢第4季）
+  - 支援 `report_type=accumulated`（quarter=1,2,3，2025只能1）
+- **損益表 (income_statement)**:
+  - 支援 `report_type=annual`（自動查詢第4季）
+  - 支援 `report_type=accumulated`（quarter=1,2,3，2025只能1）
+  - 支援 `report_type=quarterly`（quarter=1,2,3,4，2025只能1）
+- **資產負債表 (balance_sheet)**:
+  - 只支援 `report_type=quarterly`（quarter=1,2,3,4，2025只能1）
+
+> 若參數不符規則，API 會回傳 400 錯誤。
 
 ## 支援的排行榜類型
 
@@ -238,6 +247,8 @@ GET /api/advanced_search/ranking
   - `operating_income_pct`：營業利益佔營收百分比排行榜
   - `net_income_pct`：稅後淨利佔營收百分比排行榜
   - `cost_of_revenue_pct`：營業成本佔營收百分比排行榜
+  - `basic_eps`：基本每股盈餘排行榜
+  - `diluted_eps`：稀釋每股盈餘排行榜
 - 資產負債表：
   - `cash_and_equivalents`：現金及約當現金排行榜
   - `short_term_investments`：短期投資排行榜
@@ -281,8 +292,8 @@ GET /api/advanced_search/ranking
     "sector_name": null,
     "quarter": 4,
     "page": 1,
-    "page_size": 30,
-    "current_page_count": 30,
+    "page_size": 15,
+    "current_page_count": 15,
     "has_next_page": true
   },
   "status": "ok"
@@ -307,9 +318,16 @@ curl "http://localhost:8000/api/advanced_search/ranking?ranking_type=revenue&yea
 curl "http://localhost:8000/api/advanced_search/ranking?ranking_type=operating_income&year=2023&report_type=quarterly&quarter=2&sector_name=半導體業&page=1"
 ```
 
-### 查詢 2023 年現金流量表排行榜（只能 annual）
+### 查詢 2023 年現金流量表排行榜（annual 或 accumulated）
 ```bash
 curl "http://localhost:8000/api/advanced_search/ranking?ranking_type=operating_cash_flow&year=2023&report_type=annual&page=1"
+curl "http://localhost:8000/api/advanced_search/ranking?ranking_type=operating_cash_flow&year=2023&report_type=accumulated&quarter=2&page=1"
+```
+
+### 查詢 2025 年現金流量表排行榜（只能 annual 或 accumulated+quarter=1）
+```bash
+curl "http://localhost:8000/api/advanced_search/ranking?ranking_type=operating_cash_flow&year=2025&report_type=annual&page=1"
+curl "http://localhost:8000/api/advanced_search/ranking?ranking_type=operating_cash_flow&year=2025&report_type=accumulated&quarter=1&page=1"
 ```
 
 ### 查詢 2023 年第4季資產負債表排行榜（只能 quarterly）
@@ -317,9 +335,14 @@ curl "http://localhost:8000/api/advanced_search/ranking?ranking_type=operating_c
 curl "http://localhost:8000/api/advanced_search/ranking?ranking_type=total_assets&year=2023&report_type=quarterly&quarter=4&page=1"
 ```
 
+### 查詢 2025 年資產負債表排行榜（只能 quarterly+quarter=1）
+```bash
+curl "http://localhost:8000/api/advanced_search/ranking?ranking_type=total_assets&year=2025&report_type=quarterly&quarter=1&page=1"
+```
+
 ## 分頁說明
 
-- 每頁固定回傳 30 筆資料
+- 每頁固定回傳 15 筆資料
 - `page` 參數指定頁碼，預設為 1
 - 回傳欄位 `has_next_page` 可判斷是否還有下一頁
 - 建議搭配 `/api/advanced_search/count` 取得總筆數 

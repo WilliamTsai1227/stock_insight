@@ -15,100 +15,219 @@ async function fetchInitialData() {
     sectorList = (await sectorRes.json()).data;
 }
 
-function fillYearSelect(selectId) {
+// ========== 下拉選單初始化與互動規則 ========== //
+function fillYearSelect(selectId, minYear, maxYear, defaultYear) {
     const select = document.getElementById(selectId);
     select.innerHTML = '';
-    for (let y = 2025; y >= 2015; y--) {
+    for (let y = maxYear; y >= minYear; y--) {
         const opt = document.createElement('option');
         opt.value = y;
-        opt.textContent = y + '年';
+        opt.textContent = y;
+        if (y === defaultYear) opt.selected = true;
         select.appendChild(opt);
     }
 }
-
-function fillSectorSelect(selectId) {
+function fillQuarterSelect(selectId, defaultQuarter) {
     const select = document.getElementById(selectId);
     select.innerHTML = '';
-    sectorList.forEach(sector => {
+    for (let q = 1; q <= 4; q++) {
         const opt = document.createElement('option');
-        opt.value = sector;
-        opt.textContent = sector;
+        opt.value = q;
+        opt.textContent = q;
+        if (q === defaultQuarter) opt.selected = true;
         select.appendChild(opt);
-    });
+    }
 }
-
+function fillTypeSelect(selectId, type) {
+    const select = document.getElementById(selectId);
+    select.innerHTML = '';
+    if (type === 'cash_flow') {
+        select.appendChild(new Option('年報', 'annual', true, true));
+        select.appendChild(new Option('累計', 'accumulated'));
+    } else if (type === 'income_statement') {
+        select.appendChild(new Option('年報', 'annual', true, true));
+        select.appendChild(new Option('季報', 'quarterly'));
+        select.appendChild(new Option('累計', 'accumulated'));
+    } else if (type === 'balance_sheet') {
+        select.appendChild(new Option('年報', 'annual', false, false));
+        select.appendChild(new Option('季報', 'quarterly', true, true));
+        select.appendChild(new Option('累計', 'accumulated', false, false));
+        select.options[0].disabled = true;
+        select.options[2].disabled = true;
+    }
+}
+function updateCashFlowQuarterAndType() {
+    const type = document.getElementById('cash-flow-type-select').value;
+    const year = parseInt(document.getElementById('cash-flow-year-select').value);
+    const quarterSelect = document.getElementById('cash-flow-quarter-select');
+    const yearSelect = document.getElementById('cash-flow-year-select');
+    // 年報時2025反灰
+    for (let i = 0; i < yearSelect.options.length; i++) {
+        yearSelect.options[i].disabled = false;
+    }
+    if (type === 'annual') {
+        for (let i = 0; i < yearSelect.options.length; i++) {
+            if (yearSelect.options[i].value === '2025') yearSelect.options[i].disabled = true;
+        }
+        quarterSelect.value = '4';
+        for (let i = 0; i < quarterSelect.options.length; i++) {
+            quarterSelect.options[i].disabled = true;
+        }
+    } else if (type === 'accumulated') {
+        for (let i = 0; i < yearSelect.options.length; i++) {
+            yearSelect.options[i].disabled = false;
+        }
+        if (year === 2025) {
+            quarterSelect.value = '1';
+            for (let i = 0; i < quarterSelect.options.length; i++) {
+                quarterSelect.options[i].disabled = (quarterSelect.options[i].value !== '1');
+            }
+        } else {
+            if (!['1','2','3'].includes(quarterSelect.value)) quarterSelect.value = '1';
+            for (let i = 0; i < quarterSelect.options.length; i++) {
+                quarterSelect.options[i].disabled = !['1','2','3'].includes(quarterSelect.options[i].value);
+            }
+        }
+    }
+}
+function updateIncomeQuarterAndType() {
+    const type = document.getElementById('income-type-select').value;
+    const year = parseInt(document.getElementById('income-year-select').value);
+    const quarterSelect = document.getElementById('income-quarter-select');
+    const yearSelect = document.getElementById('income-year-select');
+    for (let i = 0; i < yearSelect.options.length; i++) {
+        yearSelect.options[i].disabled = false;
+    }
+    if (type === 'annual') {
+        for (let i = 0; i < yearSelect.options.length; i++) {
+            if (yearSelect.options[i].value === '2025') yearSelect.options[i].disabled = true;
+        }
+    }
+    for (let i = 0; i < quarterSelect.options.length; i++) {
+        quarterSelect.options[i].disabled = false;
+    }
+    if (type === 'annual') {
+        quarterSelect.value = '4';
+        for (let i = 0; i < quarterSelect.options.length; i++) {
+            quarterSelect.options[i].disabled = true;
+        }
+    } else if (type === 'accumulated') {
+        if (year === 2025) {
+            quarterSelect.value = '1';
+            for (let i = 0; i < quarterSelect.options.length; i++) {
+                quarterSelect.options[i].disabled = (quarterSelect.options[i].value !== '1');
+            }
+        } else {
+            if (!['1','2','3'].includes(quarterSelect.value)) quarterSelect.value = '1';
+            for (let i = 0; i < quarterSelect.options.length; i++) {
+                quarterSelect.options[i].disabled = !['1','2','3'].includes(quarterSelect.options[i].value);
+            }
+        }
+    } else if (type === 'quarterly') {
+        if (year === 2025) {
+            quarterSelect.value = '1';
+            for (let i = 0; i < quarterSelect.options.length; i++) {
+                quarterSelect.options[i].disabled = (quarterSelect.options[i].value !== '1');
+            }
+        } else {
+            if (!['1','2','3','4'].includes(quarterSelect.value)) quarterSelect.value = '1';
+            for (let i = 0; i < quarterSelect.options.length; i++) {
+                quarterSelect.options[i].disabled = false;
+            }
+        }
+    }
+}
+function updateBalanceQuarterAndType() {
+    const type = document.getElementById('balance-type-select').value;
+    const year = parseInt(document.getElementById('balance-year-select').value);
+    const quarterSelect = document.getElementById('balance-quarter-select');
+    const typeSelect = document.getElementById('balance-type-select');
+    // 僅季報可選
+    typeSelect.options[0].disabled = true;
+    typeSelect.options[2].disabled = true;
+    typeSelect.value = 'quarterly';
+    for (let i = 0; i < quarterSelect.options.length; i++) {
+        quarterSelect.options[i].disabled = false;
+    }
+    if (year === 2025) {
+        quarterSelect.value = '1';
+        for (let i = 0; i < quarterSelect.options.length; i++) {
+            quarterSelect.options[i].disabled = (quarterSelect.options[i].value !== '1');
+        }
+    } else {
+        if (!['1','2','3','4'].includes(quarterSelect.value)) quarterSelect.value = '1';
+        for (let i = 0; i < quarterSelect.options.length; i++) {
+            quarterSelect.options[i].disabled = false;
+        }
+    }
+}
 function fillMetricSelect(selectId, type) {
     const select = document.getElementById(selectId);
-    select.innerHTML = '';
-    (supportedRankings[type] || []).forEach(item => {
+    select.textContent = '';
+    const arr = supportedRankings[type] || [];
+    arr.forEach(item => {
         const opt = document.createElement('option');
         opt.value = item.key;
         opt.textContent = item.description;
         select.appendChild(opt);
     });
 }
-
-function fillTypeSelect(selectId, type) {
+function fillSectorSelect(selectId) {
     const select = document.getElementById(selectId);
-    select.innerHTML = '';
-    (reportTypeRules[type].supported_periods || []).forEach(period => {
-        const opt = document.createElement('option');
-        opt.value = period;
-        opt.textContent = period === 'annual' ? '年報' : '季報';
-        select.appendChild(opt);
+    select.textContent = '';
+    const opt = document.createElement('option');
+    opt.value = '';
+    opt.textContent = '全部產業';
+    select.appendChild(opt);
+    sectorList.forEach(sector => {
+        const o = document.createElement('option');
+        o.value = sector;
+        o.textContent = sector;
+        select.appendChild(o);
     });
 }
-
-function fillQuarterSelect(selectId) {
-    const select = document.getElementById(selectId);
-    select.innerHTML = '';
-    ['1','2','3','4'].forEach(q => {
-        const opt = document.createElement('option');
-        opt.value = q;
-        opt.textContent = `第${q}季`;
-        select.appendChild(opt);
-    });
-}
-
-// 2. 初始化所有下拉選單
 async function initPage() {
     await fetchInitialData();
     // 現金流量表
     fillMetricSelect('cash-flow-metric-select', 'cash_flow');
-    fillYearSelect('cash-flow-year-select');
+    fillTypeSelect('cash-flow-type-select', 'cash_flow');
+    fillYearSelect('cash-flow-year-select', 2016, 2025, 2024);
+    fillQuarterSelect('cash-flow-quarter-select', 4);
     fillSectorSelect('cash-flow-sector-select');
     // 損益表
     fillMetricSelect('income-metric-select', 'income_statement');
-    fillYearSelect('income-year-select');
     fillTypeSelect('income-type-select', 'income_statement');
-    fillQuarterSelect('income-quarter-select');
+    fillYearSelect('income-year-select', 2015, 2025, 2024);
+    fillQuarterSelect('income-quarter-select', 4);
     fillSectorSelect('income-sector-select');
     // 資產負債表
     fillMetricSelect('balance-metric-select', 'balance_sheet');
-    fillYearSelect('balance-year-select');
     fillTypeSelect('balance-type-select', 'balance_sheet');
-    fillQuarterSelect('balance-quarter-select');
+    fillYearSelect('balance-year-select', 2015, 2025, 2024);
+    fillQuarterSelect('balance-quarter-select', 4);
     fillSectorSelect('balance-sector-select');
-    // 預設禁用季/類型選單（依規則）
-    document.getElementById('cash-flow-metric-select').addEventListener('change', () => {});
-    document.getElementById('income-type-select').addEventListener('change', handleIncomeTypeChange);
-    document.getElementById('balance-type-select').addEventListener('change', handleBalanceTypeChange);
+    // 綁定互動
+    document.getElementById('cash-flow-type-select').addEventListener('change', updateCashFlowQuarterAndType);
+    document.getElementById('cash-flow-year-select').addEventListener('change', updateCashFlowQuarterAndType);
+    document.getElementById('income-type-select').addEventListener('change', updateIncomeQuarterAndType);
+    document.getElementById('income-year-select').addEventListener('change', updateIncomeQuarterAndType);
+    document.getElementById('balance-type-select').addEventListener('change', updateBalanceQuarterAndType);
+    document.getElementById('balance-year-select').addEventListener('change', updateBalanceQuarterAndType);
     // 查詢按鈕
     document.getElementById('cash-flow-search-btn').onclick = () => searchRanking('cash_flow');
     document.getElementById('income-search-btn').onclick = () => searchRanking('income_statement');
     document.getElementById('balance-search-btn').onclick = () => searchRanking('balance_sheet');
     // 分頁按鈕
+    document.getElementById('cash-flow-prev-page').onclick = () => prevPage('cash_flow');
     document.getElementById('cash-flow-next-page').onclick = () => nextPage('cash_flow');
+    document.getElementById('income-prev-page').onclick = () => prevPage('income_statement');
     document.getElementById('income-next-page').onclick = () => nextPage('income_statement');
+    document.getElementById('balance-prev-page').onclick = () => prevPage('balance_sheet');
     document.getElementById('balance-next-page').onclick = () => nextPage('balance_sheet');
-    // 預設禁用季選單（現金流量表）
-    document.getElementById('cash-flow-metric-select').disabled = false;
-    document.getElementById('cash-flow-year-select').disabled = false;
-    document.getElementById('cash-flow-sector-select').disabled = false;
-    document.getElementById('cash-flow-search-btn').disabled = false;
-    document.getElementById('cash-flow-next-page').style.display = 'none';
-    handleIncomeTypeChange();
-    handleBalanceTypeChange();
+    // 預設狀態
+    updateCashFlowQuarterAndType();
+    updateIncomeQuarterAndType();
+    updateBalanceQuarterAndType();
 }
 
 function handleIncomeTypeChange() {
@@ -123,67 +242,60 @@ function handleBalanceTypeChange() {
 // 3. 查詢 API 並渲染結果
 let pageState = { cash_flow: 1, income_statement: 1, balance_sheet: 1 };
 async function searchRanking(type) {
-    let metric, year, report_type, quarter, sector, resultListId, nextPageBtnId;
-    if (type === 'cash_flow') {
-        metric = document.getElementById('cash-flow-metric-select').value;
-        year = document.getElementById('cash-flow-year-select').value;
-        report_type = 'annual';
-        quarter = 4;
-        sector = document.getElementById('cash-flow-sector-select').value;
-        resultListId = 'cash-flow-result-list';
-        nextPageBtnId = 'cash-flow-next-page';
-    } else if (type === 'income_statement') {
-        metric = document.getElementById('income-metric-select').value;
-        year = document.getElementById('income-year-select').value;
-        report_type = document.getElementById('income-type-select').value;
-        quarter = report_type === 'quarterly' ? document.getElementById('income-quarter-select').value : 4;
-        sector = document.getElementById('income-sector-select').value;
-        resultListId = 'income-result-list';
-        nextPageBtnId = 'income-next-page';
-    } else {
-        metric = document.getElementById('balance-metric-select').value;
-        year = document.getElementById('balance-year-select').value;
-        report_type = document.getElementById('balance-type-select').value;
-        quarter = report_type === 'quarterly' ? document.getElementById('balance-quarter-select').value : 4;
-        sector = document.getElementById('balance-sector-select').value;
-        resultListId = 'balance-result-list';
-        nextPageBtnId = 'balance-next-page';
-    }
     pageState[type] = 1;
-    await fetchAndRenderRanking(type, metric, year, report_type, quarter, sector, resultListId, nextPageBtnId, 1);
+    await fetchAndRenderRanking(type, getMetric(type), getYear(type), getReportType(type), getQuarter(type), getSector(type), getResultListId(type), getPrevBtnId(type), getNextBtnId(type), 1);
 }
-
 async function nextPage(type) {
-    let metric, year, report_type, quarter, sector, resultListId, nextPageBtnId;
-    if (type === 'cash_flow') {
-        metric = document.getElementById('cash-flow-metric-select').value;
-        year = document.getElementById('cash-flow-year-select').value;
-        report_type = 'annual';
-        quarter = 4;
-        sector = document.getElementById('cash-flow-sector-select').value;
-        resultListId = 'cash-flow-result-list';
-        nextPageBtnId = 'cash-flow-next-page';
-    } else if (type === 'income_statement') {
-        metric = document.getElementById('income-metric-select').value;
-        year = document.getElementById('income-year-select').value;
-        report_type = document.getElementById('income-type-select').value;
-        quarter = report_type === 'quarterly' ? document.getElementById('income-quarter-select').value : 4;
-        sector = document.getElementById('income-sector-select').value;
-        resultListId = 'income-result-list';
-        nextPageBtnId = 'income-next-page';
-    } else {
-        metric = document.getElementById('balance-metric-select').value;
-        year = document.getElementById('balance-year-select').value;
-        report_type = document.getElementById('balance-type-select').value;
-        quarter = report_type === 'quarterly' ? document.getElementById('balance-quarter-select').value : 4;
-        sector = document.getElementById('balance-sector-select').value;
-        resultListId = 'balance-result-list';
-        nextPageBtnId = 'balance-next-page';
-    }
     pageState[type]++;
-    await fetchAndRenderRanking(type, metric, year, report_type, quarter, sector, resultListId, nextPageBtnId, pageState[type]);
+    await fetchAndRenderRanking(type, getMetric(type), getYear(type), getReportType(type), getQuarter(type), getSector(type), getResultListId(type), getPrevBtnId(type), getNextBtnId(type), pageState[type]);
 }
-
+async function prevPage(type) {
+    if (pageState[type] > 1) {
+        pageState[type]--;
+        await fetchAndRenderRanking(type, getMetric(type), getYear(type), getReportType(type), getQuarter(type), getSector(type), getResultListId(type), getPrevBtnId(type), getNextBtnId(type), pageState[type]);
+    }
+}
+function getMetric(type) {
+    if (type === 'cash_flow') return document.getElementById('cash-flow-metric-select').value;
+    if (type === 'income_statement') return document.getElementById('income-metric-select').value;
+    return document.getElementById('balance-metric-select').value;
+}
+function getYear(type) {
+    if (type === 'cash_flow') return document.getElementById('cash-flow-year-select').value;
+    if (type === 'income_statement') return document.getElementById('income-year-select').value;
+    return document.getElementById('balance-year-select').value;
+}
+// 查詢時正確帶入三個下拉選單的值
+function getReportType(type) {
+    if (type === 'cash_flow') return document.getElementById('cash-flow-type-select').value;
+    if (type === 'income_statement') return document.getElementById('income-type-select').value;
+    return document.getElementById('balance-type-select').value;
+}
+function getQuarter(type) {
+    if (type === 'cash_flow') return document.getElementById('cash-flow-quarter-select').value;
+    if (type === 'income_statement') return document.getElementById('income-quarter-select').value;
+    return document.getElementById('balance-quarter-select').value;
+}
+function getSector(type) {
+    if (type === 'cash_flow') return document.getElementById('cash-flow-sector-select').value;
+    if (type === 'income_statement') return document.getElementById('income-sector-select').value;
+    return document.getElementById('balance-sector-select').value;
+}
+function getResultListId(type) {
+    if (type === 'cash_flow') return 'cash-flow-result-list';
+    if (type === 'income_statement') return 'income-result-list';
+    return 'balance-result-list';
+}
+function getPrevBtnId(type) {
+    if (type === 'cash_flow') return 'cash-flow-prev-page';
+    if (type === 'income_statement') return 'income-prev-page';
+    return 'balance-prev-page';
+}
+function getNextBtnId(type) {
+    if (type === 'cash_flow') return 'cash-flow-next-page';
+    if (type === 'income_statement') return 'income-next-page';
+    return 'balance-next-page';
+}
 function getMetricLabel(type, metricKey) {
     const arr = supportedRankings[type] || [];
     const found = arr.find(item => item.key === metricKey);
@@ -195,7 +307,14 @@ function formatValue(val) {
     if (!isNaN(val)) return Number(val).toLocaleString('zh-TW', {maximumFractionDigits: 2});
     return val;
 }
-async function fetchAndRenderRanking(type, metric, year, report_type, quarter, sector, resultListId, nextPageBtnId, page) {
+// 季別渲染：根據 report_type 決定顯示內容
+function renderQuarterText(reportType, quarter) {
+    if (reportType === 'annual') return '-';
+    if (reportType === 'accumulated') return `Q${quarter}累計`;
+    if (quarter) return `Q${quarter}`;
+    return '';
+}
+async function fetchAndRenderRanking(type, metric, year, report_type, quarter, sector, resultListId, prevBtnId, nextBtnId, page) {
     const params = new URLSearchParams({
         ranking_type: metric,
         year,
@@ -207,32 +326,87 @@ async function fetchAndRenderRanking(type, metric, year, report_type, quarter, s
     const res = await fetch(`/api/advanced_search/ranking?${params.toString()}`);
     const data = await res.json();
     const listDiv = document.getElementById(resultListId);
-    listDiv.innerHTML = '';
+    listDiv.textContent = '';
+    const prevBtn = document.getElementById(prevBtnId);
+    const nextBtn = document.getElementById(nextBtnId);
+    prevBtn.style.display = 'none';
+    nextBtn.style.display = 'none';
     if (data.data && Array.isArray(data.data) && data.data.length > 0) {
         data.data.forEach(item => {
             const div = document.createElement('div');
             div.className = 'result-item';
-            // 條列式：公司名稱、代碼、產業名稱、查詢財報項目、數值、年份、(季份)、排名
-            div.innerHTML = `
-                <span class="company-link" data-symbol="${item.stock_symbol}">${item.company_name}</span>
-                <span class="stock-symbol">(${item.stock_symbol})</span>
-                <span class="sector">產業名稱：${item.sector_name}</span>
-                <span class="metric">${getMetricLabel(type, metric)}</span>
-                <span class="value">${formatValue(item[metric])}</span>
-                <span class="year">年份：${item.year}</span>
-                ${item.quarter ? `<span class="quarter">Q${item.quarter}</span>` : ''}
-                <span class="rank">排名：${item.rank}</span>
-            `;
-            div.querySelector('.company-link').onclick = () => {
+            // 公司名稱（可點擊）
+            const companyLink = document.createElement('span');
+            companyLink.className = 'company-link';
+            companyLink.textContent = item.company_name;
+            companyLink.setAttribute('data-symbol', item.stock_symbol);
+            companyLink.onclick = () => {
                 window.open(`/stock/${item.stock_symbol}/tw`, '_blank');
             };
+            div.appendChild(companyLink);
+            // 股票代碼
+            const stockSymbol = document.createElement('span');
+            stockSymbol.className = 'stock-symbol';
+            stockSymbol.textContent = `(${item.stock_symbol})`;
+            div.appendChild(stockSymbol);
+            // 產業名稱
+            const sector = document.createElement('span');
+            sector.className = 'sector';
+            sector.textContent = `產業名稱：${item.sector_name}`;
+            div.appendChild(sector);
+            // 指標名稱
+            const metricSpan = document.createElement('span');
+            metricSpan.className = 'metric';
+            metricSpan.textContent = getMetricLabel(type, metric);
+            div.appendChild(metricSpan);
+            // 數值
+            const valueSpan = document.createElement('span');
+            valueSpan.className = 'value';
+            valueSpan.textContent = formatValue(item[metric]);
+            div.appendChild(valueSpan);
+            // 年份
+            const yearSpan = document.createElement('span');
+            yearSpan.className = 'year';
+            yearSpan.textContent = `年份：${item.year}`;
+            div.appendChild(yearSpan);
+            // 季別（可選）
+            if (item.quarter) {
+                const quarterSpan = document.createElement('span');
+                quarterSpan.className = 'quarter';
+                quarterSpan.textContent = renderQuarterText(report_type, item.quarter);
+                div.appendChild(quarterSpan);
+            }
+            // 排名
+            const rankSpan = document.createElement('span');
+            rankSpan.className = 'rank';
+            rankSpan.textContent = `排名：${item.rank}`;
+            div.appendChild(rankSpan);
             listDiv.appendChild(div);
         });
-        document.getElementById(nextPageBtnId).style.display = data.metadata && data.metadata.has_next_page ? '' : 'none';
+        // 分頁按鈕顯示邏輯
+        if (page > 1 && data.metadata && data.metadata.has_next_page) {
+            prevBtn.style.display = '';
+            nextBtn.style.display = '';
+        } else if (page > 1) {
+            prevBtn.style.display = '';
+        } else if (data.metadata && data.metadata.has_next_page) {
+            nextBtn.style.display = '';
+        }
     } else {
-        listDiv.innerHTML = '<div class="no-result">查無資料</div>';
-        document.getElementById(nextPageBtnId).style.display = 'none';
+        // 無資料
+        const noResultDiv = document.createElement('div');
+        noResultDiv.className = 'no-result';
+        noResultDiv.textContent = '查無資料';
+        listDiv.appendChild(noResultDiv);
     }
 }
 
-document.addEventListener('DOMContentLoaded', initPage); 
+document.addEventListener('DOMContentLoaded', () => {
+    initPage();
+    document.getElementById('cash-flow-prev-page').onclick = () => prevPage('cash_flow');
+    document.getElementById('cash-flow-next-page').onclick = () => nextPage('cash_flow');
+    document.getElementById('income-prev-page').onclick = () => prevPage('income_statement');
+    document.getElementById('income-next-page').onclick = () => nextPage('income_statement');
+    document.getElementById('balance-prev-page').onclick = () => prevPage('balance_sheet');
+    document.getElementById('balance-next-page').onclick = () => nextPage('balance_sheet');
+}); 

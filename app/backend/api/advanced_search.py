@@ -94,6 +94,18 @@ class AdvancedSearch:
             'field': 'cost_of_revenue_pct',
             'description': '營業成本佔營業收入百分比'
         },
+        # 新增：基本每股盈餘 (EPS)
+        'basic_eps': {
+            'table': 'Income_Statements',
+            'field': 'basic_eps',
+            'description': '基本每股盈餘 (EPS)'
+        },
+        # 新增：稀釋每股盈餘
+        'diluted_eps': {
+            'table': 'Income_Statements',
+            'field': 'diluted_eps',
+            'description': '稀釋每股盈餘'
+        },
         
         # 資產負債表
         'cash_and_equivalents': {
@@ -274,7 +286,7 @@ class AdvancedSearch:
 async def get_financial_ranking(
     ranking_type: str = Query(..., description="排行榜類型"),
     year: int = Query(..., description="年份"),
-    report_type: str = Query(..., description="財報期間 (quarterly, annual)"),
+    report_type: str = Query(..., description="財報期間 (quarterly, annual, accumulated)"),
     sector_name: Optional[str] = Query(None, description="產業名稱 (可選)"),
     quarter: Optional[int] = Query(None, description="季度 (1-4, 可選)"),
     limit: int = Query(50, description="回傳筆數限制 (1-1000)", ge=1, le=1000),
@@ -298,12 +310,12 @@ async def get_financial_ranking(
     財報期間說明:
     - quarterly: 單季財報，需要指定季度 (1-4)
     - annual: 年度財報，自動查詢第4季累積資料
+    - accumulated: 累計財報，僅支援部分表與季度
     
     分頁說明:
-    - 每頁固定回傳30筆資料
+    - 每頁固定回傳15筆資料
     - 前端可透過 page 參數控制頁碼
     """
-    
     # 驗證排行榜類型
     if not AdvancedSearch.validate_ranking_type(ranking_type):
         supported_types = list(AdvancedSearch.SUPPORTED_RANKINGS.keys())
@@ -311,87 +323,137 @@ async def get_financial_ranking(
             status_code=400,
             detail=f"不支援的排行榜類型：{ranking_type}。支援的類型：{', '.join(supported_types)}"
         )
-
     # 驗證年份
     if not AdvancedSearch.validate_year(year):
         raise HTTPException(
             status_code=400,
             detail="年份格式不正確，請輸入 1900-2025 之間的年份"
         )
-
     # 驗證季度
     if not AdvancedSearch.validate_quarter(quarter):
         raise HTTPException(
             status_code=400,
             detail="季度格式不正確，請輸入 1-4 之間的數字"
         )
-    
-    # 處理季度邏輯
-    if report_type == 'quarterly':
-        if quarter is None:
-            raise HTTPException(
-                status_code=400,
-                detail="quarterly 財報期間必須指定季度 (1-4)"
-            )
-    elif report_type == 'annual':
-        # annual 財報自動使用第4季
-        if quarter is None:
-            quarter = 4
-        elif quarter != 4:
-            raise HTTPException(
-                status_code=400,
-                detail="annual 財報期間只能使用第4季"
-            )
-
     # 驗證財報期間
-    if not AdvancedSearch.validate_report_period(report_type):
+    valid_report_types = ["quarterly", "annual", "accumulated"]
+    if report_type not in valid_report_types:
         raise HTTPException(
             status_code=400,
-            detail="財報期間格式不正確，請輸入 quarterly 或 annual"
+            detail="財報期間格式不正確，請輸入 quarterly、annual 或 accumulated"
         )
-
     # 獲取排行榜配置
     ranking_config = AdvancedSearch.SUPPORTED_RANKINGS[ranking_type]
     table_name = ranking_config['table']
-    
-    # 轉換財報期間為資料庫格式
-    db_report_type = AdvancedSearch.convert_report_period(report_type)
-    
-    # 驗證財報類型與期間的組合
-    if not AdvancedSearch.validate_report_type_combination(table_name, db_report_type):
-        if table_name == 'Cash_Flow_Statements':
-            raise HTTPException(
-                status_code=400,
-                detail="現金流量表只支援 annual 財報期間"
-            )
-        elif table_name == 'Balance_Sheets':
-            raise HTTPException(
-                status_code=400,
-                detail="資產負債表只支援 quarterly 財報期間"
-            )
+    # 根據 ranking_type 判斷 statement_type
+    if table_name == 'Cash_Flow_Statements':
+        statement_type = 'cash_flow'
+    elif table_name == 'Income_Statements':
+        statement_type = 'income_statement'
+    elif table_name == 'Balance_Sheets':
+        statement_type = 'balance_sheet'
+    else:
+        statement_type = None
+    # 根據 statement_type 檢查 report_type/quarter 規則
+    if statement_type == 'cash_flow':
+        if report_type == 'annual':
+            db_report_type = 'accumulated'
+            quarter = 4
+        elif report_type == 'accumulated':
+            db_report_type = 'accumulated'
+            if year == 2025:
+                if quarter != 1:
+                    raise HTTPException(
+                        status_code=400,
+                        detail="2025 年現金流量表累計只支援第一季 (quarter=1)"
+                    )
+                quarter = 1
+            else:
+                if quarter not in [1, 2, 3]:
+                    raise HTTPException(
+                        status_code=400,
+                        detail="現金流量表累計只支援第一~三季 (quarter=1,2,3)"
+                    )
         else:
             raise HTTPException(
                 status_code=400,
-                detail=f"不支援的財報類型與期間組合：{table_name} + {report_type}"
+                detail="現金流量表只支援年報(annual)或累計(accumulated)"
             )
-
+    elif statement_type == 'income_statement':
+        if report_type == 'annual':
+            db_report_type = 'accumulated'
+            quarter = 4
+        elif report_type == 'accumulated':
+            db_report_type = 'accumulated'
+            if year == 2025:
+                if quarter != 1:
+                    raise HTTPException(
+                        status_code=400,
+                        detail="2025 年損益表累計只支援第一季 (quarter=1)"
+                    )
+                quarter = 1
+            else:
+                if quarter not in [1, 2, 3]:
+                    raise HTTPException(
+                        status_code=400,
+                        detail="損益表累計只支援第一~三季 (quarter=1,2,3)"
+                    )
+        elif report_type == 'quarterly':
+            db_report_type = 'quarterly'
+            if year == 2025:
+                if quarter != 1:
+                    raise HTTPException(
+                        status_code=400,
+                        detail="2025 年損益表季報只支援第一季 (quarter=1)"
+                    )
+                quarter = 1
+            else:
+                if quarter not in [1, 2, 3, 4]:
+                    raise HTTPException(
+                        status_code=400,
+                        detail="損益表季報只支援第一~四季 (quarter=1,2,3,4)"
+                    )
+        else:
+            raise HTTPException(
+                status_code=400,
+                detail="損益表只支援年報(annual)、累計(accumulated)或季報(quarterly)"
+            )
+    elif statement_type == 'balance_sheet':
+        if report_type != 'quarterly':
+            raise HTTPException(
+                status_code=400,
+                detail="資產負債表只支援季報(quarterly)"
+            )
+        db_report_type = 'quarterly'
+        if year == 2025:
+            if quarter != 1:
+                raise HTTPException(
+                    status_code=400,
+                    detail="2025 年資產負債表只支援第一季 (quarter=1)"
+                )
+            quarter = 1
+        else:
+            if quarter not in [1, 2, 3, 4]:
+                raise HTTPException(
+                    status_code=400,
+                    detail="資產負債表只支援第一~四季 (quarter=1,2,3,4)"
+                )
+    else:
+        db_report_type = AdvancedSearch.convert_report_period(report_type)
     # 驗證產業名稱
     if sector_name and not AdvancedSearch.validate_sector_name(sector_name):
         raise HTTPException(
             status_code=400,
             detail="產業名稱格式不正確，只能包含中英文、數字和空格"
         )
-
     # 驗證限制數量
     if not AdvancedSearch.validate_limit(limit):
         raise HTTPException(
             status_code=400,
             detail="限制數量格式不正確，請輸入 1-1000 之間的數字"
         )
-    
-    # 固定每頁筆數為30
-    page_size = 30
-    
+    # 固定每頁筆數為15
+    page_size = 15
     # 計算分頁偏移量
     offset = (page - 1) * page_size
 

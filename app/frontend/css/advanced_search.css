@@ -24,6 +24,13 @@
 }
 .controls label {
     font-weight: bold;
+    margin-right: 6px;
+    margin-left: 8px;
+}
+.controls select {
+    min-width: 90px;
+    max-width: 140px;
+    margin-right: 12px;
 }
 .controls select, .controls button {
     padding: 8px 12px;
@@ -94,6 +101,15 @@
     color: #60748a;
     font-size: 15px;
 }
+.result-item .quarter {
+    color: #60748a;
+    font-size: 15px;
+    font-weight: 700;
+    background: #f3f6fa;
+    border-radius: 4px;
+    padding: 2px 8px;
+    margin-left: 2px;
+}
 .result-item .rank {
     color: #e67e22;
     font-size: 15px;
@@ -123,6 +139,32 @@ button[id$='next-page'] {
     transition: background 0.2s, color 0.2s;
 }
 button[id$='next-page']:hover {
+    background: #0056b3;
+    color: #fff;
+}
+.paging-btn-group {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 16px;
+    margin: 10px 0 10px 0;
+}
+.paging-btn-group button {
+    min-width: 120px;
+    height: 44px;
+    box-sizing: border-box;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 16px;
+    border-radius: 6px;
+    background: #e0e4e8;
+    color: #0056b3;
+    border: none;
+    cursor: pointer;
+    transition: background 0.2s, color 0.2s;
+}
+.paging-btn-group button:hover {
     background: #0056b3;
     color: #fff;
 } 
