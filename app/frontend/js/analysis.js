@@ -64,7 +64,8 @@ function initializeSearch() {
         }
 
         loadingIndicator.style.display = 'block';
-        container.innerHTML = '';
+        // 清空 container
+        while (container.firstChild) container.removeChild(container.firstChild);
 
         // 這裡添加實際的搜索邏輯
         fetch(`http://localhost:8000/analysis_search?keyword=${encodeURIComponent(searchTerm)}&start_time=${encodeURIComponent(startTime)}&end_time=${encodeURIComponent(endTime)}`)
@@ -77,15 +78,22 @@ function initializeSearch() {
             .then(data => {
                 // 處理搜索結果
                 if (data.length === 0) {
-                    container.innerHTML = '<p>沒有找到相關結果</p>';
+                    const p = document.createElement('p');
+                    p.textContent = '沒有找到相關結果';
+                    container.appendChild(p);
                 } else {
                     // 這裡添加結果顯示邏輯
-                    container.innerHTML = '<p>搜索結果將在這裡顯示</p>';
+                    const p = document.createElement('p');
+                    p.textContent = '搜索結果將在這裡顯示';
+                    container.appendChild(p);
                 }
             })
             .catch(error => {
                 console.error('搜索錯誤:', error);
-                container.innerHTML = `<p class="error">搜索時發生錯誤: ${error.message}</p>`;
+                const p = document.createElement('p');
+                p.className = 'error';
+                p.textContent = `搜索時發生錯誤: ${error.message}`;
+                container.appendChild(p);
             })
             .finally(() => {
                 loadingIndicator.style.display = 'none';

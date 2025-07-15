@@ -66,7 +66,11 @@ async function loadNews(){
   
     } catch (error) {
       console.error("錯誤：", error);
-      document.body.innerHTML = "<h2>無法載入新聞內容。</h2>";
+      // 安全地顯示錯誤訊息
+      while (document.body.firstChild) document.body.removeChild(document.body.firstChild);
+      const h2 = document.createElement('h2');
+      h2.textContent = '無法載入新聞內容。';
+      document.body.appendChild(h2);
     }
   };
   

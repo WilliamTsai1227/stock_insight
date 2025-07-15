@@ -18,7 +18,7 @@ async function fetchInitialData() {
 // ========== 下拉選單初始化與互動規則 ========== //
 function fillYearSelect(selectId, minYear, maxYear, defaultYear) {
     const select = document.getElementById(selectId);
-    select.innerHTML = '';
+    while (select.firstChild) select.removeChild(select.firstChild);
     for (let y = maxYear; y >= minYear; y--) {
         const opt = document.createElement('option');
         opt.value = y;
@@ -29,7 +29,7 @@ function fillYearSelect(selectId, minYear, maxYear, defaultYear) {
 }
 function fillQuarterSelect(selectId, defaultQuarter) {
     const select = document.getElementById(selectId);
-    select.innerHTML = '';
+    while (select.firstChild) select.removeChild(select.firstChild);
     for (let q = 1; q <= 4; q++) {
         const opt = document.createElement('option');
         opt.value = q;
@@ -40,7 +40,7 @@ function fillQuarterSelect(selectId, defaultQuarter) {
 }
 function fillTypeSelect(selectId, type) {
     const select = document.getElementById(selectId);
-    select.innerHTML = '';
+    while (select.firstChild) select.removeChild(select.firstChild);
     if (type === 'cash_flow') {
         select.appendChild(new Option('年報', 'annual', true, true));
         select.appendChild(new Option('累計', 'accumulated'));

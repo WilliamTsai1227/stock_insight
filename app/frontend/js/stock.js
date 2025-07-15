@@ -360,15 +360,13 @@ async function loadFinancialReport(stockSymbol, country) {
     let currentFinancialData = [];
     let currentOriginalCurrency = '';
 
-    // 內部 function: 取得目前選擇的 reportType/reportPeriod
+    // 全域取得財報類型/期間
     function getReportType() {
-        return document.getElementById('reportType').value;
+        return document.getElementById('reportType')?.value || 'cash_flow';
     }
     function getReportPeriod() {
-        return document.getElementById('reportPeriod').value;
+        return document.getElementById('reportPeriod')?.value || 'annual';
     }
-
-
 
     // 內部 function: 畫圖
     function drawChartBasedOnSelection() {
@@ -380,7 +378,7 @@ async function loadFinancialReport(stockSymbol, country) {
             return;
         }
 
-        const reportType = document.getElementById('reportType').value;
+        const reportType = getReportType();
         const reportPeriod = getReportPeriod();
         
         // 根據選擇的期間調整標籤
@@ -852,13 +850,14 @@ async function performSearch() {
 async function loadStockRankingSection() {
     const section = document.getElementById('stock-ranking-section');
     if (!section) return;
-    section.innerHTML = '';
+    while (section.firstChild) section.removeChild(section.firstChild);
 
     // 定義三個財報類型
     const rankingBlocks = [
         {
             key: 'cash_flow',
             title: '現金流量表',
+            apiKey: 'cash_flow',
             reportTypes: [
                 { value: 'annual', label: '年報' },
                 { value: 'accumulated', label: '累計' }
@@ -872,6 +871,7 @@ async function loadStockRankingSection() {
         {
             key: 'income_statement',
             title: '損益表',
+            apiKey: 'income_statement',
             reportTypes: [
                 { value: 'annual', label: '年報' },
                 { value: 'quarterly', label: '季報' },
@@ -886,6 +886,7 @@ async function loadStockRankingSection() {
         {
             key: 'balance_sheet',
             title: '資產負債表',
+            apiKey: 'balance_sheet',
             reportTypes: [
                 { value: 'annual', label: '年報', disabled: true },
                 { value: 'quarterly', label: '季報', disabled: false },
@@ -898,6 +899,48 @@ async function loadStockRankingSection() {
             defaultQuarter: 4
         }
     ];
+
+    // 指標解釋對應表（同前）
+    const RANKING_EXPLAIN_MAP = {
+        cash_flow: [
+            { key: 'operating_cash_flow', title: '營業活動之現金流量 (營業現金流)', desc: '反映公司本業帶來的現金流入與流出。' },
+            { key: 'free_cash_flow', title: '自由現金流量', desc: '公司扣除資本支出後，可自由運用的現金。' },
+            { key: 'net_change_in_cash', title: '現金及約當現金淨變動 (淨現金流)', desc: '期末與期初現金差額，總體現金流的結果。' }
+        ],
+        income_statement: [
+            { key: 'revenue', title: '營業收入', desc: '公司主要來自本業的收入。' },
+            { key: 'gross_profit', title: '營業毛利', desc: '營業收入 - 營業成本' },
+            { key: 'operating_expenses', title: '營業費用', desc: '營運間接成本的總和。' },
+            { key: 'operating_income', title: '營業利益', desc: '公司本業獲利能力的指標。' },
+            { key: 'net_income', title: '稅後淨利', desc: '公司最終可分配盈餘。' },
+            { key: 'gross_profit_pct', title: '營業毛利佔營業收入百分比', desc: '毛利率。' },
+            { key: 'sales_expenses_pct', title: '銷售費用佔營業收入百分比', desc: '行銷與銷售的投入強度。' },
+            { key: 'administrative_expenses_pct', title: '管理費用佔營業收入百分比', desc: '企業管理規模與控管能力。' },
+            { key: 'research_and_development_expenses_pct', title: '研發費用佔營業收入百分比', desc: '研發費用占營收的比例。' },
+            { key: 'operating_expenses_pct', title: '營業費用佔營業收入百分比', desc: '企業間接費用的總負擔。' },
+            { key: 'operating_income_pct', title: '營業利益佔營業收入百分比', desc: '本業賺錢效率。' },
+            { key: 'net_income_pct', title: '稅後淨利佔營業收入百分比', desc: '公司最終獲利能力。' },
+            { key: 'cost_of_revenue_pct', title: '營業成本佔營業收入百分比', desc: '成本控管效率。' },
+            { key: 'basic_eps', title: '基本每股盈餘 (EPS)', desc: '每一股可分配的稅後盈餘。' },
+            { key: 'diluted_eps', title: '稀釋每股盈餘', desc: '考慮潛在股數後的 EPS。' }
+        ],
+        balance_sheet: [
+            { key: 'cash_and_equivalents', title: '現金及約當現金', desc: '可隨時動用的資金與高流動資產。' },
+            { key: 'short_term_investments', title: '短期投資', desc: '一年內可變現的投資項目。' },
+            { key: 'accounts_receivable_and_notes', title: '應收帳款及票據', desc: '尚未收回的客戶貨款。' },
+            { key: 'inventory', title: '存貨', desc: '公司持有的商品、原物料與在製品。' },
+            { key: 'current_assets', title: '流動資產', desc: '一年內可變現的資產。' },
+            { key: 'fixed_assets_total', title: '固定資產', desc: '長期營運使用的實體資產。' },
+            { key: 'total_assets', title: '總資產', desc: '企業在某一時間點擁有的全部資產。' },
+            { key: 'cash_and_equivalents_pct', title: '現金及約當現金佔總資產百分比', desc: '現金占總資產的比率。' },
+            { key: 'short_term_investments_pct', title: '短期投資佔總資產百分比', desc: '短期投資占總資產的比率。' },
+            { key: 'accounts_receivable_and_notes_pct', title: '應收帳款及票據佔總資產百分比', desc: '應收帳款占總資產的比率。' },
+            { key: 'inventory_pct', title: '存貨佔總資產百分比', desc: '存貨占總資產的比率。' },
+            { key: 'current_assets_pct', title: '流動資產佔總資產百分比', desc: '流動資產占總資產的比率。' },
+            { key: 'fixed_assets_total_pct', title: '固定資產佔總資產百分比', desc: '固定資產占總資產的比率。' },
+            { key: 'other_non_current_assets_pct', title: '其餘資產佔總資產百分比', desc: '其他非流動資產占總資產的比率。' }
+        ]
+    };
 
     for (const block of rankingBlocks) {
         const blockDiv = document.createElement('div');
@@ -912,218 +955,313 @@ async function loadStockRankingSection() {
         subtitle.className = 'ranking-block-subtitle';
         subtitle.textContent = block.title;
         blockDiv.appendChild(subtitle);
-        // 控制列
+        // tab bar
+        const tabBar = document.createElement('div');
+        tabBar.className = 'report-tab-bar';
+        const tabDetail = document.createElement('button');
+        tabDetail.className = 'report-tab-btn active';
+        tabDetail.type = 'button';
+        tabDetail.textContent = '指標排名';
+        const tabExplain = document.createElement('button');
+        tabExplain.className = 'report-tab-btn';
+        tabExplain.type = 'button';
+        tabExplain.textContent = '指標解釋';
+        tabBar.appendChild(tabDetail);
+        tabBar.appendChild(tabExplain);
+        blockDiv.appendChild(tabBar);
+        // 內容區
+        const detailSection = document.createElement('div');
+        detailSection.className = 'ranking-detail-section';
+        const explainSection = document.createElement('div');
+        explainSection.className = 'ranking-explain-section';
+        explainSection.style.display = 'none';
+        blockDiv.appendChild(detailSection);
+        blockDiv.appendChild(explainSection);
+        section.appendChild(blockDiv);
+
+        // tab 切換
+        tabDetail.onclick = () => {
+            tabDetail.classList.add('active');
+            tabExplain.classList.remove('active');
+            detailSection.style.display = '';
+            explainSection.style.display = 'none';
+        };
+        tabExplain.onclick = () => {
+            tabExplain.classList.add('active');
+            tabDetail.classList.remove('active');
+            detailSection.style.display = 'none';
+            explainSection.style.display = '';
+        };
+
+        // 製作互動選單（年份、期間）
         const controls = document.createElement('div');
         controls.className = 'ranking-controls';
-        // 財報類型下拉
-        const reportTypeLabel = document.createElement('label');
-        reportTypeLabel.textContent = '財報類型：';
-        controls.appendChild(reportTypeLabel);
-        const reportTypeSelect = document.createElement('select');
-        reportTypeSelect.className = 'ranking-report-type-select';
-        for (const rt of block.reportTypes) {
-            const opt = document.createElement('option');
-            opt.value = rt.value;
-            opt.textContent = rt.label;
-            if (rt.disabled) opt.disabled = true;
-            reportTypeSelect.appendChild(opt);
-        }
-        reportTypeSelect.value = block.defaultReportType;
-        controls.appendChild(reportTypeSelect);
-        // 年份下拉（大到小）
+        // 年份（遞減排序，預設2024在最上）
         const yearLabel = document.createElement('label');
-        yearLabel.textContent = '年份：';
-        controls.appendChild(yearLabel);
+        yearLabel.textContent = '年份';
         const yearSelect = document.createElement('select');
-        yearSelect.className = 'ranking-year-select';
         for (let y = block.yearRange[1]; y >= block.yearRange[0]; y--) {
             const opt = document.createElement('option');
             opt.value = y;
             opt.textContent = y;
+            if (y === block.defaultYear) opt.selected = true;
             yearSelect.appendChild(opt);
         }
-        yearSelect.value = block.defaultYear;
-        controls.appendChild(yearSelect);
-        // 季別下拉
+        // 期間
+        const periodLabel = document.createElement('label');
+        periodLabel.textContent = '期間';
+        const periodSelect = document.createElement('select');
+        block.reportTypes.forEach(rt => {
+            const opt = document.createElement('option');
+            opt.value = rt.value;
+            opt.textContent = rt.label;
+            if (rt.disabled) opt.disabled = true;
+            if (rt.value === block.defaultReportType) opt.selected = true;
+            periodSelect.appendChild(opt);
+        });
+        // 季別
         const quarterLabel = document.createElement('label');
-        quarterLabel.textContent = '季別：';
-        controls.appendChild(quarterLabel);
+        quarterLabel.textContent = '季別';
         const quarterSelect = document.createElement('select');
-        quarterSelect.className = 'ranking-quarter-select';
-        for (const q of block.quarters) {
+        block.quarters.forEach(q => {
             const opt = document.createElement('option');
             opt.value = q;
-            opt.textContent = ['第一季','第二季','第三季','第四季'][q-1];
+            opt.textContent = 'Q' + q;
+            if (q === block.defaultQuarter) opt.selected = true;
             quarterSelect.appendChild(opt);
-        }
-        quarterSelect.value = block.defaultQuarter;
+        });
+        controls.appendChild(yearLabel);
+        controls.appendChild(yearSelect);
+        controls.appendChild(periodLabel);
+        controls.appendChild(periodSelect);
+        controls.appendChild(quarterLabel);
         controls.appendChild(quarterSelect);
-        blockDiv.appendChild(controls);
-        // 資料區
-        const infoDiv = document.createElement('div');
-        infoDiv.className = 'ranking-info';
-        infoDiv.textContent = '載入中...';
-        blockDiv.appendChild(infoDiv);
-        section.appendChild(blockDiv);
-        // 綁定互動
-        const updateBlock = async () => {
-            let reportType = reportTypeSelect.value;
-            let year = parseInt(yearSelect.value);
-            // 先根據規則修正季別選單的值
+        blockDiv.insertBefore(controls, tabBar);
+
+        // 根據規則動態禁用季別/期間
+        function updateDropdownStatus() {
+            const year = parseInt(yearSelect.value);
+            const period = periodSelect.value;
+            // 現金流量表
             if (block.key === 'cash_flow') {
-                if (reportType === 'annual') {
-                    quarterSelect.value = '4';
-                    quarterSelect.disabled = true;
-                } else if (reportType === 'accumulated') {
+                // 年報時，季別全部 disabled，查詢時自動帶入 Q4
+                if (period === 'annual') {
+                    Array.from(quarterSelect.options).forEach(opt => { opt.disabled = true; });
+                    quarterSelect.value = 4;
+                } else if (period === 'accumulated') {
                     quarterSelect.disabled = false;
-                    quarterSelect.querySelectorAll('option').forEach(opt => {
+                    Array.from(quarterSelect.options).forEach(opt => {
                         if (year === 2025) {
-                            if (opt.value !== '1') opt.disabled = true;
-                            else opt.disabled = false;
+                            opt.disabled = opt.value !== '1';
+                            if (opt.value === '1') quarterSelect.value = 1;
                         } else {
-                            if (['1','2','3'].includes(opt.value)) opt.disabled = false;
-                            else opt.disabled = true;
+                            opt.disabled = !['1','2','3'].includes(opt.value);
+                            if (!['1','2','3'].includes(quarterSelect.value)) quarterSelect.value = '1';
                         }
                     });
-                    if (year === 2025) quarterSelect.value = '1';
-                    else if (!['1','2','3'].includes(quarterSelect.value)) quarterSelect.value = '1';
                 }
-            } else if (block.key === 'income_statement') {
-                yearSelect.querySelectorAll('option').forEach(opt => {
-                    if (reportType === 'annual' && opt.value === '2025') opt.disabled = true;
-                    else opt.disabled = false;
+                // 期間下拉只允許年報/累計
+                Array.from(periodSelect.options).forEach(opt => {
+                    opt.disabled = !['annual','accumulated'].includes(opt.value);
                 });
-                if (reportType === 'annual') {
-                    quarterSelect.value = '4';
-                    quarterSelect.disabled = true;
-                } else if (reportType === 'accumulated') {
+            }
+            // 損益表
+            else if (block.key === 'income_statement') {
+                if (period === 'annual') {
+                    Array.from(quarterSelect.options).forEach(opt => { opt.disabled = true; });
+                    quarterSelect.value = 4;
+                    // 2025 禁用
+                    Array.from(yearSelect.options).forEach(opt => {
+                        opt.disabled = (opt.value === '2025');
+                    });
+                } else if (period === 'accumulated') {
                     quarterSelect.disabled = false;
-                    quarterSelect.querySelectorAll('option').forEach(opt => {
+                    Array.from(quarterSelect.options).forEach(opt => {
                         if (year === 2025) {
-                            if (opt.value !== '1') opt.disabled = true;
-                            else opt.disabled = false;
+                            opt.disabled = opt.value !== '1';
+                            if (opt.value === '1') quarterSelect.value = 1;
                         } else {
-                            if (['1','2','3'].includes(opt.value)) opt.disabled = false;
-                            else opt.disabled = true;
+                            opt.disabled = !['1','2','3'].includes(opt.value);
+                            if (!['1','2','3'].includes(quarterSelect.value)) quarterSelect.value = '1';
                         }
                     });
-                    if (year === 2025) quarterSelect.value = '1';
-                    else if (!['1','2','3'].includes(quarterSelect.value)) quarterSelect.value = '1';
-                } else if (reportType === 'quarterly') {
+                    // 2025 禁用
+                    Array.from(yearSelect.options).forEach(opt => {
+                        opt.disabled = false;
+                    });
+                } else if (period === 'quarterly') {
                     quarterSelect.disabled = false;
-                    quarterSelect.querySelectorAll('option').forEach(opt => {
+                    Array.from(quarterSelect.options).forEach(opt => {
                         if (year === 2025) {
-                            if (opt.value !== '1') opt.disabled = true;
-                            else opt.disabled = false;
+                            opt.disabled = opt.value !== '1';
+                            if (opt.value === '1') quarterSelect.value = 1;
                         } else {
                             opt.disabled = false;
                         }
                     });
-                    if (year === 2025) quarterSelect.value = '1';
-                    else if (!['1','2','3','4'].includes(quarterSelect.value)) quarterSelect.value = '1';
+                    // 2025 禁用
+                    Array.from(yearSelect.options).forEach(opt => {
+                        opt.disabled = false;
+                    });
                 }
-            } else if (block.key === 'balance_sheet') {
-                reportTypeSelect.querySelectorAll('option').forEach(opt => {
-                    if (opt.value === 'quarterly') opt.disabled = false;
-                    else opt.disabled = true;
+                // 期間下拉允許全部
+                Array.from(periodSelect.options).forEach(opt => {
+                    opt.disabled = false;
                 });
-                reportTypeSelect.value = 'quarterly';
-                reportTypeSelect.disabled = false;
+            }
+            // 資產負債表
+            else if (block.key === 'balance_sheet') {
+                // 只允許季報
+                periodSelect.value = 'quarterly';
+                periodSelect.disabled = false;
+                Array.from(periodSelect.options).forEach(opt => {
+                    opt.disabled = opt.value !== 'quarterly';
+                });
                 quarterSelect.disabled = false;
-                quarterSelect.querySelectorAll('option').forEach(opt => {
+                Array.from(quarterSelect.options).forEach(opt => {
                     if (year === 2025) {
-                        if (opt.value !== '1') opt.disabled = true;
-                        else opt.disabled = false;
+                        opt.disabled = opt.value !== '1';
+                        if (opt.value === '1') quarterSelect.value = 1;
                     } else {
                         opt.disabled = false;
                     }
                 });
-                if (year === 2025) quarterSelect.value = '1';
-                else if (!['1','2','3','4'].includes(quarterSelect.value)) quarterSelect.value = '1';
             }
-            // 取得正確的 quarter 值
-            let quarter = parseInt(quarterSelect.value);
-            // 查詢 API
-            infoDiv.textContent = '載入中...';
-            try {
-                const statementType = block.key === 'income_statement' ? 'income_statement' : (block.key === 'cash_flow' ? 'cash_flow' : 'balance_sheet');
-                const rankingRes = await fetch(`http://localhost:8000/api/advanced_search/stock_ranking?stock_symbol=${stockSymbol}&year=${year}&report_type=${reportType}&quarter=${quarter}&statement_type=${statementType}`);
-                if (!rankingRes.ok) throw new Error('取得排名失敗');
-                const rankingData = await rankingRes.json();
-                const sectorName = rankingData.data?.stock_info?.sector || '-';
-                // 再查產業總數
-                const countRes = await fetch(`http://localhost:8000/api/advanced_search/count?ranking_type=${Object.keys(rankingData.data.rankings)[0]}&year=${year}&report_type=${reportType}&sector_name=${encodeURIComponent(sectorName)}&quarter=${quarter}`);
-                let totalCount = '-';
-                if (countRes.ok) {
-                    const countData = await countRes.json();
-                    totalCount = countData.data?.total_count || '-';
+        }
+        yearSelect.onchange = () => { updateDropdownStatus(); updateBlock(); };
+        periodSelect.onchange = () => { updateDropdownStatus(); updateBlock(); };
+        quarterSelect.onchange = () => { updateBlock(); };
+
+        // 渲染排名內容
+        const updateBlock = async () => {
+            detailSection.textContent = '載入中...';
+            explainSection.textContent = '';
+            const year = parseInt(yearSelect.value);
+            const period = periodSelect.value;
+            const quarter = parseInt(quarterSelect.value);
+            let apiPeriod = period;
+            let apiQuarter = quarter;
+            // API 查詢參數組合正確
+            if (block.key === 'cash_flow') {
+                if (period === 'annual') {
+                    apiPeriod = 'annual';
+                    apiQuarter = 4;
+                } else if (period === 'accumulated') {
+                    apiPeriod = 'accumulated';
                 }
-                // 條列渲染
-                infoDiv.textContent = '';
-                // 產業名稱 + 幣別
+            } else if (block.key === 'income_statement') {
+                if (period === 'annual') {
+                    apiPeriod = 'annual';
+                    apiQuarter = 4;
+                } else if (period === 'accumulated') {
+                    apiPeriod = 'accumulated';
+                } else if (period === 'quarterly') {
+                    apiPeriod = 'quarterly';
+                }
+            } else if (block.key === 'balance_sheet') {
+                apiPeriod = 'quarterly';
+            }
+            try {
+                const res = await fetch(`http://localhost:8000/api/advanced_search/stock_ranking?stock_symbol=${stockSymbol}&country=${country}&statement_type=${block.key}&report_type=${apiPeriod}&year=${year}&quarter=${apiQuarter}`);
+                if (!res.ok) throw new Error('查詢失敗');
+                const rankingData = await res.json();
+                if (!rankingData.data || !rankingData.data.rankings) throw new Error('無資料');
+                // 渲染排名
+                detailSection.textContent = '';
+                // 產業/幣別/總數
                 const sectorDiv = document.createElement('div');
                 sectorDiv.className = 'ranking-sector';
-                sectorDiv.appendChild(document.createTextNode('產業名稱：'));
-                const sectorSpan = document.createElement('span');
-                sectorSpan.textContent = sectorName;
-                sectorDiv.appendChild(sectorSpan);
-                const currencySpan = document.createElement('span');
-                currencySpan.className = 'ranking-currency';
-                currencySpan.textContent = ' TWD (單位: 千元)';
-                sectorDiv.appendChild(currencySpan);
-                // 新增「個股排名」
-                const stockRankLabel = document.createElement('span');
-                stockRankLabel.className = 'ranking-label';
-                stockRankLabel.textContent = '個股排名';
-                sectorDiv.appendChild(stockRankLabel);
-                // 新增「產業公司總計」
-                const industryTotalLabel = document.createElement('span');
-                industryTotalLabel.className = 'ranking-label';
-                industryTotalLabel.textContent = '產業公司總計';
-                sectorDiv.appendChild(industryTotalLabel);
-                infoDiv.appendChild(sectorDiv);
-                // 條列資訊
+                // 禁用 innerHTML，全部用 DOM API
+                const span1 = document.createElement('span');
+                span1.textContent = '產業：';
+                sectorDiv.appendChild(span1);
+                sectorDiv.appendChild(document.createTextNode(rankingData.data.stock_info.sector || '-'));
+                const span2 = document.createElement('span');
+                span2.className = 'ranking-currency';
+                span2.textContent = '幣別：TWD (單位: 千元)';
+                sectorDiv.appendChild(span2);
+                const firstKey = Object.keys(rankingData.data.rankings).find(
+                  k => rankingData.data.rankings[k] && rankingData.data.rankings[k].total_count
+                );
+                const totalCount = firstKey ? rankingData.data.rankings[firstKey].total_count : '-';
+                const span3 = document.createElement('span');
+                span3.className = 'ranking-label';
+                span3.textContent = `同產業公司總數：${totalCount}`;
+                sectorDiv.appendChild(span3);
+                detailSection.appendChild(sectorDiv);
+                // 條列
                 const ul = document.createElement('ul');
                 ul.className = 'ranking-list';
-                for (const [key, val] of Object.entries(rankingData.data.rankings)) {
+                // 取得季度資訊
+                const queryParams = rankingData.data.query_params;
+                let quarterText = '';
+                if (queryParams.report_type === 'annual') {
+                    quarterText = '季度：年報';
+                } else if (queryParams.report_type === 'accumulated') {
+                    quarterText = `季度：Q${queryParams.quarter}累計`;
+                } else if (queryParams.report_type === 'quarterly') {
+                    quarterText = `季度：Q${queryParams.quarter}`;
+                }
+                Object.entries(rankingData.data.rankings).forEach(([key, item]) => {
                     const li = document.createElement('li');
                     li.className = 'ranking-item';
+                    // 指標名稱
                     const metric = document.createElement('span');
                     metric.className = 'ranking-metric';
-                    metric.textContent = val.description;
-                    li.appendChild(metric);
+                    metric.textContent = item.description || '-';
+                    // 值
                     const value = document.createElement('span');
                     value.className = 'ranking-value';
-                    if (val.value !== null) {
-                        let v = val.value.toLocaleString();
-                        if (val.description && val.description.includes('百分比')) {
-                            v += '%';
-                        }
-                        value.textContent = v;
-                    } else {
-                        value.textContent = '-';
-                    }
-                    li.appendChild(value);
+                    if (item.value === null || item.value === undefined) value.textContent = '-';
+                    else if (typeof item.value === 'number' && metric.textContent.includes('EPS')) value.textContent = item.value.toFixed(2);
+                    else if (typeof item.value === 'number' && metric.textContent.includes('百分比')) value.textContent = item.value.toFixed(2) + '%';
+                    else if (typeof item.value === 'number') value.textContent = new Intl.NumberFormat('zh-TW').format(item.value);
+                    else value.textContent = item.value;
+                    // 排名
                     const rank = document.createElement('span');
                     rank.className = 'ranking-rank';
-                    rank.textContent = `排名：${val.rank !== null ? val.rank : '-'}`;
-                    li.appendChild(rank);
+                    rank.textContent = (item.rank === null || item.rank === undefined) ? '排名：-' : `排名：${item.rank}`;
+                    // 總數
                     const total = document.createElement('span');
                     total.className = 'ranking-total';
-                    total.textContent = `總共：${val.total_count || totalCount} 家`;
+                    total.textContent = `/ ${item.total_count || '-'} 名`;
+                    // 季度資訊
+                    const quarterSpan = document.createElement('span');
+                    quarterSpan.className = 'ranking-quarter';
+                    quarterSpan.textContent = quarterText;
+                    li.appendChild(metric);
+                    li.appendChild(value);
+                    li.appendChild(rank);
                     li.appendChild(total);
+                    li.appendChild(quarterSpan);
                     ul.appendChild(li);
-                }
-                infoDiv.appendChild(ul);
+                });
+                detailSection.appendChild(ul);
+                // 渲染指標解釋
+                explainSection.textContent = '';
+                const explainList = RANKING_EXPLAIN_MAP[block.key];
+                const rankingKeys = Object.keys(rankingData.data.rankings);
+                rankingKeys.forEach(key => {
+                    const explain = explainList.find(e => e.key === key);
+                    if (explain) {
+                        const div = document.createElement('div');
+                        div.className = 'explain-block ranking-explain-block';
+                        const h3 = document.createElement('h3');
+                        h3.textContent = explain.title;
+                        div.appendChild(h3);
+                        const desc = document.createElement('div');
+                        desc.className = 'explain-block-desc';
+                        desc.textContent = explain.desc;
+                        div.appendChild(desc);
+                        explainSection.appendChild(div);
+                    }
+                });
             } catch (e) {
-                infoDiv.textContent = '查詢失敗或無資料';
+                detailSection.textContent = '查詢失敗或無資料';
+                explainSection.textContent = '';
             }
         };
-        // 綁定事件
-        reportTypeSelect.addEventListener('change', updateBlock);
-        yearSelect.addEventListener('change', updateBlock);
-        quarterSelect.addEventListener('change', updateBlock);
-        // 初始渲染
+        updateDropdownStatus();
         updateBlock();
     }
 }
