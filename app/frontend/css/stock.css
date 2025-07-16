@@ -251,7 +251,7 @@ body {
 }
 
 /* Loading Indicator 樣式 */
-#loading-indicator {
+.loading-indicator {
     flex-direction: column;
     align-items: center;
     justify-content: center;

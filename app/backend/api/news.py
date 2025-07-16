@@ -51,14 +51,17 @@ async def get_news(
 
     # 查詢 + 排序 + 分頁
     results = list(
-        collection.find(query, {"_id": 0, "news_id": 0, "summary": 0, "keyword":0})
+        collection.find(query, {"_id": 0, "news_id": 0, "summary": 0, "keyword":0, "market":0, "type":0, "stock":0})
         .sort("publishAt", -1)
         .skip(skip)
-        .limit(limit)
+        .limit(limit+1)
     )
+
+    has_next = len(results) > limit
+    results = results[:limit]
 
     for r in results:
         if r.get("content") is not None: 
             r["content"] = r["content"][:30] # 截斷為30個字
 
-    return JSONResponse(content={"nextPage":page + 1 if len(results) == limit else None,"page": page, "data": results})
+    return JSONResponse(content={"nextPage":page + 1 if has_next else None,"page": page, "data": results})
