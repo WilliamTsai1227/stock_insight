@@ -401,8 +401,41 @@ async function fetchAndRenderRanking(type, metric, year, report_type, quarter, s
     }
 }
 
+// ========== 新增：漢堡選單初始化 ========== //
+function initializeHamburgerMenu() {
+    const hamburgerMenu = document.querySelector('.hamburger-menu');
+    const navDropdown = document.querySelector('.nav-dropdown');
+    const closeButton = document.querySelector('.hamburger-menu-close');
+
+    if (!hamburgerMenu || !navDropdown) {
+        console.log('找不到漢堡選單或導航下拉選單元素');
+        return;
+    }
+
+    // 點擊漢堡選單時切換選單狀態
+    hamburgerMenu.addEventListener('click', () => {
+        navDropdown.classList.toggle('active');
+    });
+
+    // 點擊關閉按鈕時關閉選單
+    if (closeButton) {
+        closeButton.addEventListener('click', () => {
+            navDropdown.classList.remove('active');
+        });
+    }
+
+    // 點擊下拉選單中的連結時關閉選單
+    const dropdownLinks = document.querySelectorAll('.nav-dropdown a');
+    dropdownLinks.forEach(link => {
+        link.addEventListener('click', () => {
+            navDropdown.classList.remove('active');
+        });
+    });
+}
+
 document.addEventListener('DOMContentLoaded', () => {
     initPage();
+    initializeHamburgerMenu(); // 新增這行
     document.getElementById('cash-flow-prev-page').onclick = () => prevPage('cash_flow');
     document.getElementById('cash-flow-next-page').onclick = () => nextPage('cash_flow');
     document.getElementById('income-prev-page').onclick = () => prevPage('income_statement');

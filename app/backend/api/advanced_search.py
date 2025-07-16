@@ -289,7 +289,7 @@ async def get_financial_ranking(
     report_type: str = Query(..., description="財報期間 (quarterly, annual, accumulated)"),
     sector_name: Optional[str] = Query(None, description="產業名稱 (可選)"),
     quarter: Optional[int] = Query(None, description="季度 (1-4, 可選)"),
-    limit: int = Query(50, description="回傳筆數限制 (1-1000)", ge=1, le=1000),
+    limit: int = Query(500, description="回傳筆數限制 (1-1000)", ge=1, le=1000),
     page: int = Query(1, description="頁碼 (從1開始)", ge=1)
 ):
     """

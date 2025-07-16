@@ -1048,22 +1048,14 @@ async function loadStockRankingSection() {
                 if (period === 'annual') {
                     Array.from(quarterSelect.options).forEach(opt => { opt.disabled = true; });
                     quarterSelect.value = 4;
-                } else if (period === 'accumulated') {
-                    quarterSelect.disabled = false;
-                    Array.from(quarterSelect.options).forEach(opt => {
-                        if (year === 2025) {
-                            opt.disabled = opt.value !== '1';
-                            if (opt.value === '1') quarterSelect.value = 1;
-                        } else {
-                            opt.disabled = !['1','2','3'].includes(opt.value);
-                            if (!['1','2','3'].includes(quarterSelect.value)) quarterSelect.value = '1';
-                        }
+                    // 2025 禁用（不論 value 型別）
+                    Array.from(yearSelect.options).forEach(opt => {
+                        opt.disabled = (String(opt.value) === '2025');
                     });
+                } else {
+                    // 其他狀態全部年份可選
+                    Array.from(yearSelect.options).forEach(opt => { opt.disabled = false; });
                 }
-                // 期間下拉只允許年報/累計
-                Array.from(periodSelect.options).forEach(opt => {
-                    opt.disabled = !['annual','accumulated'].includes(opt.value);
-                });
             }
             // 損益表
             else if (block.key === 'income_statement') {

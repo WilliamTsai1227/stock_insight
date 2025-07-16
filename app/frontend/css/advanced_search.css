@@ -168,3 +168,147 @@ button[id$='next-page']:hover {
     background: #0056b3;
     color: #fff;
 } 
+
+/* ========== 補充 header、漢堡選單、nav-dropdown 及 RWD 樣式 ========== */
+@media (max-width: 768px) {
+    .main-header {
+        padding: 12px 20px;
+    }
+    .header-left-section {
+        gap: 16px;
+    }
+    .nav-links {
+        display: none;
+    }
+    .header-right-section {
+        gap: 16px;
+    }
+    .user-page-button {
+        display: none;
+    }
+    .profile-image {
+        width: 32px;
+        height: 32px;
+    }
+    .hamburger-menu {
+        display: flex;
+    }
+    .nav-dropdown {
+        padding-top: 60px;
+    }
+    .nav-dropdown.active {
+        display: flex;
+    }
+    .nav-dropdown a {
+        padding: 12px 20px;
+        height: auto;
+        font-size: 18px;
+    }
+    .hamburger-menu-close {
+        display: block;
+    }
+    .content-area {
+        padding: 10px;
+    }
+    .container {
+        padding: 15px;
+    }
+    .ranking-block h2 {
+        font-size: 20px;
+    }
+}
+@media (max-width: 480px) {
+    .main-header {
+        padding: 10px;
+    }
+    .nav-dropdown {
+        padding-top: 50px;
+    }
+    .nav-dropdown a {
+        padding: 10px 15px;
+        font-size: 16px;
+    }
+    .hamburger-menu-close {
+        top: 15px;
+        right: 15px;
+    }
+} 
+
+@media (max-width: 900px) {
+    .content-area {
+        padding: 8px;
+    }
+    .container {
+        padding: 8px;
+    }
+    .result-list {
+        padding: 0 2px;
+        overflow-x: auto;
+    }
+    .result-item {
+        flex-direction: column;
+        align-items: center;
+        font-size: 13px;
+        padding: 6px 0;
+        text-align: center;
+        justify-content: center;
+        gap: 2px;
+    }
+    .result-item span {
+        font-size: 12px;
+        margin-right: 4px;
+        padding-right: 2px;
+        border-right: none;
+        text-align: center;
+        display: block;
+        width: 100%;
+    }
+    .result-item .company-link {
+        font-size: 14px;
+        text-align: center;
+        width: 100%;
+    }
+}
+@media (max-width: 600px) {
+    .content-area {
+        padding: 2px;
+    }
+    .container {
+        padding: 2px;
+        min-width: 400px;
+    }
+    .controls {
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+        gap: 6px;
+    }
+    .controls-row {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content: center;
+        gap: 4px;
+        width: 100%;
+    }
+    .controls-row label,
+    .controls-row select {
+        display: inline-flex;
+        text-align: left;
+        margin: 0;
+        width: auto;
+    }
+    .controls label,
+    .controls select,
+    .controls button {
+        text-align: center;
+        display: block;
+        margin: 0 5px;
+    }
+    .result-item span:not(:last-child) {
+        margin-right: 0px;
+        border-right: 0px solid #e0e0e0;
+        padding-right: 0px;
+    }
+} 
