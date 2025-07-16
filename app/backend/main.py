@@ -61,6 +61,10 @@ async def home(request: Request):
 async def advanced_search_page(request: Request):
     return FileResponse(HTML_DIR / "advanced_search.html", media_type="text/html")
 
+@app.get("/info", include_in_schema=False)
+async def info_page(request: Request):
+    return FileResponse(HTML_DIR / "info.html", media_type="text/html")
+
 # 加入 API router
 app.include_router(log.router)
 app.include_router(ai_news.router)

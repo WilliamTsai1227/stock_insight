@@ -240,6 +240,15 @@ async function loadStockInfo() {
             const newsSection = document.getElementById('related-news-section');
             if (newsSection) newsSection.querySelector('.related-news-list').textContent = '無法取得公司新聞';
         }
+        // 新增：取得公司簡稱查詢分析
+        if (abbreviation) {
+            window._companyNewsKeyword = abbreviation;
+            setupAIAnalysisToggle(abbreviation);
+            fetchCompanyAIAnalysis(abbreviation, false, 1);
+        } else {
+            const aiSection = document.getElementById('stock-ai-analysis-section');
+            if (aiSection) aiSection.querySelector('.ai-analysis-list').textContent = '無法取得分析結果';
+        }
     } catch (error) {
         if (loadingIndicator) loadingIndicator.style.display = 'none';
         
@@ -252,6 +261,9 @@ async function loadStockInfo() {
         // 新增：錯誤時新聞區顯示
         const newsSection = document.getElementById('related-news-section');
         if (newsSection) newsSection.querySelector('.related-news-list').textContent = '無法取得公司新聞';
+        // 新增：錯誤時分析區顯示
+        const aiSection = document.getElementById('stock-ai-analysis-section');
+        if (aiSection) aiSection.querySelector('.ai-analysis-list').textContent = '無法取得分析結果';
     }
 }
 
@@ -1372,6 +1384,200 @@ function monitorCompanyNewsClicks() {
             if (urlEl) {
                 let url = urlEl.textContent.trim();
                 window.open(url, '_blank');
+            }
+        });
+    });
+}
+
+// ========== 個股 AI 分析功能 ========== //
+let _aiAnalysisSummary = false;
+let _aiAnalysisPage = 1;
+function setupAIAnalysisToggle(keyword) {
+    const section = document.getElementById('stock-ai-analysis-section');
+    if (!section) return;
+    const btns = section.querySelectorAll('.ai-analysis-btn');
+    btns.forEach(btn => {
+        btn.onclick = () => {
+            const isSummary = btn.getAttribute('data-summary') === 'true';
+            _aiAnalysisSummary = isSummary;
+            _aiAnalysisPage = 1;
+            fetchCompanyAIAnalysis(keyword, isSummary, 1);
+            btns.forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+        };
+    });
+    // 預設啟用逐條分析
+    btns.forEach(b => b.classList.remove('active'));
+    section.querySelector('.ai-analysis-btn[data-summary="false"]').classList.add('active');
+}
+async function fetchCompanyAIAnalysis(keyword, is_summary = false, page = 1) {
+    const section = document.getElementById('stock-ai-analysis-section');
+    const list = section.querySelector('.ai-analysis-list');
+    const pagination = section.querySelector('.ai-analysis-pagination');
+    if (window.loadingIndicator) window.loadingIndicator.style.display = 'flex';
+    while (list.firstChild) list.removeChild(list.firstChild);
+    while (pagination.firstChild) pagination.removeChild(pagination.firstChild);
+    const endTime = Math.floor(Date.now() / 1000);
+    const startTime = Math.floor(new Date('2020-01-01T00:00:00Z').getTime() / 1000);
+    try {
+        const response = await fetch(`http://localhost:8000/api/ai_news?keyword=${encodeURIComponent(keyword)}&is_summary=${is_summary}&start_time=${startTime}&end_time=${endTime}&page=${page}`);
+        const result = await response.json();
+        if (!result.data || result.data.length === 0) {
+            const empty = document.createElement('div');
+            empty.textContent = '查無分析結果';
+            list.appendChild(empty);
+            if (window.loadingIndicator) window.loadingIndicator.style.display = 'none';
+            return;
+        }
+        renderCompanyAIAnalysis(result, page, result.nextPage);
+    } catch (e) {
+        const fail = document.createElement('div');
+        fail.textContent = '載入分析失敗';
+        list.appendChild(fail);
+    } finally {
+        if (window.loadingIndicator) window.loadingIndicator.style.display = 'none';
+    }
+}
+function renderCompanyAIAnalysis(data, page, nextPage) {
+    const section = document.getElementById('stock-ai-analysis-section');
+    const list = section.querySelector('.ai-analysis-list');
+    const pagination = section.querySelector('.ai-analysis-pagination');
+    while (list.firstChild) list.removeChild(list.firstChild);
+    while (pagination.firstChild) pagination.removeChild(pagination.firstChild);
+    data.data.forEach(item => {
+        const block = document.createElement('div');
+        block.className = 'ai-analysis-block';
+        // 標題
+        const title = document.createElement('div');
+        title.className = 'ai-analysis-article-title';
+        title.textContent = item.article_title || '';
+        block.appendChild(title);
+        // 洞察結果
+        const summaryTitle = document.createElement('div');
+        summaryTitle.className = 'ai-analysis-section-title';
+        summaryTitle.textContent = '洞察結果：';
+        block.appendChild(summaryTitle);
+        const summaryContent = document.createElement('div');
+        summaryContent.className = 'ai-analysis-summary';
+        summaryContent.textContent = item.summary || '';
+        block.appendChild(summaryContent);
+        // 重點新聞
+        const newsTitle = document.createElement('div');
+        newsTitle.className = 'ai-analysis-section-title';
+        newsTitle.textContent = '重點新聞：';
+        block.appendChild(newsTitle);
+        const newsContent = document.createElement('div');
+        newsContent.className = 'ai-analysis-important-news';
+        newsContent.textContent = item.important_news || '';
+        block.appendChild(newsContent);
+        // 情緒分析
+        const sentimentTitle = document.createElement('div');
+        sentimentTitle.className = 'ai-analysis-section-title';
+        sentimentTitle.textContent = '情緒分析：';
+        block.appendChild(sentimentTitle);
+        const sentimentContent = document.createElement('div');
+        sentimentContent.className = 'ai-analysis-sentiment';
+        sentimentContent.textContent = item.sentiment || '';
+        block.appendChild(sentimentContent);
+        // 產業分析
+        const potentialTitle = document.createElement('div');
+        potentialTitle.className = 'ai-analysis-section-title';
+        potentialTitle.textContent = '產業分析：';
+        block.appendChild(potentialTitle);
+        const potentialContent = document.createElement('div');
+        potentialContent.className = 'ai-analysis-potential';
+        potentialContent.textContent = item.potential_stocks_and_industries || '';
+        block.appendChild(potentialContent);
+        // 相關股票
+        const stockTitle = document.createElement('div');
+        stockTitle.className = 'ai-analysis-section-title';
+        stockTitle.textContent = '相關股票：';
+        block.appendChild(stockTitle);
+        const stockList = document.createElement('div');
+        stockList.className = 'ai-analysis-stock-list';
+        (item.stock_list || []).forEach(stock => {
+            const btn = document.createElement('button');
+            btn.className = 'ai-analysis-stock-btn';
+            btn.textContent = stock[2];
+            btn.onclick = () => {
+                if (stock[0] === 'tw') {
+                    window.open(`/stock/${stock[1]}/tw`, '_blank');
+                } else {
+                    window.open(`https://www.google.com/search?q=${stock[2]}`, '_blank');
+                }
+            };
+            stockList.appendChild(btn);
+        });
+        block.appendChild(stockList);
+        // 相關產業
+        const industryTitle = document.createElement('div');
+        industryTitle.className = 'ai-analysis-section-title';
+        industryTitle.textContent = '相關產業：';
+        block.appendChild(industryTitle);
+        const industryList = document.createElement('div');
+        industryList.className = 'ai-analysis-industry-list';
+        (item.industry_list || []).forEach(ind => {
+            const span = document.createElement('span');
+            span.className = 'ai-analysis-industry-item';
+            span.textContent = ind;
+            industryList.appendChild(span);
+        });
+        block.appendChild(industryList);
+        // ========== 新增 相關新聞 source_news ========== //
+        if (item.source_news && Array.isArray(item.source_news) && item.source_news.length > 0) {
+            const sourceNewsTitle = document.createElement('div');
+            sourceNewsTitle.className = 'ai-analysis-section-title';
+            sourceNewsTitle.textContent = '相關新聞：';
+            block.appendChild(sourceNewsTitle);
+            const sourceNewsList = document.createElement('div');
+            sourceNewsList.className = 'ai-analysis-source-news-list';
+            item.source_news.forEach(news => {
+                const btn = document.createElement('button');
+                btn.className = 'ai-analysis-source-news-btn';
+                btn.textContent = news.title || '';
+                btn.setAttribute('data-news-id', news._id || '');
+                sourceNewsList.appendChild(btn);
+            });
+            block.appendChild(sourceNewsList);
+        }
+        list.appendChild(block);
+    });
+    // 分頁按鈕
+    if (page > 1) {
+        const prevBtn = document.createElement('button');
+        prevBtn.textContent = '上一頁';
+        prevBtn.className = 'ai-analysis-btn-page';
+        prevBtn.onclick = () => fetchCompanyAIAnalysis(window._companyNewsKeyword, _aiAnalysisSummary, page - 1);
+        pagination.appendChild(prevBtn);
+    }
+    if (nextPage) {
+        const nextBtn = document.createElement('button');
+        nextBtn.textContent = '下一頁';
+        nextBtn.className = 'ai-analysis-btn-page';
+        nextBtn.onclick = () => fetchCompanyAIAnalysis(window._companyNewsKeyword, _aiAnalysisSummary, nextPage);
+        pagination.appendChild(nextBtn);
+    }
+    monitorCompanyAINewsClicks();
+}
+
+// 新增：監聽 AI 相關新聞按鈕點擊，參考 ai_news.js monitorNewsClicks
+function monitorCompanyAINewsClicks() {
+    const newsBtns = document.querySelectorAll('.ai-analysis-source-news-btn');
+    newsBtns.forEach(btn => {
+        btn.addEventListener('click', async () => {
+            const newsId = btn.getAttribute('data-news-id');
+            if (newsId) {
+                try {
+                    const response = await fetch(`/api/news/${newsId}`);
+                    if (!response.ok) throw new Error(`HTTP 錯誤狀態碼: ${response.status}`);
+                    const data = await response.json();
+                    const news = data.data;
+                    const sourceURL = news.url.trim();
+                    window.open(sourceURL, '_blank');
+                } catch (error) {
+                    console.error('無法載入原始網站，請至搜尋引擎搜尋標題關鍵字，觀看原始網站文章', error);
+                    alert('無法載入原始網站，請至搜尋引擎搜尋標題關鍵字，觀看原始網站文章');
+                }
             }
         });
     });

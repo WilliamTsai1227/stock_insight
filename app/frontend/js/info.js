@@ -5,7 +5,7 @@ function initializeHamburgerMenu() {
 
     if (!hamburgerMenu || !navDropdown) {
         console.warn('漢堡選單或導覽下拉選單元素不存在。');
-        return; // 如果必要的元素不存在，則不執行後續程式碼
+        return;
     }
 
     hamburgerMenu.addEventListener('click', () => {
@@ -13,7 +13,7 @@ function initializeHamburgerMenu() {
         navDropdown.classList.toggle('active');
     });
 
-    if (hamburgerClose) { // 確保關閉按鈕存在才綁定事件
+    if (hamburgerClose) {
         hamburgerClose.addEventListener('click', () => {
             hamburgerMenu.classList.remove('active');
             navDropdown.classList.remove('active');
@@ -21,7 +21,6 @@ function initializeHamburgerMenu() {
     } else {
         console.warn('漢堡選單關閉按鈕元素不存在。');
     }
-
 
     navDropdown.querySelectorAll('a').forEach(link => {
         link.addEventListener('click', () => {
@@ -38,9 +37,10 @@ function initializeHamburgerMenu() {
     };
 
     window.addEventListener('resize', handleResize);
-    handleResize(); // 初始載入時執行一次
+    handleResize();
 }
 
+// Footer 三個標籤導向 info.html hash
 function initializeFooterLinks() {
     document.getElementById('footer-purpose-link')?.addEventListener('click', function() {
         window.open('/info', '_blank', 'noopener,noreferrer');
@@ -53,8 +53,17 @@ function initializeFooterLinks() {
     });
 }
 
+// 自動滾動到 hash 區塊
+function scrollToHashBlock() {
+    if (window.location.hash) {
+        var el = document.getElementById(window.location.hash.replace('#',''));
+        if (el) el.scrollIntoView({behavior:'smooth', block:'start'});
+    }
+}
+
 function excute(){
     initializeHamburgerMenu();
     initializeFooterLinks();
+    scrollToHashBlock();
 }
-window.addEventListener("DOMContentLoaded", excute);
+window.addEventListener("DOMContentLoaded", excute); 

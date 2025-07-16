@@ -1,9 +1,4 @@
-* {
-    box-sizing: border-box;
-    margin: 0;
-    padding: 0;
-}
-
+/* 1. 通用樣式（複製 index.css 關鍵區塊） */
 body {
     font-family: "Work Sans", "Noto Sans", sans-serif;
     background-color: #ffffff;
@@ -12,44 +7,37 @@ body {
     flex-direction: column;
     overflow-x: hidden;
 }
-
 .layout-container {
     display: flex;
     flex-direction: column;
     flex-grow: 1;
     height: 100%;
 }
-
-/* Header 樣式 */
 .main-header {
     display: flex;
     align-items: center;
-    justify-content: space-between; /* 讓左右元素有間距 */
+    justify-content: space-between;
     white-space: nowrap;
     border-bottom: 1px solid #f0f2f5;
     padding: 12px 40px;
-    position: relative; 
-    z-index: 100; /* 調整 Header 的 z-index，讓下拉選單可以蓋過它 */
+    position: relative;
+    z-index: 100;
 }
-
 .header-left-section {
     display: flex;
     align-items: center;
     gap: 32px;
 }
-
 .logo-section {
     display: flex;
     align-items: center;
     gap: 16px;
     color: #111418;
 }
-
 .logo-icon {
     width: 16px;
     height: 16px;
 }
-
 .logo-title {
     color: #111418;
     font-size: 18px;
@@ -57,30 +45,25 @@ body {
     line-height: 28px;
     letter-spacing: -0.015em;
 }
-
 .nav-links {
     display: flex;
     align-items: center;
     gap: 36px;
 }
-
 .nav-links a {
     color: #111418;
     font-size: 14px;
     font-weight: 500;
     line-height: 20px;
     text-decoration: none;
-    padding: 5px 0; /* 增加點擊區域 */
+    padding: 5px 0;
 }
-
 .header-right-section {
     display: flex;
-    flex: 1; 
-    justify-content: flex-end; /* 靠右對齊 */
+    flex: 1;
+    justify-content: flex-end;
     align-items: center;
 }
-
-/* Profile Image 樣式 */
 .profile-image {
     background-position: center;
     background-repeat: no-repeat;
@@ -90,49 +73,38 @@ body {
     width: 40px;
     height: 40px;
 }
-
-/* Hamburger Menu 樣式 */
 .hamburger-menu {
-    display: none; /* 預設隱藏 */
+    display: none;
     flex-direction: column;
     cursor: pointer;
     padding: 10px;
-    /* z-index 在手機版媒體查詢中設定 */
 }
-
 .hamburger-menu .bar {
     width: 25px;
     height: 3px;
-    background-color: #111418; /* 改為純黑色，與叉叉顏色一致 */
+    background-color: #111418;
     margin: 4px 0;
     transition: 0.4s;
 }
-
-/* Hamburger Animation - 重新啟用 */
 .hamburger-menu.active .bar:nth-child(1) {
     transform: translateY(7px) rotate(45deg);
 }
-
 .hamburger-menu.active .bar:nth-child(2) {
     opacity: 0;
 }
-
 .hamburger-menu.active .bar:nth-child(3) {
     transform: translateY(-7px) rotate(-45deg);
 }
-
-/* 新增：漢堡選單關閉按鈕樣式 */
 .hamburger-menu-close {
     position: absolute;
-    top: 25px; /* 調整位置 */
+    top: 25px;
     right: 20px;
     width: 30px;
     height: 30px;
     cursor: pointer;
-    z-index: 1000; /* 確保在下拉選單的最上層 */
-    display: none; /* 預設隱藏，只在手機版顯示 */
+    z-index: 1000;
+    display: none;
 }
-
 .hamburger-menu-close::before,
 .hamburger-menu-close::after {
     content: '';
@@ -144,34 +116,28 @@ body {
     left: 50%;
     transform: translate(-50%, -50%) rotate(45deg);
 }
-
 .hamburger-menu-close::after {
     transform: translate(-50%, -50%) rotate(-45deg);
 }
-
-/* Dropdown Nav 樣式 */
 .nav-dropdown {
-    display: none; /* 預設隱藏 */
-    position: fixed; /* 重要：改為 fixed */
+    display: none;
+    position: fixed;
     top: 0;
     left: 0;
     width: 100%;
-    height: 100%; /* 佔滿整個視窗 */
+    height: 100%;
     background-color: #ffffff;
     border-top: 1px solid #f0f2f5;
     flex-direction: column;
-
     box-shadow: 0 8px 16px rgba(0,0,0,0.1);
-    z-index: 999; /* 比 header 高，比關閉按鈕低 */
-    overflow-y: auto; /* 如果內容過多可以滾動 */
+    z-index: 999;
+    overflow-y: auto;
 }
-
 .nav-dropdown.active {
-    display: flex; 
+    display: flex;
 }
-
 .nav-dropdown a {
-    padding: 15px 0; /* 增加點擊區域 */
+    padding: 15px 0;
     height: 100px;
     color: #111418;
     text-decoration: none;
@@ -181,129 +147,15 @@ body {
     margin-bottom: 20px;
     font-weight: 500;
 }
-/* 新增 hover 效果 */
 .nav-dropdown a:hover {
-    background-color: #f0f2f5; /* 淺灰色背景 */
+    background-color: #f0f2f5;
 }
-
-/* 新增 active 效果 */
 .nav-dropdown a:active {
-    transform: scale(0.98); /* 點擊時縮小 */
+    transform: scale(0.98);
 }
-
-
 .nav-dropdown a:last-child {
     border-bottom: none;
 }
-
-/* Content Area 樣式 */
-.content-area {
-    padding: 20px 160px; 
-    display: flex;
-    flex: 1;
-    justify-content: center;
-}
-
-.layout-content-container {
-    display: flex;
-    flex-direction: column;
-    max-width: 960px; 
-    flex: 1;
-}
-
-.welcome-section {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: space-between;
-    gap: 12px; 
-    padding: 16px; 
-}
-
-.welcome-title {
-    color: #111418;
-    letter-spacing: -0.025em; 
-    font-size: 32px; 
-    font-weight: 700; 
-    line-height: 40px; 
-    min-width: 288px; 
-}
-
-.welcome-description {
-    color: #111418;
-    font-size: 16px; 
-    font-weight: 400; 
-    line-height: 24px; 
-    padding-bottom: 12px; 
-    padding-top: 4px; 
-    padding-left: 16px; 
-    padding-right: 16px; 
-}
-
-.features-title {
-    color: #111418;
-    font-size: 22px; 
-    font-weight: 700; 
-    line-height: 28px; 
-    letter-spacing: -0.015em; 
-    padding-left: 16px; 
-    padding-right: 16px; 
-    padding-bottom: 12px; 
-    padding-top: 20px; 
-}
-
-.feature-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(158px, 1fr)); 
-    gap: 12px; 
-    padding: 16px; 
-}
-
-.feature-card {
-    display: flex;
-    flex: 1;
-    gap: 12px; 
-    border-radius: 8px; 
-    border: 1px solid #dbe0e6;
-    background-color: #ffffff;
-    padding: 16px; 
-    flex-direction: column;
-}
-
-.feature-icon {
-    color: #111418;
-    width: 24px; 
-    height: 24px; 
-}
-
-.feature-text-content {
-    display: flex;
-    flex-direction: column;
-    gap: 4px; 
-}
-
-.feature-card h2 {
-    color: #111418;
-    font-size: 16px; 
-    font-weight: 700; 
-    line-height: 24px; 
-}
-
-.feature-card p {
-    color: #60748a;
-    font-size: 14px; 
-    font-weight: 400; 
-    line-height: 20px; 
-}
-
-/* SVG 樣式 */
-.logo-icon svg,
-.feature-icon svg {
-    width: 100%;
-    height: 100%;
-    display: block;
-}
-
-/* Footer 樣式 */
 .footer {
     background-color: #f0f2f5; 
     padding: 20px 40px;
@@ -311,13 +163,12 @@ body {
     border-top: 1px solid #e0e4e8; 
     margin-top: auto; 
 }
-
 .footer_text {
-    color: #60748a; 
+    color: #60748a;
     font-size: 14px;
     line-height: 1.6;
-    max-width: 960px; 
-    margin: 0 auto; 
+    max-width: 960px;
+    margin: 0 auto;
     display: flex;
     flex-wrap: wrap;
     gap: 8px;
@@ -351,89 +202,83 @@ body {
     text-decoration: underline;
     box-shadow: none;
 }
-
 .footer_text strong {
-    font-weight: 700; 
+    font-weight: 700;
 }
-
-/* 響應式調整 */
+.footer-disclaimer-text {
+    color: #b0b8c9;
+    font-size: 13px;
+    line-height: 1.7;
+    text-align: center;
+    margin: 10px auto 0 auto;
+    max-width: 900px;
+    padding: 0 10px 10px 10px;
+}
 @media (max-width: 768px) {
     .main-header {
-        flex-direction: row; 
-        justify-content: space-between; 
+        flex-direction: row;
+        justify-content: space-between;
         align-items: center;
         padding: 12px 20px;
-        flex-wrap: nowrap; 
-        z-index: 100; /* 確保在手機版時 Header 也在下拉選單之下 */
+        flex-wrap: nowrap;
+        z-index: 100;
     }
-
     .header-left-section {
-        flex-direction: row; 
-        justify-content: flex-start; 
-        width: auto; 
-        margin-bottom: 0; 
+        flex-direction: row;
+        justify-content: flex-start;
+        width: auto;
+        margin-bottom: 0;
     }
-
     .nav-links {
-        display: none; 
+        display: none;
     }
-
     .header-right-section {
-        flex: none; 
-        width: auto; 
-        margin-top: 0; 
-        justify-content: flex-end; 
-        gap: 0; 
+        flex: none;
+        width: auto;
+        margin-top: 0;
+        justify-content: flex-end;
+        gap: 0;
     }
-
     .profile-image {
-        display: none; 
+        display: none;
     }
-
     .hamburger-menu {
-        display: flex; 
-        z-index: 1001; /* 確保漢堡選單在 Header 之上 */
+        display: flex;
+        z-index: 1001;
     }
-
     .nav-dropdown {
-        display: none; 
+        display: none;
         flex-direction: column;
         align-items: flex-start;
-        padding: 60px 20px 10px 20px; /* 增加頂部 padding 給關閉按鈕留空間 */
+        padding: 60px 20px 10px 20px;
     }
     .nav-dropdown.active {
-        display: flex; 
+        display: flex;
     }
     .nav-dropdown a {
-        width: 100%; 
+        width: 100%;
         justify-content: flex-start;
         padding: 15px 20px;
     }
-
-    /* 手機版顯示關閉按鈕 */
     .hamburger-menu-close {
-        display: block; 
+        display: block;
     }
 }
-
-/* 針對更小的手機螢幕進行微調 */
 @media (max-width: 480px) {
     .main-header {
-        padding: 10px 15px; 
+        padding: 10px 15px;
     }
     .nav-dropdown {
-        padding: 50px 15px 5px 15px; /* 進一步調整 padding */
+        padding: 50px 15px 5px 15px;
     }
     .nav-dropdown a {
         font-size: 15px;
-
     }
     .hamburger-menu-close {
-        top: 15px; /* 調整叉叉位置 */
+        top: 15px;
         right: 15px;
     }
 }
-
 @media (max-width: 600px) {
     .footer_text {
         font-size: 12px;
@@ -444,4 +289,41 @@ body {
         font-size: 12px;
         padding: 3px 8px;
     }
+    .footer-disclaimer-text {
+        font-size: 11px;
+        padding: 0 2px 8px 2px;
+    }
 }
+
+/* 2. info.html 專屬內容區塊 */
+.info-block {
+    background: #fff;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+    padding: 40px 40px 32px 40px;
+    max-width: 800px;
+    margin: 48px auto 32px auto;
+    text-align: center;
+    box-sizing: border-box;
+}
+.info-block h2 {
+    color: #0056b3;
+    font-size: 25px;
+    font-weight: 700;
+    margin-bottom: 18px;
+}
+.info-content {
+    color: #333;
+    font-size: 16px;
+    font-weight: 500;
+    line-height: 1.7;
+    text-align: center;
+}
+@media (max-width: 900px) {
+    .info-block { max-width: 98vw; padding: 24px 8px; margin: 24px auto 16px auto; }
+}
+@media (max-width: 600px) {
+    .info-block { padding: 16px 4px; max-width: 98vw; }
+    .info-block h2 { font-size: 20px; }
+    .info-content { font-size: 15px; }
+} 
