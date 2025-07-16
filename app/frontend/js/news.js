@@ -146,7 +146,7 @@ async function loadAllNews(){
     monitorNewsClicks();
 }
 
-function scrollingAddAIAnalysis(){
+function scrollingAddNews(){
     let footer = document.querySelector(".footer");
     window.addEventListener("scroll", function () {
       const { bottom } = footer.getBoundingClientRect();
@@ -273,7 +273,7 @@ async function excute(){
     initSearchParamsFromURL();
     setSearchBarValue();      // Set the value of the search box 
     await loadAllNews();
-    scrollingAddAIAnalysis();
+    scrollingAddNews();
     search();
     initializeHamburgerMenu();
 }

@@ -209,12 +209,10 @@ function updateURLParams() {
 // 載入股票資訊
 async function loadStockInfo() {
     try {
+        if (loadingIndicator) loadingIndicator.style.display = 'flex';
         // 清除前一次的內容
         document.getElementById('stock-header').textContent = '';
         document.getElementById('stock-info').textContent = '';
-        
-        // 顯示載入中
-        document.getElementById('loading-indicator').style.display = 'flex';
         
         const response = await fetch(`http://localhost:8000/api/stock_info?stock_symbol=${stockSymbol}&country=${country}`);
         
@@ -229,13 +227,21 @@ async function loadStockInfo() {
         }
         
         // 隱藏載入中
-        document.getElementById('loading-indicator').style.display = 'none';
+        if (loadingIndicator) loadingIndicator.style.display = 'none';
         
         // 顯示股票資訊
         displayStockInfo(responseData.data);
+        // 新增：取得公司簡稱查詢新聞
+        const abbreviation = responseData.data.abbreviation;
+        if (abbreviation) {
+            window._companyNewsKeyword = abbreviation;
+            fetchCompanyNews(abbreviation, 1);
+        } else {
+            const newsSection = document.getElementById('related-news-section');
+            if (newsSection) newsSection.querySelector('.related-news-list').textContent = '無法取得公司新聞';
+        }
     } catch (error) {
-        // 隱藏載入中
-        document.getElementById('loading-indicator').style.display = 'none';
+        if (loadingIndicator) loadingIndicator.style.display = 'none';
         
         // 清除所有內容
         document.getElementById('stock-header').textContent = '';
@@ -243,6 +249,9 @@ async function loadStockInfo() {
         
         // 顯示錯誤訊息
         displayError(error.message);
+        // 新增：錯誤時新聞區顯示
+        const newsSection = document.getElementById('related-news-section');
+        if (newsSection) newsSection.querySelector('.related-news-list').textContent = '無法取得公司新聞';
     }
 }
 
@@ -1126,6 +1135,7 @@ async function loadStockRankingSection() {
 
         // 渲染排名內容
         const updateBlock = async () => {
+            if (window.loadingIndicator) window.loadingIndicator.style.display = 'flex';
             detailSection.textContent = '載入中...';
             explainSection.textContent = '';
             const year = parseInt(yearSelect.value);
@@ -1163,7 +1173,7 @@ async function loadStockRankingSection() {
                 // 產業/幣別/總數
                 const sectorDiv = document.createElement('div');
                 sectorDiv.className = 'ranking-sector';
-                // 禁用 innerHTML，全部用 DOM API
+                
                 const span1 = document.createElement('span');
                 span1.textContent = '產業：';
                 sectorDiv.appendChild(span1);
@@ -1251,9 +1261,118 @@ async function loadStockRankingSection() {
             } catch (e) {
                 detailSection.textContent = '查詢失敗或無資料';
                 explainSection.textContent = '';
+            } finally {
+                if (window.loadingIndicator) window.loadingIndicator.style.display = 'none';
             }
         };
         updateDropdownStatus();
         updateBlock();
     }
+}
+
+// ========== 相關新聞功能 ========== //
+async function fetchCompanyNews(keyword, page = 1) {
+    const section = document.getElementById('related-news-section');
+    const list = section.querySelector('.related-news-list');
+    const pagination = section.querySelector('.related-news-pagination');
+    if (loadingIndicator) loadingIndicator.style.display = "flex";
+    // 清空內容
+    while (list.firstChild) list.removeChild(list.firstChild);
+    while (pagination.firstChild) pagination.removeChild(pagination.firstChild);
+
+    try {
+        const response = await fetch(`http://localhost:8000/api/news?keyword=${encodeURIComponent(keyword)}&page=${page}`);
+        const result = await response.json();
+        // 清空 loading
+        while (list.firstChild) list.removeChild(list.firstChild);
+        if (!result.data || result.data.length === 0) {
+            const empty = document.createElement('div');
+            empty.textContent = '查無相關新聞';
+            list.appendChild(empty);
+            if (loadingIndicator) loadingIndicator.style.display = 'none';
+            return;
+        }
+        renderCompanyNews(result, page, result.nextPage);
+    } catch (e) {
+        while (list.firstChild) list.removeChild(list.firstChild);
+        const fail = document.createElement('div');
+        fail.textContent = '載入新聞失敗';
+        list.appendChild(fail);
+    } finally {
+        if (loadingIndicator) loadingIndicator.style.display = 'none';
+    }
+}
+function renderCompanyNews(newsData, page, nextPage) {
+    const section = document.getElementById('related-news-section');
+    const list = section.querySelector('.related-news-list');
+    const pagination = section.querySelector('.related-news-pagination');
+    // 清空內容
+    while (list.firstChild) list.removeChild(list.firstChild);
+    while (pagination.firstChild) pagination.removeChild(pagination.firstChild);
+    newsData.data.forEach(item => {
+        const block = document.createElement('div');
+        block.className = 'related-news-block';
+        const newsSection = document.createElement('div');
+        newsSection.className = 'related-news-session';
+        const newsTitle = document.createElement('div');
+        newsTitle.textContent = item.title || '';
+        newsTitle.className = 'related-news-title-text';
+        const newsContent = document.createElement('div');
+        newsContent.className = 'related-news-content';
+        newsContent.textContent = item.content || '';
+        const publishAtDiv = document.createElement('div');
+        publishAtDiv.className = 'related-news-publishAt';
+        const date = new Date(item.publishAt * 1000);
+        publishAtDiv.textContent = date.toLocaleString('zh-TW', { timeZone: 'Asia/Taipei' });
+        const newsCategory = document.createElement('span');
+        let categoryContent = item.category || '';
+        if (categoryContent === 'headline') categoryContent = '頭條新聞';
+        newsCategory.textContent = categoryContent;
+        newsCategory.className = 'related-news-category';
+        const newsSource = document.createElement('div');
+        let newsSourceContent = item.source || '';
+        if (newsSourceContent === 'anue') newsSourceContent = '鉅亨網';
+        newsSource.textContent = newsSourceContent;
+        newsSource.className = 'related-news-source';
+        const newsURL = document.createElement('div');
+        newsURL.textContent = item.url || '';
+        newsURL.className = 'related-news-url';
+        newsURL.style.display = 'none';
+        newsSection.appendChild(newsTitle);
+        newsSection.appendChild(newsContent);
+        newsSection.appendChild(publishAtDiv);
+        newsSection.appendChild(newsSource);
+        newsSection.appendChild(newsCategory);
+        newsSection.appendChild(newsURL);
+        block.appendChild(newsSection);
+        list.appendChild(block);
+    });
+    // 分頁按鈕
+    if (page > 1) {
+        const prevBtn = document.createElement('button');
+        prevBtn.textContent = '上一頁';
+        prevBtn.className = 'related-news-btn';
+        prevBtn.onclick = () => fetchCompanyNews(window._companyNewsKeyword, page - 1);
+        pagination.appendChild(prevBtn);
+    }
+    if (nextPage) {
+        const nextBtn = document.createElement('button');
+        nextBtn.textContent = '下一頁';
+        nextBtn.className = 'related-news-btn';
+        nextBtn.onclick = () => fetchCompanyNews(window._companyNewsKeyword, nextPage);
+        pagination.appendChild(nextBtn);
+    }
+    monitorCompanyNewsClicks();
+}
+function monitorCompanyNewsClicks() {
+    let listItems = document.querySelectorAll('.related-news-session');
+    listItems.forEach(item => {
+        item.addEventListener('click', () => {
+            let urlEl = item.querySelector('.related-news-url');
+            if (urlEl) {
+                let url = urlEl.textContent.trim();
+                window.open(url, '_blank');
+            }
+        });
+    });
 }
