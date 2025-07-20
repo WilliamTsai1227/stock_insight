@@ -1582,3 +1582,20 @@ function monitorCompanyAINewsClicks() {
         });
     });
 }
+
+function initializeFooterLinks() {
+    document.getElementById('footer-purpose-link')?.addEventListener('click', function() {
+        window.open('/info', '_blank', 'noopener,noreferrer');
+    });
+    document.getElementById('footer-contact-link')?.addEventListener('click', function() {
+        window.open('/info', '_blank', 'noopener,noreferrer');
+    });
+    document.getElementById('footer-disclaimer-link')?.addEventListener('click', function() {
+        window.open('/info', '_blank', 'noopener,noreferrer');
+    });
+}
+
+function excute(){
+    initializeFooterLinks();
+}
+window.addEventListener("DOMContentLoaded", excute);

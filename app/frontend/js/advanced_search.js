@@ -433,6 +433,18 @@ function initializeHamburgerMenu() {
     });
 }
 
+function initializeFooterLinks() {
+    document.getElementById('footer-purpose-link')?.addEventListener('click', function() {
+        window.open('/info', '_blank', 'noopener,noreferrer');
+    });
+    document.getElementById('footer-contact-link')?.addEventListener('click', function() {
+        window.open('/info', '_blank', 'noopener,noreferrer');
+    });
+    document.getElementById('footer-disclaimer-link')?.addEventListener('click', function() {
+        window.open('/info', '_blank', 'noopener,noreferrer');
+    });
+}
+
 document.addEventListener('DOMContentLoaded', () => {
     initPage();
     initializeHamburgerMenu(); // 新增這行
@@ -442,4 +454,5 @@ document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('income-next-page').onclick = () => nextPage('income_statement');
     document.getElementById('balance-prev-page').onclick = () => prevPage('balance_sheet');
     document.getElementById('balance-next-page').onclick = () => nextPage('balance_sheet');
+    initializeFooterLinks();
 }); 

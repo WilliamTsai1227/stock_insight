@@ -338,28 +338,51 @@ body {
 
 /* Footer 樣式 */
 .footer {
-    border-top: 1px solid #e0e4e8;
-    flex: none;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    padding: 20px 0;
-    width: 100%;
-    background-color: #f0f2f5;
-    box-sizing: border-box;
-    margin-top: auto;
+    background-color: #f0f2f5; 
+    padding: 20px 40px;
+    text-align: center;
+    border-top: 1px solid #e0e4e8; 
+    margin-top: auto; 
 }
 
 .footer_text {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    width: 800px;
+    color: #60748a; 
     font-size: 14px;
     line-height: 1.6;
-    text-align: center;
-    color: #60748a;
-    padding: 0 20px;
+    max-width: 960px; 
+    margin: 0 auto; 
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    justify-content: center;
+    align-items: center;
+}
+.footer-link {
+    display: inline-block;
+    padding: 0 6px;
+    background: none;
+    color: #0056b3;
+    font-weight: 600;
+    font-size: 15px;
+    cursor: pointer;
+    border: none;
+    border-radius: 0;
+    margin: 0 2px;
+    transition: color 0.2s;
+    text-decoration: underline;
+    box-shadow: none;
+}
+.footer-link:hover, .footer-link:focus {
+    color: #333;
+    background: none;
+    text-decoration: underline;
+    box-shadow: none;
+}
+.footer-link:active {
+    color: #111418;
+    background: none;
+    text-decoration: underline;
+    box-shadow: none;
 }
 
 .stock-financial-report-container {

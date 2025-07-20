@@ -45,9 +45,6 @@ async def ai_news_page(request: Request):
 async def news_page(request: Request):
     return FileResponse(HTML_DIR / "news.html", media_type="text/html")
 
-@app.get("/news/{id}", include_in_schema=False)
-async def news_detail(request: Request, id: str):
-    return FileResponse(HTML_DIR / "detail_news.html", media_type="text/html")
 
 @app.get("/stock/{symbol}/{country}", include_in_schema=False)
 async def stock_page(request: Request, symbol: str, country: str):

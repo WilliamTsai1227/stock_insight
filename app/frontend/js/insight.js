@@ -515,7 +515,17 @@ function initializeHamburgerMenu() {
     handleResize(); // 初始載入時執行一次
   }
 
-
+function initializeFooterLinks() {
+    document.getElementById('footer-purpose-link')?.addEventListener('click', function() {
+        window.open('/info', '_blank', 'noopener,noreferrer');
+    });
+    document.getElementById('footer-contact-link')?.addEventListener('click', function() {
+        window.open('/info', '_blank', 'noopener,noreferrer');
+    });
+    document.getElementById('footer-disclaimer-link')?.addEventListener('click', function() {
+        window.open('/info', '_blank', 'noopener,noreferrer');
+    });
+}
 
 
 
@@ -527,6 +537,7 @@ async function excute(){
     scrollingAddAIAnalysis();
     search();
     initializeHamburgerMenu();
+    initializeFooterLinks();
     
 }
 window.addEventListener("DOMContentLoaded", excute);
