@@ -1073,9 +1073,21 @@ async function loadStockRankingSection() {
                     Array.from(yearSelect.options).forEach(opt => {
                         opt.disabled = (String(opt.value) === '2025');
                     });
-                } else {
-                    // 其他狀態全部年份可選
-                    Array.from(yearSelect.options).forEach(opt => { opt.disabled = false; });
+                } else if (period === 'accumulated') {
+                    quarterSelect.disabled = false;
+                    Array.from(quarterSelect.options).forEach(opt => {
+                        if (year === 2025) {
+                            opt.disabled = opt.value !== '1';
+                            if (opt.value === '1') quarterSelect.value = 1;
+                        } else {
+                            opt.disabled = !['1','2','3'].includes(opt.value);
+                            if (!['1','2','3'].includes(quarterSelect.value)) quarterSelect.value = '1';
+                        }
+                    });
+                    // 2025 禁用
+                    Array.from(yearSelect.options).forEach(opt => {
+                        opt.disabled = false;
+                    });
                 }
             }
             // 損益表
