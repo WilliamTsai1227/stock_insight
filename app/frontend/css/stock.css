@@ -1137,6 +1137,11 @@ td:first-child, th:first-child {
     background: #eaf3fa;
     color: #333;
 }
+.publishAtDiv{
+    color: #333;
+    font-size: 14px;
+    padding-left: 2px;
+}
 @media (max-width: 900px) {
     .ai-analysis-title { font-size: 20px; }
     .ai-analysis-block { max-width: 100vw; padding: 10px 6px; }
@@ -1146,18 +1151,19 @@ td:first-child, th:first-child {
     .ai-analysis-summary,
     .ai-analysis-important-news,
     .ai-analysis-sentiment,
-    .ai-analysis-potential { font-size: 13px; }
+    .ai-analysis-potential { font-size: 14px; }
 }
 @media (max-width: 600px) {
-    .ai-analysis-title { font-size: 17px; }
+    .ai-analysis-title { font-size: 18px; }
     .ai-analysis-block { max-width: 100vw; padding: 6px 2px; }
     .ai-analysis-source-news-btn { font-size: 12px; padding: 3px 4px; max-width: 120px; }
-    .ai-analysis-article-title { font-size: 13px; }
-    .ai-analysis-section-title { font-size: 12px; }
+    .ai-analysis-article-title { font-size: 14px; }
+    .ai-analysis-section-title { font-size: 13px; }
     .ai-analysis-summary,
     .ai-analysis-important-news,
     .ai-analysis-sentiment,
     .ai-analysis-potential { font-size: 12px; }
     .ai-analysis-pagination { gap: 6px; }
-    .ai-analysis-btn-page { font-size: 13px; padding: 6px 12px; }
+    .ai-analysis-btn-page { font-size: 14px; padding: 6px 12px; }
+    .publishAtDiv{font-size: 10px;padding-left: 2px;}
 } 

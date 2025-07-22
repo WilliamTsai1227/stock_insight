@@ -1552,6 +1552,26 @@ function renderCompanyAIAnalysis(data, page, nextPage) {
             });
             block.appendChild(sourceNewsList);
         }
+        // 新增 publishAt 顯示
+        if (item.publishAt) {
+            const publishAtDiv = document.createElement("div");
+            publishAtDiv.className = "publishAtDiv"; // 可以為此 class 設定 CSS 樣式來控制位置和外觀
+            const timestamp = item.publishAt; // Unix timestamp（以秒為單位）
+            const date = new Date(timestamp * 1000); // 轉成毫秒
+
+            const taiwanTime = date.toLocaleString("zh-TW", {
+                timeZone: "Asia/Taipei",
+                year: 'numeric', // 顯示年份
+                month: '2-digit', // 顯示月份，兩位數
+                day: '2-digit', // 顯示日期，兩位數
+                hour: '2-digit', // 顯示小時，兩位數
+                minute: '2-digit', // 顯示分鐘，兩位數
+                second: '2-digit', // 顯示秒數，兩位數
+                hour12: false // 使用24小時制
+            });
+            publishAtDiv.textContent = taiwanTime;
+            block.appendChild(publishAtDiv);
+        }
         list.appendChild(block);
     });
     // 分頁按鈕
