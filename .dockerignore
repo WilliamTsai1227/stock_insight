@@ -1,60 +1,61 @@
+# stock_insight_project/.dockerignore
 
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+env/
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/sdist/
+var/
+*.egg-info/
+.installed.cfg
+*.egg
 
-# Ignore version control files
-.git
+# 虛擬環境
+venv/
+ENV/
 
-# Ignore virtual environment directories
-venv
-env
-.venv
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
 
-# Ignore environment variable files
-.env
+# 系統文件
+.DS_Store
+Thumbs.db
 
-# Ignore Python compiled files
-__pycache__
-*.pyc
-*.pyo
-*.pyd
-
-# Ignore log and instant files
+# 日誌
 *.log
-*.tmp
 
+# 本地配置文件
+.env
+.env.local
 
-# Ignore IDE editor configuration directory
-.vscode
-*.sublime-project
-*.sublime-workspace
-
-# Ignore Docker build and deployment files
-docker-compose.yml
-Dockerfile
-.dockerignore
-
-#gitignore
-.gitignore
-
-#note
-aws_command.txt
-database_structure.sql
-
-#README
-README.md
-
-sql_command.sql
-#python
-try.py
-note.py
-
-# Ignore GIF file
-/gif/
-.gif
-
-# Ignore lambda directory
+#需要忽略的資料夾
+app/backend/docs/
+app/backend/tests/
+crawler_anue/
+crawler_module/
+data_process/
+financial_report_crawler/
 lambda_function/
 lambda_layer/
+tests/
+設計圖/
 
-# Ignore Database related
-*.sqlite3
-*.db
+#需要忽略的文件
+需求.txt
+database_schema.sql
+.cursorignore
+.gitignore

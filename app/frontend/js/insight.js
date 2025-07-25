@@ -81,7 +81,7 @@ async function loadAllAIAnalysis(){
         isLoading = true; // Start loading data, set isLoading to true
         if (loadingIndicator) loadingIndicator.style.display = "flex"; // Display the loading indicator
         console.log(`fetch startTime:${startTime}, endTime: ${endTime}`)
-        const response = await fetch(`http://localhost:8000/api/ai_news?keyword=${keyword}&industry=${industry}&is_summary=${is_summary}&start_time=${startTime}&end_time=${endTime}&page=${page}`);
+        const response = await fetch(`/api/ai_news?keyword=${keyword}&industry=${industry}&is_summary=${is_summary}&start_time=${startTime}&end_time=${endTime}&page=${page}`);
         const result = await response.json();
         // 判斷是否還有下一頁資料
         if (result.nextPage === null || result.data.length === 0) {

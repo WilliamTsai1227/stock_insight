@@ -214,7 +214,7 @@ async function loadStockInfo() {
         document.getElementById('stock-header').textContent = '';
         document.getElementById('stock-info').textContent = '';
         
-        const response = await fetch(`http://localhost:8000/api/stock_info?stock_symbol=${stockSymbol}&country=${country}`);
+        const response = await fetch(`/api/stock_info?stock_symbol=${stockSymbol}&country=${country}`);
         
         if (!response.ok) {
             const errorData = await response.json();
@@ -377,7 +377,7 @@ function displayError(message) {
 
 // 包裝財報查詢/繪圖為 function
 async function loadFinancialReport(stockSymbol, country) {
-    const API_BASE_URL = "http://localhost:8000/api/financial_report";
+    const API_BASE_URL = "/api/financial_report";
     let currentFinancialData = [];
     let currentOriginalCurrency = '';
 
@@ -1188,7 +1188,7 @@ async function loadStockRankingSection() {
                 apiPeriod = 'quarterly';
             }
             try {
-                const res = await fetch(`http://localhost:8000/api/advanced_search/stock_ranking?stock_symbol=${stockSymbol}&country=${country}&statement_type=${block.key}&report_type=${apiPeriod}&year=${year}&quarter=${apiQuarter}`);
+                const res = await fetch(`/api/advanced_search/stock_ranking?stock_symbol=${stockSymbol}&country=${country}&statement_type=${block.key}&report_type=${apiPeriod}&year=${year}&quarter=${apiQuarter}`);
                 if (!res.ok) throw new Error('查詢失敗');
                 const rankingData = await res.json();
                 if (!rankingData.data || !rankingData.data.rankings) throw new Error('無資料');
@@ -1305,7 +1305,7 @@ async function fetchCompanyNews(keyword, page = 1) {
     while (pagination.firstChild) pagination.removeChild(pagination.firstChild);
 
     try {
-        const response = await fetch(`http://localhost:8000/api/news?keyword=${encodeURIComponent(keyword)}&page=${page}`);
+        const response = await fetch(`/api/news?keyword=${encodeURIComponent(keyword)}&page=${page}`);
         const result = await response.json();
         // 清空 loading
         while (list.firstChild) list.removeChild(list.firstChild);
@@ -1432,7 +1432,7 @@ async function fetchCompanyAIAnalysis(keyword, is_summary = false, page = 1) {
     const endTime = Math.floor(Date.now() / 1000);
     const startTime = Math.floor(new Date('2020-01-01T00:00:00Z').getTime() / 1000);
     try {
-        const response = await fetch(`http://localhost:8000/api/ai_news?keyword=${encodeURIComponent(keyword)}&is_summary=${is_summary}&start_time=${startTime}&end_time=${endTime}&page=${page}`);
+        const response = await fetch(`/api/ai_news?keyword=${encodeURIComponent(keyword)}&is_summary=${is_summary}&start_time=${startTime}&end_time=${endTime}&page=${page}`);
         const result = await response.json();
         if (!result.data || result.data.length === 0) {
             const empty = document.createElement('div');

@@ -59,7 +59,7 @@ async function loadAllNews(){
         if (loadingIndicator) loadingIndicator.style.display = "flex"; // Display the loading indicator
         //Can add a printout of the search time to check
         //console.log(`fetch startTime:${startTime}, endTime: ${endTime}`)
-        const response = await fetch(`http://localhost:8000/api/news?keyword=${keyword}&start_time=${startTime}&end_time=${endTime}&page=${page}`);
+        const response = await fetch(`/api/news?keyword=${keyword}&start_time=${startTime}&end_time=${endTime}&page=${page}`);
         const result = await response.json();
         // 判斷是否還有下一頁資料
         if (result.nextPage === null || result.data.length === 0) {
