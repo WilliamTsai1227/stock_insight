@@ -108,29 +108,17 @@ async function loadAllAIAnalysis(){
             // --- 1. Summary Section ---
             const aiSection = document.createElement("div");
             aiSection.className = "section ai-summary";
-            const aiSectionDiv = document.createElement("div"); 
-
+            const aiSectionDiv = document.createElement("div");
             
-            //Establish a creation time block
-            const publishAtDiv = document.createElement("div");
-            publishAtDiv.className = "publishAtDiv";
-            const timestamp = item.publishAt; // Unix timestamp（以秒為單位）
-            const date = new Date(timestamp * 1000); // 轉成毫秒
-
-            const taiwanTime = date.toLocaleString("zh-TW", {
-            timeZone: "Asia/Taipei",
-            });
-            publishAtDiv.textContent = taiwanTime;
-            aiSectionDiv.appendChild(publishAtDiv);
-
+            const title = document.createElement('div');
+            title.className = 'ai-analysis-article-title';
+            title.textContent = item.article_title || '';
+            aiSectionDiv.appendChild(title);
             aiSection.appendChild(aiSectionDiv);
+            
 
 
             //洞察結果 重點新聞 情緒分析
-            const aiBigTitle = document.createElement("div");
-            aiBigTitle.textContent = "重點整理";
-            aiBigTitle.className = "section-title";
-            aiSectionDiv.appendChild(aiBigTitle);
 
             
 
@@ -167,7 +155,6 @@ async function loadAllAIAnalysis(){
                 keyNewsContent.appendChild(document.createTextNode(importantNewsLines));
                 if (index < importantNewsLines.length - 1) {
                     keyNewsContent.appendChild(document.createElement("br"));
-                    keyNewsContent.appendChild(document.createElement("br"));
                 }
             });
             aiSectionDiv.appendChild(keyNewsTitle);
@@ -177,14 +164,14 @@ async function loadAllAIAnalysis(){
             sentimentTitle.textContent = "情緒分析: " ;
             sentimentTitle.className = "sentiment-analysis";
             const sentimentContent = document.createElement("div");
-            sentimentContent.textContent = item.sentiment;
+            sentimentContent.textContent = item.sentiment || '';;
             sentimentContent.className = "sentiment-analysis-content";
             aiSectionDiv.appendChild(sentimentTitle);
             aiSectionDiv.appendChild(sentimentContent);
 
             // 股票產業分析
             const potentialBigTitle = document.createElement("div");
-            potentialBigTitle.textContent = "股票＆產業分析";
+            potentialBigTitle.textContent = "產業分析";
             potentialBigTitle.className = "section-title";
             aiSectionDiv.appendChild(potentialBigTitle);
 
@@ -197,7 +184,6 @@ async function loadAllAIAnalysis(){
             lines.forEach((line, index) => {
                 potentialContentDiv.appendChild(document.createTextNode(line));
                 if (index < lines.length - 1) {
-                    potentialContentDiv.appendChild(document.createElement("br"));
                     potentialContentDiv.appendChild(document.createElement("br"));
                 }
             });
@@ -213,23 +199,29 @@ async function loadAllAIAnalysis(){
             listSection.appendChild(stockListBigTitle);
             aiSectionDiv.appendChild(listSection);
 
-            item.stock_list.forEach(stock => {
+            const stockList = document.createElement('div');
+            stockList.className = 'ai-analysis-stock-list';
+            
+
+            (item.stock_list || []).forEach(stock => {
                 const div = document.createElement("div");
                 div.className = "stock-list-item";
-                div.textContent = stock[2];
+                div.textContent = stock[2] || '';
                 const span = document.createElement("span");
                 span.className = "stock-list-item-code";
                 const firstTwo = stock.slice(0, 2); // 取第 0 和第 1 個元素
-                span.textContent = firstTwo.join(",");  // 例如："2330,TSMC"
+                span.textContent = firstTwo.join(",") || '';  // 例如："2330,TSMC"
                 div.appendChild(span);
                 const [market, number] = firstTwo;
                 const tooltip = document.createElement('div');
                 tooltip.className = 'stock-tooltip';
-                tooltip.textContent = `股票代碼：${market} ${number}`;
+                tooltip.textContent = `股票代碼：${market} ${number}`|| '';
                 div.appendChild(tooltip);
-                listSection.appendChild(div);
-                aiSectionDiv.appendChild(listSection);
+                stockList.appendChild(div);
+                
             });
+            listSection.appendChild(stockList);
+            aiSectionDiv.appendChild(listSection);
 
             const industryListBigTitle = document.createElement("div");
             industryListBigTitle.textContent = "相關產業";
@@ -237,40 +229,53 @@ async function loadAllAIAnalysis(){
             listSection.appendChild(industryListBigTitle);
             aiSectionDiv.appendChild(listSection);
 
+            const industryList = document.createElement('div');
+            industryList.className = 'ai-analysis-industry-list';
+
             item.industry_list.forEach(ind => {
                 const div = document.createElement("div");
                 div.className = "industry-list-item";
-                div.textContent = ind;
-                listSection.appendChild(div);
-                aiSectionDiv.appendChild(listSection);
+                div.textContent = ind || '';
+                industryList.appendChild(div);
+                
             });
+            listSection.appendChild(industryList);
+            
+            const newsSection = document.createElement("div");
+            newsSection.className = "news-section";
+            const newsBigTitle = document.createElement("div");
+            newsBigTitle.textContent = "相關新聞";
+            newsBigTitle.className = "section-title"
+            newsSection.appendChild(newsBigTitle);
+            aiSectionDiv.appendChild(newsSection);
 
-            // --- 4. source_news - news items ---
-            // const newsSection = document.createElement("div");
-            // newsSection.className = "news-section";
-            // const newsBigTitle = document.createElement("div");
-            // newsBigTitle.textContent = "相關新聞";
-            // newsBigTitle.className = "section-title"
-            // newsSection.appendChild(newsBigTitle);
-            // aiSectionDiv.appendChild(newsSection);
+            const sourceNewsList = document.createElement('div');
+            sourceNewsList.className = 'ai-analysis-source-news-list';
 
-            // item.source_news.forEach(news => {
-            //     const newsDiv = document.createElement("div");
-            //     newsDiv.className = "news-item";
-            //     newsDiv.textContent = news.title;
+            item.source_news.forEach(news => {
+                const newsDiv = document.createElement("div");
+                newsDiv.className = "news-item";
+                newsDiv.textContent = news.title || '';
+                const idSpan = document.createElement("span");
+                idSpan.textContent = news["_id"] || "";
+                idSpan.className = "news-item-id";
+                newsDiv.appendChild(idSpan);
+                sourceNewsList.appendChild(newsDiv);
+                
+            });
+            newsSection.appendChild(sourceNewsList);
 
-            //     // hidden _id span
-            //     const idSpan = document.createElement("span");
-            //     idSpan.textContent = news["_id"] || "";
-            //     idSpan.className = "news-item-id";
-            //     newsDiv.appendChild(idSpan);
+            //Establish a creation time block
+            const publishAtDiv = document.createElement("div");
+            publishAtDiv.className = "publishAtDiv";
+            const timestamp = item.publishAt; // Unix timestamp（以秒為單位）
+            const date = new Date(timestamp * 1000); // 轉成毫秒
 
-
-            //     newsSection.appendChild(newsDiv);
-            //     aiSectionDiv.appendChild(newsSection);
-            // });
-
-
+            const taiwanTime = date.toLocaleString("zh-TW", {
+            timeZone: "Asia/Taipei",
+            });
+            publishAtDiv.textContent = taiwanTime || '';
+            aiSectionDiv.appendChild(publishAtDiv);
 
 
 
@@ -288,7 +293,7 @@ async function loadAllAIAnalysis(){
         if (loadingIndicator) loadingIndicator.style.display = "none"; // Hide the loading indicator
         const container = document.querySelector(".container");
         const errorMessage = document.createElement("div");
-        errorMessage.textContent = "Oops! 載入分析時發生錯誤，請稍後再試。";
+        errorMessage.textContent = "Oops! 載入時發生錯誤，請稍後再試。";
         errorMessage.className = "errorMessage";
         container.appendChild(errorMessage);
     }
@@ -402,71 +407,20 @@ function monitorStockClicks() {
             let stockCodeElement = item.querySelector(".stock-list-item-code");
             let stockCodeText = stockCodeElement ? stockCodeElement.textContent.trim() : "";
             let [market, stockCode] = stockCodeText.split(",");
-            
-            // 開啟第一個網頁（Google 搜尋）並保持當前窗口焦點
-            let googleStockWindow = window.open(`https://www.google.com/search?q=${stockName}`, '_blank');
-            if (!googleStockWindow) {
-                alert("Google 搜尋窗口被攔截，請檢查瀏覽器彈窗設定。");
-            } else {
-                window.focus(); // 保持當前窗口焦點
+
+            if (market === "tw"){
+                window.open(`/stock/${stockCode}/${market}`);
+            }else{
+                // 開啟Google 搜尋並保持當前窗口焦點
+                let googleStockWindow = window.open(`https://www.google.com/search?q=${stockName}`, '_blank');
+                if (!googleStockWindow) {
+                    alert("Google 搜尋窗口被攔截，請檢查瀏覽器彈窗設定。");
+                } else {
+                    window.focus(); // 保持當前窗口焦點
+                }    
             }
             
-            // 根據市場代碼生成 TradingView URL
-            let tradingViewUrl = "";
-            if (market && stockCode) {
-                stockCode = stockCode.trim();
-                // 特殊處理香港股票代碼（移除前綴的 00）
-                if (market === "hk") {
-                    stockCode = stockCode.replace(/^00/, "");
-                }
-                
-                switch (market) {
-                    case "tw":
-                        // 首先嘗試 TWSE
-                        tradingViewUrl = `https://tw.tradingview.com/chart/?symbol=TWSE%3A${stockCode}`;
-                        break;
-                    case "us":
-                        tradingViewUrl = `https://tw.tradingview.com/chart/?symbol=NASDAQ%3A${stockCode}`;
-                        break;
-                    case "cn":
-                        tradingViewUrl = `https://tw.tradingview.com/chart/?symbol=SZSE%3A${stockCode}`;
-                        break;
-                    case "hk":
-                        tradingViewUrl = `https://tw.tradingview.com/chart/?symbol=HKEX%3A${stockCode}`;
-                        break;
-                    case "jp":
-                        tradingViewUrl = `https://tw.tradingview.com/chart/?symbol=TSE%3A${stockCode}`;
-                        break;
-                    case "kr":
-                        tradingViewUrl = `https://tw.tradingview.com/chart/?symbol=KRX%3A${stockCode}`;
-                        break;
-                    default:
-                        tradingViewUrl = null; // 如果市場代碼無效，不開啟第二個網頁
-                }
-                
-                // 開啟 TradingView 網頁（延遲 2 秒）
-                if (tradingViewUrl) {
-                    setTimeout(() => {
-                        let tradingViewWindow = window.open(tradingViewUrl, '_blank');
-                        if (!tradingViewWindow) {
-                            alert("TradingView 窗口被攔截，請檢查瀏覽器彈窗設定。");
-                        } else {
-                            window.focus(); // 保持當前窗口焦點
-                            if (market === "tw") {
-                                // 對於 tw 市場，額外嘗試 TPEX（延遲 4 秒）
-                                setTimeout(() => {
-                                    let tpexWindow = window.open(`https://tw.tradingview.com/chart/?symbol=TPEX%3A${stockCode}`, '_blank');
-                                    if (!tpexWindow) {
-                                        alert("TradingView TPEX 窗口被攔截，請檢查瀏覽器彈窗設定。");
-                                    } else {
-                                        window.focus(); // 保持當前窗口焦點
-                                    }
-                                }, 3000);
-                            }
-                        }
-                    }, 2000);
-                }
-            }
+
         });
     });
 }

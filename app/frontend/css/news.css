@@ -195,11 +195,9 @@ body {
     flex-wrap: wrap;
     align-items: center;
     justify-content:center;
-    /* padding-left: 10%;
-    padding-right: 10%;  */
-    padding-top: 15px; 
-    /* border: 1px solid #68696a38; */
-    /* width: 50vw; */
+    background-color: #ffffff;
+    padding-top: 30px; 
+
 }
 
 .start-time-div,
@@ -228,6 +226,7 @@ body {
     border: none; 
     outline: none; 
     border-radius: 5px 0 0 5px;
+    border: 1px solid #ddd;
 }
 .search_icon {
     display: flex;
@@ -318,8 +317,8 @@ body {
     display: flex;
     flex-direction: column; /* 垂直堆疊 */
     padding-top: 10px;
-    padding-left: 20%;
-    padding-right: 20%; 
+    padding-left: 10%;
+    padding-right: 10%; 
     width: 95%;  
 
 }
@@ -571,7 +570,12 @@ body {
     .search-bar{
         width: 170px;
     }
-
+    .news-title{
+        font-size: 17px;
+    }
+    .news-content{
+        font-size: 16px;
+    }
 
 
 }

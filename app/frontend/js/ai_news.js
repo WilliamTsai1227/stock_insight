@@ -429,7 +429,7 @@ function monitorStockClicks() {
             let [market, stockCode] = stockCodeText.split(",");
 
             if (market === "tw"){
-                window.open(`http://localhost:8000/stock/${stockCode}/${market}`);
+                window.open(`/stock/${stockCode}/${market}`);
             }else{
                 // 開啟Google 搜尋並保持當前窗口焦點
                 let googleStockWindow = window.open(`https://www.google.com/search?q=${stockName}`, '_blank');
