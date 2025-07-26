@@ -267,6 +267,7 @@ body {
     background-color: #ffffff;
     padding: 16px; 
     flex-direction: column;
+    cursor: pointer;
 }
 
 .feature-icon {

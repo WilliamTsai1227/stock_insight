@@ -52,8 +52,43 @@ function initializeFooterLinks() {
         window.open('/info', '_blank', 'noopener,noreferrer');
     });
 }
+function monitorFeatureCardClicks() {
+    const featureCards = document.querySelectorAll('.feature-card');
+
+    featureCards.forEach(card => {
+        card.addEventListener("click", () => {
+            const cardId = card.id; 
+            let targetUrl = ''; 
+
+            switch (cardId) {
+                case 'feature-card-news':
+                    targetUrl = '/news';
+                    break;
+                case 'feature-card-insight':
+                    targetUrl = '/insight';
+                    break;
+                case 'feature-card-stock':
+                    targetUrl = '/stock/2330/tw'; 
+                    break;
+                case 'feature-card-advanced-search':
+                    targetUrl = '/advanced_search';
+                    break;
+                default:
+                    console.warn(`未知的卡片 ID: ${cardId}`);
+                    break;
+            }
+
+            if (targetUrl) {
+                window.location.href = targetUrl; 
+            }
+        });
+    });
+}
+
+
 
 function excute(){
+    monitorFeatureCardClicks()
     initializeHamburgerMenu();
     initializeFooterLinks();
 }

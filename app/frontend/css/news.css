@@ -320,7 +320,6 @@ body {
     padding-left: 10%;
     padding-right: 10%; 
     width: 95%;  
-
 }
 
 
@@ -576,7 +575,11 @@ body {
     .news-content{
         font-size: 16px;
     }
-
+    .block {
+        padding-left: 5%;
+        padding-right: 5%; 
+        width: 95%;  
+    }
 
 }
 

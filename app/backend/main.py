@@ -37,9 +37,6 @@ async def index(request: Request):
 async def home(request: Request):
     return FileResponse(HTML_DIR / "index.html", media_type="text/html")
 
-@app.get("/ai_news", include_in_schema=False)
-async def ai_news_page(request: Request):
-    return FileResponse(HTML_DIR / "ai_news.html", media_type="text/html")
 
 @app.get("/news", include_in_schema=False)
 async def news_page(request: Request):

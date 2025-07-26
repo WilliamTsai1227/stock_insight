@@ -323,15 +323,12 @@ function displayStockInfo(data) {
         const thEl = document.createElement("th");
         thEl.textContent = th;
         tr.appendChild(thEl);
+    
         const tdEl = document.createElement("td");
         tdEl.colSpan = 3;
+    
         if (url) {
-            const a = document.createElement("a");
-            a.href = url;
-            a.target = "_blank";
-            a.rel = "noopener noreferrer";
-            a.textContent = url;
-            tdEl.appendChild(a);
+            tdEl.textContent = url; // 直接顯示網址文字
         } else {
             tdEl.textContent = "-";
         }
@@ -1503,7 +1500,7 @@ function renderCompanyAIAnalysis(data, page, nextPage) {
         // 相關股票
         const stockTitle = document.createElement('div');
         stockTitle.className = 'ai-analysis-section-title';
-        stockTitle.textContent = '相關股票：';
+        stockTitle.textContent = '潛力股票：';
         block.appendChild(stockTitle);
         const stockList = document.createElement('div');
         stockList.className = 'ai-analysis-stock-list';
@@ -1524,7 +1521,7 @@ function renderCompanyAIAnalysis(data, page, nextPage) {
         // 相關產業
         const industryTitle = document.createElement('div');
         industryTitle.className = 'ai-analysis-section-title';
-        industryTitle.textContent = '相關產業：';
+        industryTitle.textContent = '潛力產業：';
         block.appendChild(industryTitle);
         const industryList = document.createElement('div');
         industryList.className = 'ai-analysis-industry-list';

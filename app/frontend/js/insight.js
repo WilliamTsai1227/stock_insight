@@ -194,7 +194,7 @@ async function loadAllAIAnalysis(){
             listSection.className = "list-section";
 
             const stockListBigTitle = document.createElement("div");
-            stockListBigTitle.textContent = "相關股票";
+            stockListBigTitle.textContent = "潛力股票";
             stockListBigTitle.className = "section-title";
             listSection.appendChild(stockListBigTitle);
             aiSectionDiv.appendChild(listSection);
@@ -224,7 +224,7 @@ async function loadAllAIAnalysis(){
             aiSectionDiv.appendChild(listSection);
 
             const industryListBigTitle = document.createElement("div");
-            industryListBigTitle.textContent = "相關產業";
+            industryListBigTitle.textContent = "潛力產業";
             industryListBigTitle.className = "section-title";
             listSection.appendChild(industryListBigTitle);
             aiSectionDiv.appendChild(listSection);
