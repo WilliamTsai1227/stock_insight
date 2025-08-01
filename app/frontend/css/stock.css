@@ -1116,9 +1116,9 @@ td:first-child, th:first-child {
     }
 
     .nav-dropdown a {
-        padding: 12px 20px;
-        height: auto;
-        font-size: 18px;
+        width: 100%; 
+        justify-content: flex-start;
+        padding: 15px 20px; 
     }
 
     .hamburger-menu-close {
@@ -1156,7 +1156,7 @@ td:first-child, th:first-child {
 
     .nav-dropdown a {
         padding: 10px 15px;
-        font-size: 16px;
+        font-size: 15px;
     }
 
     .hamburger-menu-close {

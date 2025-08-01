@@ -232,7 +232,7 @@ async function loadAllAIAnalysis(){
             const industryList = document.createElement('div');
             industryList.className = 'ai-analysis-industry-list';
 
-            item.industry_list.forEach(ind => {
+            (item.industry_list || []).forEach(ind => {
                 const div = document.createElement("div");
                 div.className = "industry-list-item";
                 div.textContent = ind || '';
@@ -251,8 +251,8 @@ async function loadAllAIAnalysis(){
 
             const sourceNewsList = document.createElement('div');
             sourceNewsList.className = 'ai-analysis-source-news-list';
-
-            item.source_news.forEach(news => {
+            
+            (item.source_news || []).forEach(news => {
                 const newsDiv = document.createElement("div");
                 newsDiv.className = "news-item";
                 newsDiv.textContent = news.title || '';
@@ -263,6 +263,7 @@ async function loadAllAIAnalysis(){
                 sourceNewsList.appendChild(newsDiv);
                 
             });
+            
             newsSection.appendChild(sourceNewsList);
 
             //Establish a creation time block
