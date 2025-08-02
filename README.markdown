@@ -7,25 +7,24 @@ Stock Insight 是一個整合股市新聞、AI 洞察分析與個股數據的平
 
 ## 核心功能
 - **定時新聞更新與查詢**：每日自動化更新新聞，支援根據關鍵字與時間區間進行查詢。
-- **AI 洞察**：AI 根據新聞內容生成洞察，包括重點新聞摘要、情緒分析、潛力股票推薦及產業趨勢分析。
+- **AI 洞察**：AI 根據新聞內容生成洞察，包括重點新聞摘要、情緒分析、潛力股票推薦及產業趨勢分析，並支援根據關鍵字與時間區間進行查詢。
 - **個股頁面**：提供個股詳盡資料，包含十年財報（季報/年報/累計）（總共21萬筆數據）、財報指標在同產業中的排名、個股相關新聞及 AI 洞察。
 - **進階搜尋**：允許使用者根據財報欄位、年份、報表類型及特定產業，搜尋並對產業內的個股進行排名。
 
 ## 技術棧
 
 ### 後端與數據工程
-- **雲端服務**：AWS Lambda, AWS Step Functions, AWS ECS, AWS SQS, AWS S3, AWS PostgreSQL (RDS), AWS EC2, AWS Bedrock
-- **數據庫**：PostgreSQL, MongoDB
-- **容器化**：Docker Swarm
-- **網路與安全**：AWS Application Load Balancer (ALB), AWS Route53, AWS WAF, AWS Certificate Manager (ACM)
-- **後端框架**：Python FastAPI
-- **語言**：Python
+- **AWS Compute & Data Processing:** Lambda, Step Functions, ECS, SQS, S3, RDS, Bedrock, EC2, EventBridge
+- **AWS Networking & Security:** ALB, Route 53, WAF, ACM
+- **Databases:** PostgreSQL, MongoDB
+- **Containerization & Deployment:** Docker Swarm
+- **Backend Framework & Language:** Python (FastAPI)
 
 ### 前端
 - **技術**：HTML, CSS, JavaScript (Chart.js)
 
 ## 架構概覽
-本專案採用分散式架構，旨在提供高可用性、可擴展性與安全性。
+本專案採用分散式架構，提供高可用性、可擴展性與安全性。
 ![網站架構](diagrams/Architecture/Application_架構圖.png)
 ## 關鍵技術實踐
 
@@ -41,17 +40,16 @@ Stock Insight 是一個整合股市新聞、AI 洞察分析與個股數據的平
 - **提取 (Extract)**：批量從 MongoDB 讀取新聞數據，並暫存至 AWS S3。
 - **轉換 (Transform)**：AWS Lambda 從 S3 提取數據進行整理。
 - **分析 (Analyze)**：整理後的數據餵給 AWS Bedrock 進行 AI 分析。
-- **結果檢查**：另一個 AWS Lambda Function 會對 AI 生成的結果進行檢查，確保數據品質。
 - **載入 (Load)**：分析結果存回 MongoDB。
 
 ### 財務數據管理
+![財報ETL架構](diagrams/Architecture/財報ETL架構.png)
 - **數據規模**：支援台灣 1906 家上市櫃公司，涵蓋十年現金流量表、資產負債表、損益表，總計約 21 萬筆數據。
 - **數據庫設計**：
-  - 使用 AWS PostgreSQL (RDS) 建立高效能關聯式資料庫。
-  - 精心設計並建立索引，確保快速查詢與排名計算。
+  - 使用 AWS PostgreSQL (RDS) 建立關聯式資料庫。
+  - 設計並建立索引，確保快速查詢與排名計算。
 
 #### 分散式財報爬蟲
-![財報ETL架構](diagrams/Architecture/財報ETL架構.png)
 - 為大幅縮短 21 萬筆數據的爬取時間，實作分散式爬蟲系統。
 - 利用 AWS ECS 部署 6 個爬蟲實例，搭配 AWS SQS 作為任務佇列。
 - ECS 實例同時從 SQS 獲取任務並執行爬取。
@@ -59,7 +57,7 @@ Stock Insight 是一個整合股市新聞、AI 洞察分析與個股數據的平
 - 後續 ETL 流程從 S3 提取、清洗、轉換數據，並載入至 PostgreSQL，確保所有財報數據與公司基本資料的正確關聯，以支援個股頁面的完整查詢。
 
 ### 財報排名與進階查詢
-- 利用 PostgreSQL 強大的 SQL 排序與聚合功能，實現複雜的財報欄位排名與進階查詢。
+- 利用 PostgreSQL 的 SQL 排序與聚合功能，實現財報欄位排名與進階查詢。
 
 ### 個股頁面可視化
 - 前端利用 Chart.js 庫，將十年財報數據以直觀的折線圖形式呈現，便於使用者分析數據變化趨勢。
@@ -99,6 +97,7 @@ Stock Insight 是一個整合股市新聞、AI 洞察分析與個股數據的平
 
 ## 前端技術與使用者體驗
 - **數據視覺化**： 在個股頁面，整合 Chart.js 繪製財報數據的完整折線圖，提供直觀的十年數據變化趨勢，提升使用者體驗。
+![螢幕錄影](diagrams/demo/Recording_stock_line_chart.gif)
 
 - **非同步數據載入 (AJAX)**： 利用 JavaScript Fetch API 實現非同步數據載入，從 RESTful API 獲取並顯示數據，無需重新載入整個頁面，提升使用者體驗。
 
