@@ -26,10 +26,11 @@ Stock Insight 是一個整合股市新聞、AI 洞察分析與個股數據的平
 
 ## 架構概覽
 本專案採用分散式架構，旨在提供高可用性、可擴展性與安全性。
+![網站架構](diagrams/Architecture/Application 架構圖.png)
 ## 關鍵技術實踐
 
 ### 新聞與 AI 洞察管道
-
+![新聞與AI_ETL架構](diagrams/Architecture/News & AI ETL 架構.png)
 #### 新聞爬蟲
 - 利用 Python 腳本，部署於 AWS Lambda。
 - 通過 AWS EventBridge 設定定時觸發，每日多次執行爬蟲任務。
@@ -50,6 +51,7 @@ Stock Insight 是一個整合股市新聞、AI 洞察分析與個股數據的平
   - 精心設計並建立索引，確保快速查詢與排名計算。
 
 #### 分散式財報爬蟲
+![財報ETL架構](diagrams/Architecture/財報ETL架構.png)
 - 為大幅縮短 21 萬筆數據的爬取時間，實作分散式爬蟲系統。
 - 利用 AWS ECS 部署 6 個爬蟲實例，搭配 AWS SQS 作為任務佇列。
 - ECS 實例同時從 SQS 獲取任務並執行爬取。
