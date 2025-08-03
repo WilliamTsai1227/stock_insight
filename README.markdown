@@ -1,15 +1,18 @@
-# Stock Insight: 後端與數據工程面試作品集
+# Stock Insight: 後端與數據工程面試作品
 
 **網站網址**: [Stock Insight](https://stockinsight-ai.com/)
 
 ## 專案介紹
-Stock Insight 是一個整合股市新聞、AI 洞察分析與個股數據的平台。本專案旨在展示我在後端開發與數據工程領域的綜合能力，涵蓋了從數據採集、ETL 流程、數據庫設計、分散式系統建置到部署與安全防護的完整解決方案。
+Stock Insight 是一個整合股市新聞、AI 洞察分析與個股財報數據的平台。本專案旨在展示後端開發與數據工程領域的綜合能力，涵蓋了從數據採集、ETL 流程、數據庫設計、分散式系統建置到部署與安全防護的完整解決方案。
 
 ## 核心功能
 - **定時新聞更新與查詢**：每日自動化更新新聞，支援根據關鍵字與時間區間進行查詢。
 - **AI 洞察**：AI 根據新聞內容生成洞察，包括重點新聞摘要、情緒分析、潛力股票推薦及產業趨勢分析，並支援根據關鍵字與時間區間進行查詢。
+![螢幕錄影](diagrams/demo/Recording_insight_page.gif)
+
 - **個股頁面**：提供個股詳盡資料，包含十年財報（季報/年報/累計）（總共21萬筆數據）、財報指標在同產業中的排名、個股相關新聞及 AI 洞察。
 ![螢幕錄影](diagrams/demo/Recording_stock_page.gif)
+
 - **進階搜尋**：允許使用者根據財報欄位、年份、報表類型及特定產業，搜尋並對產業內的個股進行排名。
 ![螢幕錄影](diagrams/demo/Recording_advanced_search.gif)
 
@@ -28,10 +31,12 @@ Stock Insight 是一個整合股市新聞、AI 洞察分析與個股數據的平
 ## 架構概覽
 本專案採用分散式架構，提供高可用性、可擴展性與安全性。
 ![網站架構](diagrams/Architecture/Application_架構圖.png)
+
 ## 關鍵技術實踐
 
 ### 新聞與 AI 洞察管道
 ![新聞與AI_ETL架構](diagrams/Architecture/News&AI_ETL架構.png)
+
 #### 新聞爬蟲
 - 利用 Python 腳本，部署於 AWS Lambda。
 - 通過 AWS EventBridge 設定定時觸發，每日多次執行爬蟲任務。
@@ -46,13 +51,14 @@ Stock Insight 是一個整合股市新聞、AI 洞察分析與個股數據的平
 
 ### 財務數據管理
 ![財報ETL架構](diagrams/Architecture/財報ETL架構.png)
+
 - **數據規模**：支援台灣 1906 家上市櫃公司，涵蓋十年現金流量表、資產負債表、損益表，總計約 21 萬筆數據。
 - **數據庫設計**：
   - 使用 AWS PostgreSQL (RDS) 建立關聯式資料庫。
   - 設計並建立索引，確保快速查詢與排名計算。
 
 #### 分散式財報爬蟲
-- 為大幅縮短 21 萬筆數據的爬取時間，實作分散式爬蟲系統。
+- 為縮短 21 萬筆數據的爬取時間，實作分散式爬蟲系統。
 - 利用 AWS ECS 部署 6 個爬蟲實例，搭配 AWS SQS 作為任務佇列。
 - ECS 實例同時從 SQS 獲取任務並執行爬取。
 - 爬取到的原始數據 (raw data) 存入 AWS S3。
@@ -95,7 +101,7 @@ Stock Insight 是一個整合股市新聞、AI 洞察分析與個股數據的平
 - **後端伺服器**：EC2 上的後端應用程式負責從 PostgreSQL 和 MongoDB 獲取數據並提供服務。
 
 ## API 設計
-- 遵循 RESTful API 設計原則，提供清晰、標準化的介面供前端應用程式調用。
+- RESTful API 設計原則，提供清晰、標準化的介面供前端應用程式調用。
 
 ## 前端技術與使用者體驗
 - **數據視覺化**： 在個股頁面，整合 Chart.js 繪製財報數據的完整折線圖，提供直觀的十年數據變化趨勢，提升使用者體驗。
@@ -104,5 +110,7 @@ Stock Insight 是一個整合股市新聞、AI 洞察分析與個股數據的平
 - **非同步數據載入 (AJAX)**： 利用 JavaScript Fetch API 實現非同步數據載入，從 RESTful API 獲取並顯示數據，無需重新載入整個頁面，提升使用者體驗。
 
 - **響應式網頁設計 (RWD)**： 運用 HTML 和 CSS 實作響應式網頁設計，確保網站在不同裝置（如桌面電腦、平板、手機）上都能提供良好的瀏覽與操作體驗。
+![螢幕錄影](diagrams/demo/Recording_RWD.gif)
 
 - **延遲載入 (Lazy Loading)**： 在新聞頁面及AI洞察頁面實作 JavaScript 延遲載入功能，優化頁面載入速度，減少初始載入時的資源消耗，提升使用者體驗。
+![螢幕錄影](diagrams/demo/Recording_lazing_loading.gif)
