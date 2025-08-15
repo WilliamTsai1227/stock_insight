@@ -194,7 +194,7 @@ async function loadAllAIAnalysis(){
             listSection.className = "list-section";
 
             const stockListBigTitle = document.createElement("div");
-            stockListBigTitle.textContent = "潛力股票";
+            stockListBigTitle.textContent = "股票";
             stockListBigTitle.className = "section-title";
             listSection.appendChild(stockListBigTitle);
             aiSectionDiv.appendChild(listSection);

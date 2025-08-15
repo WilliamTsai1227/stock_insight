@@ -10,7 +10,7 @@ app = FastAPI()
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],  # 可改為你的前端網址，例如 http://localhost:5500 或 http://messageboards.life
+    allow_origins=["https://stockinsight-ai.com/"],  
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
