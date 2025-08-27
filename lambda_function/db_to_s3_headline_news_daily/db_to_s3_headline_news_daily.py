@@ -19,7 +19,7 @@ def get_s3_client():
     )
 
 def get_today_max_version(bucket_name, prefix_date=None):
-    """取得今天該 prefix 下最大的版本號"""
+    
     s3 = get_s3_client()
     
     if prefix_date is None:
@@ -48,7 +48,7 @@ def get_next_write_key(bucket_name):
 def normalize_news(news_list: list[dict]) -> pd.DataFrame:
     df = pd.json_normalize(news_list)
     df["_id"] = df["_id"].astype(str)
-    df.drop(columns=["news_id","type","url","category","summary","keyword","stock","market"], inplace=True) #清除AI新聞分析不必要的欄位，僅留title/content/publishAt/source
+    df.drop(columns=["news_id","type","url","category","summary","keyword","stock","market"], inplace=True) #清除AI新聞分析不必要的欄位
     return df
 
 def news_to_json_and_upload(news_list: list[dict], bucket: str = None, key: str = None):
@@ -74,6 +74,15 @@ def lambda_handler(event, context):
         start_ts = int(start_time.timestamp())
         end_ts = int(end_time.timestamp())
         news = get_news(start_ts, end_ts, db_name="stock_insight", collection_name="news")
+        #Check for news within the time range.
+        if len(news) == 0:                              
+            message = "此時間範圍內沒有新爬取的新聞，流程提前結束。"
+            print(message)
+            return{
+                "status": "NO_NEWS_FOUND",
+                "news_count": 0,
+                "message": message
+            }
 
         key = get_next_write_key("stock-insight-news-datalake")
         upload_result = news_to_json_and_upload(news, bucket="stock-insight-news-datalake", key=key)
