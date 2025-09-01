@@ -1,7 +1,7 @@
 CREATE TABLE Sectors (
     sector_id SERIAL PRIMARY KEY,
     sector_name VARCHAR(100) NOT NULL UNIQUE,
-    last_updated TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    last_updated TIMESTAMP WITH TIME ZONE DEFAULT NOW()
 );
 CREATE INDEX idx_sectors_sector_name ON Sectors(sector_name);
 
@@ -41,7 +41,7 @@ CREATE TABLE Companies (
     description TEXT,                         -- 公司簡介
     is_verified BOOLEAN DEFAULT FALSE,        -- 是否已驗證
     sector_id INTEGER REFERENCES Sectors(sector_id), -- 產業ID (外部鍵)
-    last_updated TIMESTAMP DEFAULT CURRENT_TIMESTAMP, -- 最後更新時間
+    last_updated TIMESTAMP WITH TIME ZONE DEFAULT NOW(), -- 最後更新時間
     CONSTRAINT uq_companies_stock_country UNIQUE (stock_symbol, country_id) 
 );
 CREATE INDEX idx_companies_sector_id ON Companies(sector_id);
@@ -156,71 +156,19 @@ CREATE TABLE Cash_Flow_Statements (
 
 
 
-CREATE TABLE Stock_Analysis (
-    analysis_id SERIAL PRIMARY KEY,
-    company_id INTEGER REFERENCES Companies(company_id), -- 公司ID
-    sector_id INTEGER REFERENCES Sectors(sector_id), -- 產業ID (外部鍵)
-    country_id INTEGER REFERENCES Countrys(country_id), -- 國家 (外鍵）
-    year INTEGER NOT NULL, -- 年度
-    quarter INTEGER CHECK (quarter IN (1, 2, 3, 4) OR quarter IS NULL), -- 季度
-    pe_ratio DECIMAL(20,2), -- 本益比
-    pe_achieved BOOLEAN, -- 是否達到本益比目標
-    pe_rank_above_median BOOLEAN, -- 本益比是否高於產業中位數
-    pe_rank_in_sector INTEGER, -- 本益比在產業中的排名
-    revenue_growth BOOLEAN, -- 營收是否成長
-    revenue_rank_above_median BOOLEAN, -- 營收是否高於產業中位數
-    revenue_rank_in_sector INTEGER, -- 營收在產業中的排名
-    operating_income_growth BOOLEAN, -- 營業利益是否成長
-    operating_income_rank_above_median BOOLEAN, -- 營業利益是否高於產業中位數
-    operating_income_rank_in_sector INTEGER, -- 營業利益在產業中的排名
-    net_income_growth BOOLEAN, -- 稅後淨利是否成長
-    net_income_rank_above_median BOOLEAN, -- 稅後淨利是否高於產業中位數
-    net_income_rank_in_sector INTEGER, -- 稅後淨利在產業中的排名
-    current_ratio_above1 BOOLEAN, -- 流動比率是否大於1
-    longTermBebt_netIncome_ratio_below4 BOOLEAN, -- 長期負債/淨利是否小於4
-    shareholders_equity_growth BOOLEAN, -- 股東權益是否成長
-    OCF_above_InvestCF BOOLEAN, -- 營業現金流是否大於投資現金流
-    CONSTRAINT uq_stock_analysis_company_year_quarter UNIQUE (company_id, year, quarter) 
+CREATE TYPE user_role_type AS ENUM ('admin', 'user');
+CREATE TYPE user_status_type AS ENUM ('pending', 'active', 'rejected');
+
+CREATE TABLE users (
+    id SERIAL PRIMARY KEY,
+    username VARCHAR(255) NOT NULL,
+    email VARCHAR(255) UNIQUE NOT NULL,
+    password_hash VARCHAR(255) NOT NULL,
+    role user_role_type NOT NULL,
+    status user_status_type NOT NULL,
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
 );
-CREATE INDEX idx_Stock_Analysis_sector_country_year_quarter ON Stock_Analysis (sector_id, country_id, year, quarter);
-
-
-CREATE TABLE Sector_Analysis (
-    analysis_id SERIAL PRIMARY KEY,
-    sector_id INTEGER REFERENCES Sectors(sector_id), -- 產業ID (外鍵)
-    country_id INTEGER REFERENCES Countrys(country_id), -- 國家 (外鍵）
-    year INTEGER NOT NULL, -- 年度
-    quarter INTEGER CHECK (quarter IN (1, 2, 3, 4) OR quarter IS NULL), -- 季度
-    pe_avg DECIMAL(20,2), -- 產業平均本益比
-    pe_median DECIMAL(20,2), -- 產業中位數本益比
-    revenue_avg DECIMAL(20,2), -- 產業平均營收
-    revenue_median DECIMAL(20,2), -- 產業中位數營收
-    operating_income_avg DECIMAL(20,2), -- 產業平均營業利益
-    operating_income_median DECIMAL(20,2), -- 產業中位數營業利益
-    net_income_avg DECIMAL(20,2), -- 產業平均稅後淨利
-    net_income_median DECIMAL(20,2), -- 產業中位數稅後淨利
-    CONSTRAINT uq_sector_analysis_sector_year_quarter UNIQUE (sector_id, year, quarter) 
-);
-CREATE INDEX idx_Sector_Analysis_sector_country_year_quarter ON Sector_Analysis (sector_id, country_id, year, quarter);
-
-CREATE TABLE Financial_Ratios (
-    ratio_id SERIAL PRIMARY KEY,
-    company_id INTEGER REFERENCES Companies(company_id), -- 公司ID
-    sector_id INTEGER REFERENCES Sectors(sector_id), -- 產業ID (外部鍵)
-    country_id INTEGER REFERENCES Countrys(country_id), -- 國家 (外鍵）
-    year INTEGER NOT NULL, -- 年度
-    quarter INTEGER CHECK (quarter IN (1, 2, 3, 4) OR quarter IS NULL), -- 季度
-    
-    -- 獲利能力比率
-    gross_margin DECIMAL(5,2), -- 毛利率
-    operating_margin DECIMAL(5,2), -- 營業利益率
-    net_margin DECIMAL(5,2), -- 淨利率
-    
-    -- 市場價值比率
-    pe_ratio DECIMAL(5,2), -- 本益比
-    
-    report_date DATE , -- 報告日期
-    CONSTRAINT uq_financial_ratios_company_year_quarter UNIQUE (company_id, year, quarter)
-);
-
-CREATE INDEX idx_financial_ratios_sector_country_year_quarter ON Financial_Ratios (sector_id, country_id, year, quarter);
+CREATE UNIQUE INDEX idx_users_email ON users(email);
+CREATE INDEX idx_users_created_at ON users(created_at);
+CREATE INDEX idx_users_status ON users(status);
+CREATE INDEX idx_users_role ON users(role);
