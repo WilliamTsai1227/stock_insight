@@ -4,7 +4,7 @@ from fastapi.staticfiles import StaticFiles
 from pathlib import Path
 import os
 from fastapi.middleware.cors import CORSMiddleware
-from api import log, ai_news, news, stock, financial_report, advanced_search
+from api import log, ai_news, news, stock, financial_report, advanced_search, user
 
 app = FastAPI()
 
@@ -66,3 +66,4 @@ app.include_router(news.router)
 app.include_router(stock.router)
 app.include_router(financial_report.router)
 app.include_router(advanced_search.router)
+app.include_router(user.router)
