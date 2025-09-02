@@ -4,9 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="robots" content="noindex, nofollow">
-    <title>洞察 | Stock Insight</title>
+    <title>首頁 | Stock Insight</title>
     <link rel="icon" type="image/x-icon" href="data:image/x-icon;base64," />
-
     <link rel="preconnect" href="https://fonts.gstatic.com/" crossorigin />
     <link
       rel="stylesheet"
@@ -14,8 +13,8 @@
       onload="this.rel='stylesheet'"
       href="https://fonts.googleapis.com/css2?display=swap&family=Noto+Sans%3Awght%40400%3B500%3B700%3B900&family=Work+Sans%3Awght%40400%3B500%3B700%3B900"
     />
-    <link rel="stylesheet" href="/css/insight.css">
-    <script src="/js/insight.js" defer></script>
+    <link rel="stylesheet" href="../css/login.css">
+    <script src="../js/login.js" defer></script>
 </head>
 <body>
     <div class="layout-container">
@@ -65,36 +64,25 @@
         </div>
 
         <div class="content-area">
-            <div class="search-block">
-                <div class="start-time-div">
-                    <div class="start-time-title">開始時間:</div>
-                    <input type="datetime-local" class="start-time-calendar">
+            <div class="login-container">
+                <div class="login-box">
+                    <h2 class="login-title">登入 Stock Insight</h2>
+                    <div class="login-form">
+                        <div class="input-group">
+                            <div id="email-l-title">帳號</div>
+                            <input type="text" id="email"  placeholder="請輸入您的帳號" required>
+                        </div>
+                        <div class="input-group">
+                            <div id="password-l-title">密碼</div>
+                            <input type="password" id="password"  placeholder="請輸入您的密碼" required>
+                        </div>
+                        <div id="login-error"></div>
+                        <div class="login-button">登入</div>
+                        <div class="logout-button">登出</div>
+                    </div>
                 </div>
-                <div class="end-time-div">
-                    <div class="end-time-title">結束時間:</div>
-                    <input type="datetime-local" class="end-time-calendar">
-                </div>
-                <div class="analysis-type-div">
-                    <div class="analysis-type-title">分析類型:</div>
-                    <select class="analysis-type-select">
-                        <option value="false">逐條分析</option>
-                        <option value="true">統整分析</option>
-                    </select>
-                </div>
-                <div class="search-bar-div">
-                    <div class="search-bar-title">關鍵字搜尋:</div>
-                    <input type="text" class="search-bar" placeholder="Search...">
-                    <div class="search_icon"></div>
-                </div>
-            </div>
-            <div class="container">
-            </div>
-            <div id="loading-indicator">
-                <div class="spinner"></div> 
-                <p>載入中...</p>
             </div>
         </div>
-
         <div class="footer">
             <div class="footer_text">
                 <span class="footer-link" id="footer-purpose-link">網站用途</span> |

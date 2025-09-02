@@ -206,6 +206,7 @@ body {
     display: flex;
     flex: 1;
     justify-content: center;
+    align-items: center; 
 }
 
 .layout-content-container {
@@ -360,6 +361,118 @@ body {
 .footer_text strong {
     font-weight: 700; 
 }
+.login-container {
+    width: 100%;
+    max-width: 400px;
+    padding: 20px;
+    border-radius: 8px;
+    background-color: #ffffff;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.login-box {
+    width: 100%;
+}
+
+.login-title {
+    font-size: 24px;
+    font-weight: 700;
+    color: #111418;
+    text-align: center;
+    margin-bottom: 24px;
+}
+
+.login-form {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.input-group {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+#email-l-title {
+    font-size: 14px;
+    font-weight: 500;
+    color: #333;
+}
+#password-l-title {
+    font-size: 14px;
+    font-weight: 500;
+    color: #333;
+}
+
+
+.input-group input {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #dbe0e6;
+    border-radius: 6px;
+    font-size: 16px;
+    transition: border-color 0.3s;
+}
+
+.input-group input:focus {
+    outline: none;
+    border-color: #007bff; /* 聚焦時的顏色 */
+}
+
+.login-button {
+    width: 100%;
+    padding: 12px;
+    background-color: #000000;
+    color: #fff;
+    border: none;
+    border-radius: 6px;
+    font-size: 16px;
+    font-weight: 700;
+    cursor: pointer;
+    text-align: center;
+    transition: background-color 0.3s, transform 0.2s;
+}
+.logout-button {
+    display: none;
+    width: 100%;
+    padding: 12px;
+    background-color: #000000;
+    color: #fff;
+    border: none;
+    border-radius: 6px;
+    font-size: 16px;
+    font-weight: 700;
+    cursor: pointer;
+    text-align: center;
+    transition: background-color 0.3s, transform 0.2s;
+}
+
+.login-button:hover {
+    background-color: #033e7e;
+}
+
+.login-button:active {
+    transform: scale(0.98);
+}
+.logout-button:hover {
+    background-color: #033e7e;
+}
+
+.logout-button:active {
+    transform: scale(0.98);
+}
+#login-error{
+    text-align: center;
+    font-size: 16px;
+    font-weight: 600;
+    color: rgb(211, 4, 4);
+    display: none;
+}
+
 
 /* 響應式調整 */
 @media (max-width: 768px) {
@@ -418,6 +531,9 @@ body {
     /* 手機版顯示關閉按鈕 */
     .hamburger-menu-close {
         display: block; 
+    }
+    .content-area {
+        padding: 20px;
     }
 }
 

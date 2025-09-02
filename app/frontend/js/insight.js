@@ -482,9 +482,39 @@ function initializeFooterLinks() {
     });
 }
 
+function monitorUserIconClicks() {
+    const userIcon = document.querySelector(".profile-image");
+    if (userIcon) {
+        userIcon.addEventListener('click', function() {
+            window.location.href = '/login';
+        });
+    }
+}
+async function getUserData() {
+    try {
+        const response = await fetch("/api/user/auth", {
+            method: "GET",
+            credentials: "include" // 自動帶 cookie
+        });
+        const data = await response.json();
+
+        if (!response.ok) {
+            console.log("取得使用者資料失敗:", data.message);
+            window.location.href = '/login';
+            return false;
+        }else{
+            return true;
+        }
+
+    } catch (err) {
+        console.error("取得使用者資料錯誤:", err);
+        return false;
+    }
+}
 
 
 async function excute(){
+    getUserData();
     initSearchParamsFromURL();
     setSearchBarValue();      // Set the value of the search box 
     setAnalysisTypeSelect(); 
@@ -493,6 +523,7 @@ async function excute(){
     search();
     initializeHamburgerMenu();
     initializeFooterLinks();
+    monitorUserIconClicks(); 
     
 }
 window.addEventListener("DOMContentLoaded", excute);

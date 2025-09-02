@@ -60,10 +60,20 @@ function scrollToHashBlock() {
         if (el) el.scrollIntoView({behavior:'smooth', block:'start'});
     }
 }
+function monitorUserIconClicks() {
+    const userIcon = document.querySelector(".profile-image");
+    if (userIcon) {
+        userIcon.addEventListener('click', function() {
+            window.location.href = '/login';
+        });
+    }
+}
+
 
 function excute(){
     initializeHamburgerMenu();
     initializeFooterLinks();
     scrollToHashBlock();
+    monitorUserIconClicks();
 }
 window.addEventListener("DOMContentLoaded", excute); 

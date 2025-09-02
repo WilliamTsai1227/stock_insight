@@ -85,11 +85,21 @@ function monitorFeatureCardClicks() {
     });
 }
 
+function monitorUserIconClicks() {
+    const userIcon = document.querySelector(".profile-image");
+    if (userIcon) {
+        userIcon.addEventListener('click', function() {
+            window.location.href = '/login';
+        });
+    }
+}
+
 
 
 function excute(){
-    monitorFeatureCardClicks()
+    monitorFeatureCardClicks();
     initializeHamburgerMenu();
     initializeFooterLinks();
+    monitorUserIconClicks()
 }
 window.addEventListener("DOMContentLoaded", excute);

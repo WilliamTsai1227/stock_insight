@@ -23,10 +23,12 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 HTML_DIR = BASE_DIR / "frontend" / "html"
 CSS_DIR = BASE_DIR / "frontend" / "css"
 JS_DIR = BASE_DIR / "frontend" / "js"
+IMG_DIR = BASE_DIR / "frontend" / "img"
 
 # 掛載靜態檔案目錄
 app.mount("/css", StaticFiles(directory=str(CSS_DIR), html=True), name="css")
 app.mount("/js", StaticFiles(directory=str(JS_DIR), html=True), name="js")
+app.mount("/img", StaticFiles(directory=str(IMG_DIR), html=True), name="img")
 
 # 回傳 HTML 頁面
 @app.get("/", include_in_schema=False)
@@ -58,6 +60,10 @@ async def advanced_search_page(request: Request):
 @app.get("/info", include_in_schema=False)
 async def info_page(request: Request):
     return FileResponse(HTML_DIR / "info.html", media_type="text/html")
+
+@app.get("/login", include_in_schema=False)
+async def info_page(request: Request):
+    return FileResponse(HTML_DIR / "login.html", media_type="text/html")
 
 # 加入 API router
 app.include_router(log.router)
