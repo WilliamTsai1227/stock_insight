@@ -6,3 +6,5 @@ pydantic==1.10.12
 python-multipart==0.0.9
 psycopg2-binary==2.9.10
 asyncpg==0.30.0
+PyJWT==2.4.0
+bcrypt==3.2.0
