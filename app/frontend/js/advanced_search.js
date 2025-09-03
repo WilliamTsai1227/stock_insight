@@ -474,9 +474,9 @@ async function getUserData() {
     }
 }
 
-document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener('DOMContentLoaded', async () => {
+    await getUserData();
     initPage();
-    getUserData();
     initializeHamburgerMenu(); 
     monitorUserIconClicks();
     document.getElementById('cash-flow-prev-page').onclick = () => prevPage('cash_flow');

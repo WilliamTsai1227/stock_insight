@@ -87,6 +87,8 @@ function checkPasswordFormat(password) {
 // ======= Verify user identity =======
 async function getUserData() {
     try {
+        errorMessage.textContent = "";
+        errorMessage.style.display = "none";
         const response = await fetch("/api/user/auth", {
             method: "GET",
             credentials: "include" // 自動帶 cookie
@@ -201,7 +203,7 @@ async function logout() {
 
 
 async function excute(){
-    getUserData()
+    await getUserData()
     login();
     logout();
     monitorUserIconClicks();

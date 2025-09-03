@@ -514,7 +514,7 @@ async function getUserData() {
 
 
 async function excute(){
-    getUserData();
+    await getUserData();
     initSearchParamsFromURL();
     setSearchBarValue();      // Set the value of the search box 
     setAnalysisTypeSelect(); 

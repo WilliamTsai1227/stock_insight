@@ -1654,8 +1654,8 @@ async function getUserData() {
     }
 }
 
-function excute(){
-    getUserData();
+async function excute(){
+    await getUserData();
     initializeFooterLinks();
     monitorUserIconClicks();
 }
