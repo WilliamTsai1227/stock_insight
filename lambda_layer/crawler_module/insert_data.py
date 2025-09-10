@@ -34,12 +34,12 @@ def insert_data_mongodb(items: list[dict],insert_db:str,insert_collection:str ,s
         if items:
             try:
                 result = collection.insert_many(items, ordered=False)
-                inserted_count = len(result.inserted_ids)
-                
+                inserted_count = len(result.inserted_ids)  #The number of entries that were actually successfully inserted   
             except BulkWriteError as bwe:
                 inserted_count = bwe.details.get('nInserted', 0)
                 error_message = f"Bulk write warning: {bwe.details}"
-            log_success('ai_summary_insert_success', successful_inserts=inserted_count, source=source,db=insert_db,collection=insert_collection)
+            # Regardless of whether there is a unique key conflict, there will be correct log records
+            log_success('ai_summary_insert_success', successful_inserts=inserted_count, source=source,db=insert_db,collection=insert_collection) 
     except Exception as e:
         error_message = f"Insert mongodb fail: {e}"
         log_error(LogType.CRAWLER_ERROR, error_message,db=insert_db,collection=insert_collection)

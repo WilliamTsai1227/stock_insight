@@ -37,11 +37,7 @@ async def get_news(
     query = {}
 
     if keyword:
-        query["$or"] = [
-            {"title": {"$regex": keyword, "$options": "i"}},
-            {"summary": {"$regex": keyword, "$options": "i"}},
-            {"content": {"$regex": keyword, "$options": "i"}}
-        ]
+        query["$text"] = {"$search": keyword}
 
     if start_time is not None and end_time is not None:
         query["publishAt"] = {
@@ -49,9 +45,10 @@ async def get_news(
             "$lte": end_time
         }
 
-    # 查詢 + 排序 + 分頁
+    # 使用 projection 確保只返回需要的欄位，以提高效能
+    projection = {"_id": 0, "news_id": 0, "summary": 0, "keyword": 0, "market": 0, "type": 0, "stock": 0}
     results = list(
-        collection.find(query, {"_id": 0, "news_id": 0, "summary": 0, "keyword":0, "market":0, "type":0, "stock":0})
+        collection.find(query, projection)
         .sort("publishAt", -1)
         .skip(skip)
         .limit(limit+1)
@@ -62,6 +59,6 @@ async def get_news(
 
     for r in results:
         if r.get("content") is not None: 
-            r["content"] = r["content"][:30] # 截斷為30個字
+            r["content"] = r["content"][:60] # 截斷為60個字
 
     return JSONResponse(content={"nextPage":page + 1 if has_next else None,"page": page, "data": results})

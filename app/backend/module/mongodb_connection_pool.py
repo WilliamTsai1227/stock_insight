@@ -1,4 +1,7 @@
 from pymongo import MongoClient
+from pymongo.read_concern import ReadConcern
+from pymongo.write_concern import WriteConcern
+from pymongo.read_preferences import SecondaryPreferred
 import os
 from dotenv import load_dotenv
 
@@ -7,7 +10,7 @@ load_dotenv()
 class MongoDBConnectionPool:
     _instance = None
     _client = None
-    _db_name = "stock_insight"  # 固定使用 stock_insight 資料庫
+    _db_name = "stock_insight" 
 
     def __new__(cls):
         if cls._instance is None:
@@ -25,16 +28,15 @@ class MongoDBConnectionPool:
                 url,
                 maxPoolSize=20,
                 minPoolSize=5,
-                serverSelectionTimeoutMS=5000
+                serverSelectionTimeoutMS=5000,
+                write_concern=WriteConcern(w=1),
+                read_preference=SecondaryPreferred()
             )
 
     def get_collection(self, collection_name: str):
-        """
-        獲取指定的 collection
-        
+        """    
         Args:
-            collection_name (str): collection 名稱
-            
+            collection_name (str): collection 名稱            
         Returns:
             Collection: MongoDB collection 物件
         """
@@ -42,8 +44,6 @@ class MongoDBConnectionPool:
 
     def get_database(self):
         """
-        獲取資料庫實例
-        
         Returns:
             Database: MongoDB database 物件
         """

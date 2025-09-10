@@ -2,6 +2,7 @@ import urllib.request
 import json
 import datetime
 import time
+import boto3
 
 # 這個是放在本身 function 裡的 Tidy
 # from local_module.tidy_data import Tidy
@@ -11,6 +12,7 @@ from local_module.tidy_data import Tidy
 from crawler_module.insert_data import insert_data_mongodb
 from crawler_module.logger import log_error, LogType
 
+S3_BUCKET_NAME = "stock-insight-original-news-datalake"
 base_url = "https://api.cnyes.com/media/api/v1/newslist/category/headline"
 headers = {
     "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/135.0.0.0 Safari/537.36",
@@ -32,6 +34,7 @@ def crawl_news():
             if response.status == 200:
                 data = json.loads(response.read().decode())
                 last_page = data["items"]["last_page"]
+                pages_to_crawl = (last_page + 2) // 3   # Get the first 1/3 of the page
                 total_from_api = data["items"]["total"]
             else:
                 raise Exception(f"Unexpected status code: {response.status}")
@@ -39,7 +42,7 @@ def crawl_news():
         raise Exception(f"[錯誤] 無法取得初始頁面資料：{e}")
     
     # into page process
-    while page <= last_page:
+    while page <= pages_to_crawl:
         url = f"{base_url}?page={page}&limit={limit}&showOutsource=1"
         req = urllib.request.Request(url, headers=headers)
 
@@ -69,7 +72,24 @@ def crawl_news():
 
     # insert news in mongodb
     try:
-        insert_data_mongodb(db_all_news, insert_db="stock_insight", insert_collection="news", source="anue")
+        # insert_data_mongodb(db_all_news, insert_db="stock_insight", insert_collection="news", source="anue")
+        news_json_string = json.dumps(db_all_news, ensure_ascii=False, indent=2)
+
+        # 建立 S3 檔案路徑，建議加上日期和時間，以避免覆蓋
+        now = datetime.datetime.now()
+        file_path = f"anue/headline/{now.strftime('%Y/%m/%d')}/{now.strftime('%H-%M-%S')}.json"
+        
+        # 建立 S3 客戶端
+        s3_client = boto3.client("s3")
+        
+        # 上傳檔案至 S3
+        s3_client.put_object(
+            Bucket=S3_BUCKET_NAME,
+            Key=file_path,
+            Body=news_json_string.encode("utf-8"),
+            ContentType="application/json"
+        )
+        print(f"成功將資料上傳至 S3: s3://{S3_BUCKET_NAME}/{file_path}")
     except Exception as e:
         error_message = f"insert_data_mongodb() module fail: {e}"
         log_error(log_type=LogType.CRAWLER_ERROR, error_message=error_message, source="crawler_anue/headline_news")

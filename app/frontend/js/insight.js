@@ -385,7 +385,7 @@ function monitorNewsClicks() {
                     const data = await response.json();
                     const news = data.data;
                     const sourceURL = news.url.trim();
-                    window.open(sourceURL, '_blank');
+                    window.open(sourceURL, '_blank','noopener,noreferrer');
 
                 } catch (error) {
                     console.error("無法載入原始網站，請至搜尋引擎搜尋標題關鍵字，觀看原始網站文章", error);
