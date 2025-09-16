@@ -34,7 +34,7 @@ function initSearchParamsFromURL() {
     page = 1;
 }
 
-// 函式：設定搜尋框的值
+// Function: Set the value of the search box
 function setSearchBarValue() {
     const searchBar = document.querySelector('.search-bar');
     if (searchBar) {
@@ -48,7 +48,7 @@ function updateURLParams() {
     params.set('start_time', startTime);
     params.set('end_time', endTime);
     const newUrl = `${window.location.pathname}?${params.toString()}`;
-    history.replaceState({}, '', newUrl); // 不重新整理，只更新網址
+    history.replaceState({}, '', newUrl); // No refresh, only update URL
 }
 
 
@@ -58,10 +58,10 @@ async function loadAllNews(){
         isLoading = true; // Start loading data, set isLoading to true
         if (loadingIndicator) loadingIndicator.style.display = "flex"; // Display the loading indicator
         //Can add a printout of the search time to check
-        //console.log(`fetch startTime:${startTime}, endTime: ${endTime}`)
+        
         const response = await fetch(`/api/news?keyword=${keyword}&start_time=${startTime}&end_time=${endTime}&page=${page}`);
         const result = await response.json();
-        // 判斷是否還有下一頁資料
+        // Determine whether there is a next page data
         if (result.nextPage === null || result.data.length === 0) {
             hasMoreData = false;
         } else {

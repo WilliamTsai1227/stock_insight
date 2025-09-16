@@ -6,7 +6,7 @@ from module.mongodb_connection_pool import mongodb_pool
 
 router = APIRouter()
 
-# 使用連接池獲取 news collection
+# Use the connection pool to get the news collection
 collection = mongodb_pool.get_collection("news")
 
 @router.get("/api/news/{object_id}")
@@ -33,7 +33,7 @@ async def get_news(
     limit = 20
     skip = (page - 1) * limit
 
-    # 組查詢條件
+    # Group query conditions
     query = {}
 
     if keyword:
@@ -45,7 +45,7 @@ async def get_news(
             "$lte": end_time
         }
 
-    # 使用 projection 確保只返回需要的欄位，以提高效能
+    # Use projection to ensure that only the required columns are returned to improve performance
     projection = {"_id": 0, "news_id": 0, "summary": 0, "keyword": 0, "market": 0, "type": 0, "stock": 0}
     results = list(
         collection.find(query, projection)
@@ -59,6 +59,6 @@ async def get_news(
 
     for r in results:
         if r.get("content") is not None: 
-            r["content"] = r["content"][:60] # 截斷為60個字
+            r["content"] = r["content"][:60] # Truncated to 60 characters
 
     return JSONResponse(content={"nextPage":page + 1 if has_next else None,"page": page, "data": results})

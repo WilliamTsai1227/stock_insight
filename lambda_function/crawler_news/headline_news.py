@@ -3,14 +3,9 @@ import json
 import datetime
 import time
 import boto3
-
-# 這個是放在本身 function 裡的 Tidy
-# from local_module.tidy_data import Tidy
 from local_module.tidy_data import Tidy
+from local_module.log import log_success,log_error
 
-# 這個是放在 Lambda Layer 裡的共用 insert_data / logger
-from crawler_module.insert_data import insert_data_mongodb
-from crawler_module.logger import log_error, LogType
 
 S3_BUCKET_NAME = "stock-insight-original-news-datalake"
 base_url = "https://api.cnyes.com/media/api/v1/newslist/category/headline"
@@ -77,7 +72,7 @@ def crawl_news():
 
         # 建立 S3 檔案路徑，建議加上日期和時間，以避免覆蓋
         now = datetime.datetime.now()
-        file_path = f"anue/headline/{now.strftime('%Y/%m/%d')}/{now.strftime('%H-%M-%S')}.json"
+        file_path = f"anue/headline/{now.strftime('%Y-%m-%d')}/{now.strftime('%H-%M-%S')}.json"
         
         # 建立 S3 客戶端
         s3_client = boto3.client("s3")
@@ -89,10 +84,14 @@ def crawl_news():
             Body=news_json_string.encode("utf-8"),
             ContentType="application/json"
         )
-        print(f"成功將資料上傳至 S3: s3://{S3_BUCKET_NAME}/{file_path}")
+        news_count = len(db_all_news)
+        success_message = f"crawler_anue/headline_news :成功將{news_count}筆anue新聞資料上傳至 S3: s3://{S3_BUCKET_NAME}/{file_path}"
+        print(success_message)
+        log_success(log_type="news_insert_s3_success",message=success_message,source="anue", db="s3")
     except Exception as e:
-        error_message = f"insert_data_mongodb() module fail: {e}"
-        log_error(log_type=LogType.CRAWLER_ERROR, error_message=error_message, source="crawler_anue/headline_news")
+        error_message = f"crawler_anue/headline_news fail: {e}"
+        print(error_message)
+        log_error(log_type="news_insert_s3_error", message=error_message, source="anue", db="s3")
         raise
 
 def lambda_handler(event, context):
