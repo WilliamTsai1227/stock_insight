@@ -29,7 +29,6 @@ class MongoDBConnectionPool:
                 maxPoolSize=20,
                 minPoolSize=5,
                 serverSelectionTimeoutMS=5000,
-                write_concern=WriteConcern(w=1),
                 read_preference=SecondaryPreferred()
             )
 
@@ -40,14 +39,20 @@ class MongoDBConnectionPool:
         Returns:
             Collection: MongoDB collection 物件
         """
-        return self._client[self._db_name][collection_name]
+        return self._client[self._db_name].get_collection(
+            collection_name,
+            write_concern=WriteConcern(w=1)   #
+        )
 
     def get_database(self):
         """
         Returns:
             Database: MongoDB database 物件
         """
-        return self._client[self._db_name]
+        return self._client.get_database(
+            self._db_name,
+            write_concern=WriteConcern(w=1)   #
+        )
 
 # 創建一個全局的連接池實例
 mongodb_pool = MongoDBConnectionPool()
