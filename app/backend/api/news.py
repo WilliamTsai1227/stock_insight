@@ -59,6 +59,6 @@ async def get_news(
 
     for r in results:
         if r.get("content") is not None: 
-            r["content"] = r["content"][:60] # Truncated to 60 characters
+            r["content"] = r["content"][:150] # Truncated to 150 characters
 
     return JSONResponse(content={"nextPage":page + 1 if has_next else None,"page": page, "data": results})
