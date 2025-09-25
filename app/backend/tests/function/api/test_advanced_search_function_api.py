@@ -3,7 +3,7 @@ from httpx import AsyncClient
 from main import app
 
 
-BASE_URL = "http://test"
+BASE_URL = "https://stockinsight-ai.com/"
 
 
 # ========== 正確情境測試 ==========
