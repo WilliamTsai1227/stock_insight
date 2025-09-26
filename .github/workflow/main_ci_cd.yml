@@ -1,0 +1,94 @@
+name: CI/CD Pipeline
+
+# 觸發條件：在推送到 main 分支時觸發
+on:
+  push:
+    branches:
+      - main
+  # 也可以增加 pull_request: 以在 PR 合併前進行測試
+
+jobs:
+
+  # CI Job: 執行測試
+
+  backend_unit_test:
+    name: Backend_unit_test
+    runs-on: ubuntu-latest  # 執行環境
+    defaults:
+      run:
+        working-directory: stock_insight/app/backend 
+
+    steps:
+    - name: Checkout Code
+      uses: actions/checkout@v4
+
+    - name: Set up Python
+      uses: actions/setup-python@v5
+      with:
+        python-version: '3.11' 
+
+    - name: Install dependencies
+      run: |
+        pip install -r requirements/base.txt
+        pip install -r requirements/ci.txt
+      working-directory: stock_insight
+
+    - name: Run Pytest Unit Tests
+      run: |
+        pytest -v unit/module/test_advanced_search_unit_module.py
+
+
+    # CD Job: 建構與部署
+
+  # cd_deploy:
+  #   name: Continuous Deployment (Docker Build & Push)
+  #   runs-on: ubuntu-latest
+  #   needs: backend_unit_test 
+
+  #   steps:
+  #   - name: Checkout Code
+  #     uses: actions/checkout@v4
+
+  #   - name: Set up QEMU (多架構支援)
+  #     uses: docker/setup-qemu-action@v3
+
+  #   - name: Set up Docker Buildx
+  #     uses: docker/setup-buildx-action@v3
+
+  #   - name: Login to Docker Hub
+  #     uses: docker/login-action@v3
+  #     with:
+  #       username: williamtsai1998  # 您的 Docker Hub ID
+  #       password: ${{ secrets.DOCKER_HUB_TOKEN }} # 使用 Secret
+
+  #   - name: Set Image Tag
+  #     id: tag
+  #     run: |
+  #       # 獲取 Commit SHA 作為版本標籤，確保每次建構的版本唯一
+  #       echo "tag=$(echo $GITHUB_SHA | cut -c1-8)" >> $GITHUB_OUTPUT
+    
+  #   - name: Build and Push Docker Image
+  #     uses: docker/build-push-action@v5
+  #     with:
+  #       context: stock_insight/app/ # Dockerfile 所在目錄
+  #       file: stock_insight/app/Dockerfile # Dockerfile 檔案路徑
+  #       platforms: linux/amd64,linux/arm64 # 多架構建構
+  #       push: true
+  #       tags: williamtsai1998/stock-insight-app:${{ steps.tag.outputs.tag }},williamtsai1998/stock-insight-app:latest 
+        
+    # --- [進階: 自動部署到 EC2/Swarm Manager] ---
+    # 因為您目前是手動 SSH 進入 EC2 更改 docker-compose.yml，
+    # 若要自動化，您需要使用 SSH Action 執行遠端指令。
+    # 這裡只提供架構，您需要根據 AWS 環境和安全設定調整。
+    
+    # - name: Deploy to AWS EC2 (Swarm Manager)
+    #   uses: appleboy/ssh-action@v1.0.3
+    #   with:
+    #     host: ${{ secrets.EC2_HOST }}
+    #     username: ${{ secrets.EC2_USERNAME }}
+    #     key: ${{ secrets.EC2_SSH_KEY }}
+    #     script: |
+    #       # 遠端登入後，更新 docker-compose.yml 中的 image 標籤
+    #       # 並執行 docker stack deploy
+    #       sed -i 's|williamtsai1998/stock-insight-app:.*|williamtsai1998/stock-insight-app:${{ steps.tag.outputs.tag }}|g' ~/docker-compose.yml
+    #       docker stack deploy -c ~/docker-compose.yml stock-insight-stack
