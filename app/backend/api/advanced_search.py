@@ -183,11 +183,15 @@ class AdvancedSearch:
     @staticmethod
     def validate_ranking_type(ranking_type: str) -> bool:
         """驗證排行榜類型"""
+        if not isinstance(ranking_type, str):
+            return False
         return ranking_type in AdvancedSearch.SUPPORTED_RANKINGS
 
     @staticmethod
     def validate_year(year: int) -> bool:
         """驗證年份"""
+        if not isinstance(year, int):
+            return False
         return 1900 <= year <= 2025
 
     @staticmethod
@@ -267,6 +271,8 @@ class AdvancedSearch:
         Returns:
             bool: 是否支援該排行榜
         """
+        if table_name not in ["Cash_Flow_Statements", "Balance_Sheets", "Income_Statements"]:
+            return False
         # Cash_Flow_Statements 只支援 accumulated
         if table_name == 'Cash_Flow_Statements' and report_type != 'accumulated':
             return False
