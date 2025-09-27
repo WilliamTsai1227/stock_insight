@@ -28,7 +28,6 @@ jobs:
       run: |
         ls -R
         pip install -r ./requirements/ci.txt   
-        pip install -r ./requirements/base.txt
 
     - name: Run Pytest Unit Tests
       run: |
