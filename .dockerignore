@@ -53,9 +53,16 @@ lambda_function/
 lambda_layer/
 tests/
 設計圖/
+requirements/
+app/backend/pytest.ini
 
 #需要忽略的文件
 需求.txt
 database_schema.sql
 .cursorignore
 .gitignore
+
+
+
+
+

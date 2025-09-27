@@ -31,47 +31,53 @@ jobs:
 
     - name: Run Pytest Unit Tests
       run: |
-        ls -R
         pytest -v ./app/backend/tests/unit/module/test_advanced_search_unit_module.py
 
 
-    # CD Job: 建構與部署
 
-  # cd_deploy:
-  #   name: Continuous Deployment (Docker Build & Push)
-  #   runs-on: ubuntu-latest
-  #   needs: backend_unit_test 
+  cd_deploy:
+    name: Continuous Deployment (Docker Build & Push)
+    runs-on: ubuntu-latest
+    needs: backend_unit_test 
 
-  #   steps:
-  #   - name: Checkout Code
-  #     uses: actions/checkout@v4
+    steps:
+    - name: Checkout Code
+      uses: actions/checkout@v4
 
-  #   - name: Set up QEMU (多架構支援)
-  #     uses: docker/setup-qemu-action@v3
+    - name: Set up QEMU (多架構支援)
+      uses: docker/setup-qemu-action@v3
 
-  #   - name: Set up Docker Buildx
-  #     uses: docker/setup-buildx-action@v3
+    - name: Set up Docker Buildx
+      uses: docker/setup-buildx-action@v3
 
-  #   - name: Login to Docker Hub
-  #     uses: docker/login-action@v3
-  #     with:
-  #       username: williamtsai1998  # 您的 Docker Hub ID
-  #       password: ${{ secrets.DOCKER_HUB_TOKEN }} # 使用 Secret
+    - name: Login to Docker Hub
+      uses: docker/login-action@v3
+      with:
+        username: williamtsai1998  
+        password: ${{ secrets.DOCKER_HUB_TOKEN }} 
 
-  #   - name: Set Image Tag
-  #     id: tag
-  #     run: |
-  #       # 獲取 Commit SHA 作為版本標籤，確保每次建構的版本唯一
-  #       echo "tag=$(echo $GITHUB_SHA | cut -c1-8)" >> $GITHUB_OUTPUT
+    - name: Set Image Tag
+      id: tag
+      run: |
+        SHA_TAG=$(echo $GITHUB_SHA | cut -c1-8)
+        BRANCH_NAME=$(echo ${GITHUB_REF#refs/heads/}) 
+        echo "sha_tag=$SHA_TAG" >> $GITHUB_OUTPUT
+        echo "branch_tag=$BRANCH_NAME" >> $GITHUB_OUTPUT
+
+    - name: Debug 
+      run: |
+        ls -R
     
-  #   - name: Build and Push Docker Image
-  #     uses: docker/build-push-action@v5
-  #     with:
-  #       context: stock_insight/app/ # Dockerfile 所在目錄
-  #       file: stock_insight/app/Dockerfile # Dockerfile 檔案路徑
-  #       platforms: linux/amd64,linux/arm64 # 多架構建構
-  #       push: true
-  #       tags: williamtsai1998/stock-insight-app:${{ steps.tag.outputs.tag }},williamtsai1998/stock-insight-app:latest 
+    - name: Build and Push Docker Image
+      uses: docker/build-push-action@v5
+      with:
+        context: ./stock_insight/app/ # Dockerfile 所在目錄
+        file: ./stock_insight/app/Dockerfile # Dockerfile 檔案路徑
+        platforms: linux/amd64,linux/arm64 # 多架構建構
+        push: true
+        tags: |
+            williamtsai1998/stock-insight-app:${{ steps.tag.outputs.sha_tag }},
+            williamtsai1998/stock-insight-app:${{ steps.tag.outputs.branch_tag }}
         
     # --- [進階: 自動部署到 EC2/Swarm Manager] ---
     # 因為您目前是手動 SSH 進入 EC2 更改 docker-compose.yml，
