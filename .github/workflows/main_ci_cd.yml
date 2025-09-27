@@ -1,23 +1,18 @@
 name: CI/CD Pipeline
 
-# 觸發條件：在推送到 main 分支時觸發
 on:
   push:
     branches:
       - main
-  # 也可以增加 pull_request: 以在 PR 合併前進行測試
   workflow_dispatch:
 
 jobs:
-
-  # CI Job: 執行測試
-
   backend_unit_test:
-    name: Backend_unit_test
-    runs-on: ubuntu-latest  # 執行環境
+    name: Backend Unit Test
+    runs-on: ubuntu-latest
     defaults:
       run:
-        working-directory: stock_insight/app/backend 
+        working-directory: app/backend 
 
     steps:
     - name: Checkout Code
@@ -30,9 +25,8 @@ jobs:
 
     - name: Install dependencies
       run: |
-        pip install -r requirements/base.txt
-        pip install -r requirements/ci.txt
-      working-directory: stock_insight
+        pip install -r ../../requirements/base.txt
+        pip install -r ../../requirements/ci.txt  
 
     - name: Run Pytest Unit Tests
       run: |
