@@ -32,7 +32,7 @@ jobs:
     - name: Run Pytest Unit Tests
       run: |
         ls -R
-        pytest -v ./app/backend/unit/module/test_advanced_search_unit_module.py
+        pytest -v ./app/backend/tests/unit/module/test_advanced_search_unit_module.py
 
 
     # CD Job: 建構與部署
