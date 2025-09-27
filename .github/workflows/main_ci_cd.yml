@@ -6,6 +6,7 @@ on:
     branches:
       - main
   # 也可以增加 pull_request: 以在 PR 合併前進行測試
+  workflow_dispatch:
 
 jobs:
 
