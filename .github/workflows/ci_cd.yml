@@ -61,8 +61,15 @@ jobs:
       run: |
         SHA_TAG=$(echo $GITHUB_SHA | cut -c1-8)
         BRANCH_NAME=$(echo ${GITHUB_REF#refs/heads/}) 
+
+        if [ "$BRANCH_NAME" == "main" ]; then
+          FLOATING_TAG="latest"
+        else
+          FLOATING_TAG="$BRANCH_NAME"
+        fi
+        
         echo "sha_tag=$SHA_TAG" >> $GITHUB_OUTPUT
-        echo "branch_tag=$BRANCH_NAME" >> $GITHUB_OUTPUT
+        echo "branch_tag=$FLOATING_TAG" >> $GITHUB_OUTPUT
 
     - name: Debug 
       run: |
