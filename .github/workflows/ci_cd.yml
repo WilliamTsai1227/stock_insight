@@ -78,8 +78,8 @@ jobs:
     - name: Build and Push Docker Image
       uses: docker/build-push-action@v5
       with:
-        context: ./stock_insight/app/ # Dockerfile 所在目錄
-        file: ./stock_insight/app/Dockerfile # Dockerfile 檔案路徑
+        context: ./app/ # Dockerfile 所在目錄
+        file: ./app/Dockerfile # Dockerfile 檔案路徑
         platforms: linux/amd64,linux/arm64 # 多架構建構
         push: true
         tags: |
