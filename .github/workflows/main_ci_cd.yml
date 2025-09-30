@@ -35,8 +35,8 @@ jobs:
 
 
 
-  cd_deploy:
-    name: Continuous Deployment (Docker Build & Push)
+  cd_deliver:
+    name: Docker Build & Push
     runs-on: ubuntu-latest
     needs: backend_unit_test 
 
@@ -86,19 +86,23 @@ jobs:
             williamtsai1998/stock-insight-app:${{ steps.tag.outputs.sha_tag }},
             williamtsai1998/stock-insight-app:${{ steps.tag.outputs.branch_tag }}
         
-    # --- [進階: 自動部署到 EC2/Swarm Manager] ---
-    # 因為您目前是手動 SSH 進入 EC2 更改 docker-compose.yml，
-    # 若要自動化，您需要使用 SSH Action 執行遠端指令。
-    # 這裡只提供架構，您需要根據 AWS 環境和安全設定調整。
+
     
-    # - name: Deploy to AWS EC2 (Swarm Manager)
-    #   uses: appleboy/ssh-action@v1.0.3
-    #   with:
-    #     host: ${{ secrets.EC2_HOST }}
-    #     username: ${{ secrets.EC2_USERNAME }}
-    #     key: ${{ secrets.EC2_SSH_KEY }}
-    #     script: |
-    #       # 遠端登入後，更新 docker-compose.yml 中的 image 標籤
-    #       # 並執行 docker stack deploy
-    #       sed -i 's|williamtsai1998/stock-insight-app:.*|williamtsai1998/stock-insight-app:${{ steps.tag.outputs.tag }}|g' ~/docker-compose.yml
-    #       docker stack deploy -c ~/docker-compose.yml stock-insight-stack
+  cd_deploy:
+    name: Deploy to EC2/Swarm
+    runs-on: ubuntu-latest
+    needs: cd_deliver 
+
+    steps:
+      - name: Deploy to AWS EC2 (Swarm Manager)
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.EC2_HOST }}
+          username: ${{ secrets.EC2_USERNAME }}
+          key: ${{ secrets.EC2_SSH_KEY }}
+          script: |
+            echo "正在部署 Swarm Stack..."
+            
+            docker stack deploy -c ~/docker-compose.yml stock-insight-stack
+            
+            echo "部署完成!"
