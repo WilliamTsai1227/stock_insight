@@ -1,9 +1,9 @@
-name: CI/CD Pipeline(Main Environment)
+name: CI/CD Pipeline (Develop Environment)
 
 on:
   push:
     branches:
-      - main
+      - develop
   workflow_dispatch: {}
 
 jobs:
@@ -63,8 +63,8 @@ jobs:
         BRANCH_NAME=$(echo ${GITHUB_REF#refs/heads/})
         PERMANENT_TAG="${BRANCH_NAME}-${SHA_SHORT}" 
 
-        if [ "$BRANCH_NAME" == "main" ]; then
-          FLOATING_TAG="latest"
+        if [ "$BRANCH_NAME" == "develop" ]; then
+          FLOATING_TAG="develop"
         else
           FLOATING_TAG="$BRANCH_NAME"
         fi
@@ -87,23 +87,3 @@ jobs:
             williamtsai1998/stock-insight-app:${{ steps.tag.outputs.permanent_tag }},
             williamtsai1998/stock-insight-app:${{ steps.tag.outputs.floating_tag }}
         
-
-    
-  cd_deploy:
-    name: Deploy to EC2/Swarm
-    runs-on: ubuntu-latest
-    needs: cd_deliver 
-
-    steps:
-      - name: Deploy to AWS EC2 (Swarm Manager)
-        uses: appleboy/ssh-action@v1.0.3
-        with:
-          host: ${{ secrets.EC2_HOST }}
-          username: ${{ secrets.EC2_USERNAME }}
-          key: ${{ secrets.EC2_SSH_KEY }}
-          script: |
-            echo "正在部署 Swarm Stack..."
-            
-            docker stack deploy -c ~/docker-compose.yml stock-insight-stack
-            
-            echo "部署完成!"
