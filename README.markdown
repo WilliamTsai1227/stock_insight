@@ -3,7 +3,7 @@
 **網站網址**: [Stock Insight](https://stockinsight-ai.com/)
 
 ## 專案介紹
-Stock Insight 是一個整合股市新聞、AI 洞察分析與個股財報數據的平台。本專案旨在展示後端開發與數據工程領域的能力，涵蓋從數據採集、ETL 流程、數據庫設計、分散式系統建置到部署與安全防護的解決方案。
+Stock Insight 是一個整合股市新聞、AI 洞察分析與個股財報數據的平台。本專案旨在展示後端開發與數據工程領域的能力，涵蓋從數據採集、ETL 流程、數據庫設計、分散式系統建置到部署與基本安全防護的建立。
 
 ## 核心功能
 - **定時新聞更新與查詢**：自動化更新新聞，支援根據關鍵字與時間區間進行查詢。
@@ -89,7 +89,7 @@ Stock Insight 是一個整合股市新聞、AI 洞察分析與個股財報數據
 - 透過 AWS Certificate Manager (ACM) 申請並管理 SSL 憑證，提供安全的 HTTPS 連線。所有 HTTP 請求會自動重導向 HTTPS。
 
 #### Web 應用防火牆 (WAF)
-- 在 ALB 上部署 AWS WAF，提供應用層級的安全防護，有效阻擋常見的網路攻擊：
+- 在 ALB 上部署 AWS WAF，建立應用層級的防護，阻擋基本常見攻擊：
   - **Core Rule Set**：防範 OWASP Top 10 漏洞，如 SQL Injection, Cross-Site Scripting (XSS), Cross-Site Request Forgery (CSRF)。
   - **AWS IP Reputation List**：阻擋來自已知惡意 IP 地址的流量。
   - **IP Rate Limit**：限制單一 IP 每分鐘可發送的請求數量，防止 DDoS 攻擊。
