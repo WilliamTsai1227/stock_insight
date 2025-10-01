@@ -61,6 +61,7 @@ app/backend/pytest.ini
 database_schema.sql
 .cursorignore
 .gitignore
+docker-compose.yml
 
 
 
