@@ -24,6 +24,7 @@ Stock Insight 是一個整合股市新聞、AI 洞察分析與個股財報數據
 - **Databases:** PostgreSQL, MongoDB
 - **Containerization & Deployment:** Docker Swarm
 - **Backend Framework & Language:** Python (FastAPI)
+- **CI/CD & Testing:** GitHub Actions, pytest
 
 ### 前端
 - **技術**：HTML, CSS, JavaScript (Chart.js)
@@ -76,6 +77,14 @@ Stock Insight 是一個整合股市新聞、AI 洞察分析與個股財報數據
 - 採用 Docker Swarm 進行容器編排與部署。
 - 在 AWS EC2 上架設 1 個 Manager 節點與 3 個 Worker 節點。
 - 實現服務的可用性、負載分流，並確保在版本更新或回溯時服務不中斷。Manager 節點負責監控 Worker 節點的健康狀況。
+
+### **持續整合與部署 (CI/CD) 與測試** 
+確保系統穩定性與快速迭代，導入了自動化流程：
+- **Unit Testing (pytest):** 使用 **pytest** 撰寫單元測試，確保邏輯正確性。
+- **GitHub Actions 自動化流程:**
+    - 觸發自動化測試，確保代碼品質。
+    - **自動化 Build 與 Push Docker Image**。
+    - **自動化部署 (CD):** 當代碼合併至 main 分支時，GitHub Actions 流程會連接至 Docker Swarm Manager 節點，實現自動化版本更新。縮短從提交到更新線上版本所需的時間，並降低人為操作錯誤。
 
 ### 網路與安全防護
 
