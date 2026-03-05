@@ -1,6 +1,5 @@
 # Stock Insight:
 
-**網站網址**: [Stock Insight](https://stockinsight-ai.com/)
 
 ## 專案介紹
 Stock Insight 是一個整合股市新聞、AI 洞察分析與個股財報數據的平台。本專案涵蓋前後端開發、系統架構、安全防護、API設計、數據採集、ETL 流程、數據庫設計、分散式系統建置到CICD部署
